@@ -1361,7 +1361,7 @@ int main (int argc, char *argv[]){
 	VkEngine e = vkengine_create (VK_PRESENT_MODE_FIFO_KHR, width, height);
 	vkengine_set_key_callback (e, key_callback);
 
-	dev = vkvg_device_create_multisample(vkh_app_get_inst(e->app),
+	dev = vkvg_device_create_from_vk_multisample (vkh_app_get_inst(e->app),
 			 vkengine_get_physical_device(e), vkengine_get_device(e), vkengine_get_queue_fam_idx(e), 0, samples, false);
 
 	VkvgSurface surf = vkvg_surface_create(dev, width, height);
