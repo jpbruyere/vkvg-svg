@@ -87,6 +87,7 @@ void readSVG (VkEngine e) {
 		vkvg_destroy(ctx);
 		repaintIconList = false;
 	}else if (filename) {
+		vkengine_set_title(e, filename);
 		if (stat(filename, &sb) == -1) {
 			printf ("Unable to stat file: %s\n", filename);
 			exit(EXIT_FAILURE);
@@ -98,6 +99,7 @@ void readSVG (VkEngine e) {
 	} else if (dir) {
 		char tmp[FILENAME_MAX];
 		sprintf(tmp, "%s/%s", directory, dir->d_name);
+		vkengine_set_title(e, tmp);
 		if (stat(tmp, &sb) == -1) {
 			printf ("Unable to stat file: %s\n", tmp);
 			exit(EXIT_FAILURE);
@@ -214,7 +216,7 @@ int main (int argc, char *argv[]){
 			filename = argv[i];
 		i++;
 	}
-	VkEngine e = vkengine_create (VK_PRESENT_MODE_MAILBOX_KHR, width, height);
+	VkEngine e = vkengine_create (VK_PRESENT_MODE_FIFO_KHR, width, height);
 	vkengine_set_key_callback (e, key_callback);
 	vkengine_set_scroll_callback(e, scroll_callback);
 

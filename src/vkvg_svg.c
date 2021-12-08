@@ -10,6 +10,7 @@
 #include <ctype.h>
 
 #include "vkvg_svg.h"
+#include "vkvg_extensions.h"
 
 #ifdef DEBUG_LOG
 #define LOG(msg,...) fLOG (stdout, msg, __VA_ARGS__);
@@ -20,14 +21,14 @@
 static int res;
 
 typedef struct svg_context_t {
-	char elt[128];
-	char att[1024];
-	char value[1024*1024];
-	VkvgDevice dev;
-	VkvgContext ctx;
+	char		elt[128];
+	char		att[1024];
+	char		value[1024*1024];
+	VkvgDevice	dev;
+	VkvgContext	ctx;
 	VkvgSurface surf;
-	uint32_t width;//force surface width & height
-	uint32_t height;
+	uint32_t	width;//force surface width & height
+	uint32_t	height;
 } svg_context;
 
 int read_tag (svg_context* svg, FILE* f, bool hasStroke, bool hasFill, uint32_t stroke, uint32_t fill);
@@ -36,12 +37,12 @@ int read_tag (svg_context* svg, FILE* f, bool hasStroke, bool hasFill, uint32_t 
 
 #define read_tag_end \
 	if (res < 0) {											\
-		LOG("error parsing: %s\n", svg->att);			\
+		LOG("error parsing: %s\n", svg->att);				\
 		return -1;											\
 	}														\
 	if (res == 1) {											\
 		if (getc(f) != '>') {								\
-			LOG("parsing error, expecting '>'\n");		\
+			LOG("parsing error, expecting '>'\n");			\
 			return -1;										\
 		}													\
 		return 0;											\
@@ -675,8 +676,8 @@ float parse_lenghtOrPercentage (const char* measure) {
 	res = sscanf(measure, "%f", &m);
 	return m;
 }
-uint32_t parse_color (const char* colorString, bool* isEnabled) {
-	uint32_t colorValue = 0;
+bool parse_color (const char* colorString, bool* isEnabled, uint32_t* colorValue) {
+
 	if (colorString[0] == '#') {
 		char color[6];
 		res = sscanf(&colorString[1], " %[0-9A-Fa-f]", color);
@@ -685,21 +686,21 @@ uint32_t parse_color (const char* colorString, bool* isEnabled) {
 			sprintf(hexColorString, "0xff%c%c%c%c%c%c", color[2],color[2],color[1],color[1],color[0],color[0]);
 		else
 			sprintf(hexColorString, "0xff%c%c%c%c%c%c", color[4],color[5],color[2],color[3],color[0],color[1]);
-		sscanf(hexColorString, "%x", &colorValue);
+		sscanf(hexColorString, "%x", colorValue);
 		*isEnabled = true;
-		return colorValue;
+		return true;
 	}
 	uint32_t r = 0, g = 0, b = 0, a = 0;
 	if (sscanf(colorString, "rgb ( %d%*[ ,]%d%*[ ,]%d )", &r, &g, &b))
-		colorValue = 0xff000000 + (b << 16) + (g << 8) + r;
+		*colorValue = 0xff000000 + (b << 16) + (g << 8) + r;
 	else if (sscanf(colorString, "rgba ( %d%*[ ,]%d%*[ ,]%d%*[ ,]%d )", &r, &g, &b, &a))
-		colorValue = (a << 24) + (b << 16) + (g << 8) + r;
+		*colorValue = (a << 24) + (b << 16) + (g << 8) + r;
 	else if (!strcmp (colorString, "none"))
-		colorValue = 0;
-	else
-		colorValue = parseColorName(colorString);
+		*colorValue = 0;
+	else if (strcasecmp (colorString, "currentColor"))
+		*colorValue = parseColorName(colorString);
 	*isEnabled = colorValue > 0;
-	return colorValue;
+	return true;
 }
 
 int draw (svg_context* svg, bool hasStroke, bool hasFill, uint32_t stroke, uint32_t fill) {
@@ -719,17 +720,31 @@ int draw (svg_context* svg, bool hasStroke, bool hasFill, uint32_t stroke, uint3
 
 int read_common_attributes (svg_context* svg, bool *hasStroke, bool *hasFill, uint32_t *stroke, uint32_t *fill) {
 	if (!strcmp(svg->att, "fill"))
-		*fill = parse_color (svg->value, hasFill);
+		parse_color (svg->value, hasFill, fill);
 	else if (!strcmp(svg->att, "fill-rule")) {
 		if (!strcmp(svg->value, "evenodd"))
 			vkvg_set_fill_rule(svg->ctx, VKVG_FILL_RULE_EVEN_ODD);
 		else
 			vkvg_set_fill_rule(svg->ctx, VKVG_FILL_RULE_NON_ZERO);
 	}else if (!strcmp(svg->att, "stroke"))
-		*stroke = parse_color (svg->value, hasStroke);
+		parse_color (svg->value, hasStroke, stroke);
 	else if (!strcmp (svg->att, "stroke-width"))
 		vkvg_set_line_width(svg->ctx, parse_lenghtOrPercentage (svg->value));
-	else if (!strcmp (svg->att, "transform")) {
+	else if (!strcmp (svg->att, "stroke-linecap")) {
+		if (!strcasecmp(svg->value, "round"))
+			vkvg_set_line_cap(svg->ctx, VKVG_LINE_CAP_ROUND);
+		else if (!strcasecmp(svg->value, "square"))
+			vkvg_set_line_cap(svg->ctx, VKVG_LINE_CAP_SQUARE);
+		else if (!strcasecmp(svg->value, "butt"))
+			vkvg_set_line_cap(svg->ctx, VKVG_LINE_CAP_BUTT);
+	} else if (!strcmp (svg->att, "stroke-linejoin")) {
+		if (!strcasecmp(svg->value, "round"))
+			vkvg_set_line_join(svg->ctx, VKVG_LINE_JOIN_ROUND);
+		else if (!strcasecmp(svg->value, "bevel"))
+			vkvg_set_line_join(svg->ctx, VKVG_LINE_JOIN_BEVEL);
+		else if (!strcasecmp(svg->value, "miter"))
+			vkvg_set_line_join(svg->ctx, VKVG_LINE_JOIN_MITER);
+	} else if (!strcmp (svg->att, "transform")) {
 		FILE *tmp = fmemopen(svg->value, strlen (svg->value), "r");
 		char transform[16];
 		while (!feof(tmp)) {
@@ -810,7 +825,7 @@ int read_line_attributes (svg_context* svg, FILE* f, bool hasStroke, bool hasFil
 	}
 	if (hasStroke) {
 		vkvg_move_to(svg->ctx, x1, y1);
-		vkvg_move_to(svg->ctx, x2, y2);
+		vkvg_line_to(svg->ctx, x2, y2);
 		draw (svg, hasStroke, false, stroke, 0);
 	}
 	read_tag_end
@@ -839,12 +854,39 @@ int read_circle_attributes (svg_context* svg, FILE* f, bool hasStroke, bool hasF
 	read_tag_end
 	return res;
 }
+int read_polyline_attributes (svg_context* svg, FILE* f, bool hasStroke, bool hasFill, uint32_t stroke, uint32_t fill) {
+	float x = 0, y = 0;
+	res = get_attribute;
+	while (res == 2) {
+		if (!read_common_attributes(svg, &hasStroke, &hasFill, &stroke, &fill)) {
+			if (!strcasecmp (svg->att, "points")) {
+				FILE *tmp = fmemopen(svg->value, strlen (svg->value), "r");
+				if (parse_floats(tmp, 2, &x, &y)) {
+					vkvg_move_to(svg->ctx, x, y);
+
+					while (!feof(tmp)) {
+						if (!parse_floats(tmp, 2, &x, &y))
+							break;
+						vkvg_line_to(svg->ctx, x, y);
+					}
+				}
+				fclose (tmp);
+			} else
+				LOG("Unprocessed attribute: %s->%s\n", svg->elt, svg->att);
+		}
+		res = get_attribute;
+	}
+	if (hasFill || hasStroke)
+		draw (svg, hasStroke, hasFill, stroke, fill);
+	read_tag_end
+	return res;
+}
 enum prevCmd {none, quad, cubic};
 int read_path_attributes (svg_context* svg, FILE* f, bool hasStroke, bool hasFill, uint32_t stroke, uint32_t fill) {
 	res = get_attribute;
 	while (res == 2) {
 		if (!read_common_attributes(svg, &hasStroke, &hasFill, &stroke, &fill)) {
-			float x, y, c1x, c1y, c2x, c2y, cpX, cpY;
+			float x, y, c1x, c1y, c2x, c2y, cpX, cpY, rx, ry, rotx, large, sweep;
 			enum prevCmd prev = none;
 			int repeat=0;
 			char c;
@@ -1060,6 +1102,36 @@ int read_path_attributes (svg_context* svg, FILE* f, bool hasStroke, bool hasFil
 						} else
 							parseError = true;
 						break;
+					case 'A'://rx ry x-axis-rotation large-arc-flag sweep-flag x y
+						if (repeat)
+							result = parse_floats(tmp, 6, &ry, &rotx, &large, &sweep, &x, &y);
+						else
+							result = parse_floats(tmp, 7, &rx, &ry, &rotx, &large, &sweep, &x, &y);
+						if (result) {
+							vkvg_get_current_point(svg->ctx, &cpX, &cpY);
+							bool lf = large > __FLT_EPSILON__;
+							bool sw = sweep > __FLT_EPSILON__;
+							vkvg_elliptic_arc(svg->ctx, cpX, cpY, x, y, lf, sw, rx, ry, rotx);
+							repeat = parse_floats(tmp, 1, &rx);
+
+						} else
+							parseError = true;
+						break;
+					case 'a'://rx ry x-axis-rotation large-arc-flag sweep-flag x y
+						if (repeat)
+							result = parse_floats(tmp, 6, &ry, &rotx, &large, &sweep, &x, &y);
+						else
+							result = parse_floats(tmp, 7, &rx, &ry, &rotx, &large, &sweep, &x, &y);
+						if (result) {
+							vkvg_get_current_point(svg->ctx, &cpX, &cpY);
+							bool lf = large > __FLT_EPSILON__;
+							bool sw = sweep > __FLT_EPSILON__;
+							vkvg_elliptic_arc(svg->ctx, cpX, cpY, cpX + x, cpY + y, lf, sw, rx, ry, rotx);
+							repeat = parse_floats(tmp, 1, &rx);
+
+						} else
+							parseError = true;
+						break;
 					case 'z':
 					case 'Z':
 						vkvg_close_path(svg->ctx);
@@ -1075,6 +1147,7 @@ int read_path_attributes (svg_context* svg, FILE* f, bool hasStroke, bool hasFil
 	}
 	if (hasFill || hasStroke)
 		draw (svg, hasStroke, hasFill, stroke, fill);
+	//_highlight (svg->ctx);
 	read_tag_end
 	return res;
 }
@@ -1148,8 +1221,7 @@ int read_svg_attributes (svg_context* svg, FILE* f, bool hasStroke, bool hasFill
 		if (!read_common_attributes(svg, &hasStroke, &hasFill, &stroke, &fill) &&
 																	strcmp(svg->att, "viewBox") &&
 																	strcmp(svg->att, "width") &&
-																	strcmp(svg->att, "height") &&
-																	strcmp(svg->att, "width"))
+																	strcmp(svg->att, "height"))
 			LOG("Unprocessed attribute: %s->%s\n", svg->elt, svg->att);
 		res = get_attribute;
 	}
@@ -1223,6 +1295,10 @@ int read_tag (svg_context* svg, FILE* f, bool hasStroke, bool hasFill, uint32_t 
 		} else if (!strcmp(svg->elt,"circle")) {
 			vkvg_save (svg->ctx);
 			res = read_circle_attributes (svg, f, hasStroke, hasFill, stroke, fill);
+			vkvg_restore (svg->ctx);
+		} else if (!strcmp(svg->elt,"polyline")) {
+			vkvg_save (svg->ctx);
+			res = read_polyline_attributes (svg, f, hasStroke, hasFill, stroke, fill);
 			vkvg_restore (svg->ctx);
 		} else if (!strcmp(svg->elt,"path")) {
 			vkvg_save (svg->ctx);
