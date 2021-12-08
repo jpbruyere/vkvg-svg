@@ -80,12 +80,16 @@ void vkvg_elliptic_arc (VkvgContext ctx, float x1, float y1, float x2, float y2,
 	vec2 u = vec2_unit_x;
 	vec2 v = {(p1.x-cp.x)/rx, (p1.y-cp.y)/ry};
 	double sa = acosf (vec2_dot (u, v) / (fabsf(vec2_length(v)) * fabsf(vec2_length(u))));
+	if (isnanf(sa))
+		sa=M_PIF;
 	if (u.x*v.y-u.y*v.x < 0)
 		sa = -sa;
 
 	u = v;
 	v = (vec2) {(-p1.x-cp.x)/rx, (-p1.y-cp.y)/ry};
 	double delta_theta = acosf (vec2_dot (u, v) / (fabsf(vec2_length (v)) * fabsf(vec2_length (u))));
+	if (isnanf(delta_theta))
+		delta_theta=M_PIF;
 	if (u.x*v.y-u.y*v.x < 0)
 		delta_theta = -delta_theta;
 

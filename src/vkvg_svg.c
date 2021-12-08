@@ -679,9 +679,9 @@ float parse_lenghtOrPercentage (const char* measure) {
 bool parse_color (const char* colorString, bool* isEnabled, uint32_t* colorValue) {
 
 	if (colorString[0] == '#') {
-		char color[6];
+		char color[7];
 		res = sscanf(&colorString[1], " %[0-9A-Fa-f]", color);
-		char hexColorString[11];
+		char hexColorString[12];
 		if (strlen(color) == 3)
 			sprintf(hexColorString, "0xff%c%c%c%c%c%c", color[2],color[2],color[1],color[1],color[0],color[0]);
 		else
