@@ -5,9 +5,12 @@
 #include <stddef.h>
 #include <errno.h>
 #include <stdint.h>
-#include "vkengine.h"
 #include <stdarg.h>
 #include <ctype.h>
+#include <string.h>
+
+#include <locale.h>
+#include <wchar.h>
 
 #include "vkvg_svg.h"
 #include "vkvg_extensions.h"
@@ -21,9 +24,9 @@
 static int res;
 
 typedef struct svg_context_t {
-	char		elt[128];
-	char		att[1024];
-	char		value[1024*1024];
+	wint_t		elt[128];
+	wint_t		att[1024];
+	wint_t		value[1024*1024];
 	VkvgDevice	dev;
 	VkvgContext	ctx;
 	VkvgSurface surf;
@@ -33,7 +36,7 @@ typedef struct svg_context_t {
 
 int read_tag (svg_context* svg, FILE* f, bool hasStroke, bool hasFill, uint32_t stroke, uint32_t fill);
 
-#define get_attribute fscanf(f, " %[^=>]=%*[\"']%[^\"']%*[\"']", svg->att, svg->value)
+#define get_attribute fwscanf(f, L" %[^=>]=%*[\"']%[^\"']%*[\"']", svg->att, svg->value)
 
 #define read_tag_end \
 	if (res < 0) {											\
@@ -41,13 +44,13 @@ int read_tag (svg_context* svg, FILE* f, bool hasStroke, bool hasFill, uint32_t 
 		return -1;											\
 	}														\
 	if (res == 1) {											\
-		if (getc(f) != '>') {								\
+		if (getwc(f) != L'>') {								\
 			LOG("parsing error, expecting '>'\n");			\
 			return -1;										\
 		}													\
 		return 0;											\
 	}														\
-	if (getc(f) != '>') {									\
+	if (getwc(f) != L'>') {									\
 		LOG("parsing error, expecting '>'\n");			\
 		return -1;											\
 	}														\
@@ -55,51 +58,51 @@ int read_tag (svg_context* svg, FILE* f, bool hasStroke, bool hasFill, uint32_t 
 
 
 
-uint32_t parseColorName (const char* name) {
-	int valLenght = strlen (name);
+uint32_t parseColorName (const wchar_t* name) {
+	int valLenght = wcslen (name);
 
 	switch(tolower(name[0])) {
-	case 'a':
+	case L'a':
 		switch(tolower(name[1])) {
-		case 'l':
+		case L'l':
 			return 0xFFFFF8F0;//AliceBlue
-		case 'n':
+		case L'n':
 			return 0xFFD7EBFA;//AntiqueWhite
-		case 'q':
-			if (!strncasecmp(&name[2],"ua",2)) {//down
+		case L'q':
+			if (!wcsncasecmp (&name[2],L"ua",2)) {//down
 				if (valLenght == 4)
 					return 0xFFFFFF00;//Aqua
-				if (!strcasecmp(&name[4],"marine"))
+				if (!wcscasecmp (&name[4],L"marine"))
 					return 0xFFD4FF7F;//Aquamarine
 				else
 					return 0;//UNKNOWN COLOR
 			}
 			break;
-		case 'z':
+		case L'z':
 			return 0xFFFFFFF0;//Azure
 		}
 		break;
-	case 'b':
+	case L'b':
 		switch(tolower(name[1])) {
-		case 'e':
+		case L'e':
 			return 0xFFDCF5F5;//Beige
-		case 'i':
+		case L'i':
 			return 0xFFC4E4FF;//Bisque
-		case 'l':
+		case L'l':
 			switch(tolower(name[2])) {
-			case 'a':
+			case L'a':
 				switch(tolower(name[3])) {
-				case 'c':
+				case L'c':
 					return 0xFF000000;//Black
-				case 'n':
+				case L'n':
 					return 0xFFCDEBFF;//BlanchedAlmond
 				}
 				break;
-			case 'u':
-				if (tolower(name[3]) == 'e') {//down
+			case L'u':
+				if (tolower(name[3]) == L'e') {//down
 					if (valLenght == 4)
 						return 0xFFFF0000;//Blue
-					if (!strcasecmp(&name[4],"violet"))
+					if (!wcscasecmp (&name[4],L"violet"))
 						return 0xFFE22B8A;//BlueViolet
 					else
 						return 0;//UNKNOWN COLOR
@@ -107,34 +110,34 @@ uint32_t parseColorName (const char* name) {
 				break;
 			}
 			break;
-		case 'r':
+		case L'r':
 			return 0xFF2A2AA5;//Brown
-		case 'u':
+		case L'u':
 			return 0xFF87B8DE;//Burlywood
 		}
 		break;
-	case 'c':
+	case L'c':
 		switch(tolower(name[1])) {
-		case 'a':
+		case L'a':
 			return 0xFFA09E5F;//CadetBlue
-		case 'h':
+		case L'h':
 			switch(tolower(name[2])) {
-			case 'a':
+			case L'a':
 				return 0xFF00FF7F;//Chartreuse
-			case 'o':
+			case L'o':
 				return 0xFF1E69D2;//Chocolate
 			}
 			break;
-		case 'o':
-			if (tolower(name[2]) == 'r') {//up
+		case L'o':
+			if (tolower(name[2]) == L'r') {//up
 				switch(tolower(name[3])) {
-				case 'a':
+				case L'a':
 					return 0xFF507FFF;//Coral
-				case 'n':
+				case L'n':
 					switch(tolower(name[4])) {
-					case 'f':
+					case L'f':
 						return 0xFFED9564;//Cornflower
-					case 's':
+					case L's':
 						return 0xFFDCF8FF;//Cornsilk
 					}
 					break;
@@ -142,67 +145,67 @@ uint32_t parseColorName (const char* name) {
 			} else
 				return 0;//UNKNOWN COLOR
 			break;
-		case 'r':
+		case L'r':
 			return 0xFF3C14DC;//Crimson
-		case 'y':
+		case L'y':
 			return 0xFFFFFF00;//Cyan
 		}
 		break;
-	case 'd':
+	case L'd':
 		switch(tolower(name[1])) {
-		case 'a':
-			if (!strncasecmp(&name[2],"rk",2)) {//up
+		case L'a':
+			if (!wcsncasecmp (&name[2],L"rk",2)) {//up
 				switch(tolower(name[4])) {
-				case 'b':
+				case L'b':
 					return 0xFF8B0000;//DarkBlue
-				case 'c':
+				case L'c':
 					return 0xFF8B8B00;//DarkCyan
-				case 'g':
+				case L'g':
 					switch(tolower(name[5])) {
-					case 'o':
+					case L'o':
 						return 0xFF0B86B8;//DarkGoldenrod
-					case 'r':
+					case L'r':
 						switch(tolower(name[6])) {
-						case 'a':
+						case L'a':
 							return 0xFFA9A9A9;//DarkGray
-						case 'e':
+						case L'e':
 							return 0xFF006400;//DarkGreen
 						}
 						break;
 					}
 					break;
-				case 'k':
+				case L'k':
 					return 0xFF6BB7BD;//DarkKhaki
-				case 'm':
+				case L'm':
 					return 0xFF8B008B;//DarkMagenta
-				case 'o':
+				case L'o':
 					switch(tolower(name[5])) {
-					case 'l':
+					case L'l':
 						return 0xFF2F6B55;//DarkOliveGreen
-					case 'r':
+					case L'r':
 						switch(tolower(name[6])) {
-						case 'a':
+						case L'a':
 							return 0xFF008CFF;//DarkOrange
-						case 'c':
+						case L'c':
 							return 0xFFCC3299;//DarkOrchid
 						}
 						break;
 					}
 					break;
-				case 'r':
+				case L'r':
 					return 0xFF00008B;//DarkRed
-				case 's':
+				case L's':
 					switch(tolower(name[5])) {
-					case 'a':
+					case L'a':
 						return 0xFF7A96E9;//DarkSalmon
-					case 'e':
+					case L'e':
 						return 0xFF8FBC8F;//DarkSeaGreen
-					case 'l':
-						if (!strncasecmp(&name[6],"ate",3)) {//up
+					case L'l':
+						if (!wcsncasecmp (&name[6],L"ate",3)) {//up
 							switch(tolower(name[9])) {
-							case 'b':
+							case L'b':
 								return 0xFF8B3D48;//DarkSlateBlue
-							case 'g':
+							case L'g':
 								return 0xFF4F4F2F;//DarkSlateGray
 							}
 						} else
@@ -210,68 +213,68 @@ uint32_t parseColorName (const char* name) {
 						break;
 					}
 					break;
-				case 't':
+				case L't':
 					return 0xFFD1CE00;//DarkTurquoise
-				case 'v':
+				case L'v':
 					return 0xFFD30094;//DarkViolet
 				}
 			} else
 				return 0;//UNKNOWN COLOR
 			break;
-		case 'e':
-			if (!strncasecmp(&name[2],"ep",2)) {//up
+		case L'e':
+			if (!wcsncasecmp (&name[2],L"ep",2)) {//up
 				switch(tolower(name[4])) {
-				case 'p':
+				case L'p':
 					return 0xFF9314FF;//DeepPink
-				case 's':
+				case L's':
 					return 0xFFFFBF00;//DeepSkyBlue
 				}
 			} else
 				return 0;//UNKNOWN COLOR
 			break;
-		case 'i':
+		case L'i':
 			return 0xFF696969;//DimGray
-		case 'o':
+		case L'o':
 			return 0xFFFF901E;//DodgerBlue
 		}
 		break;
-	case 'f':
+	case L'f':
 		switch(tolower(name[1])) {
-		case 'i':
+		case L'i':
 			return 0xFF2222B2;//Firebrick
-		case 'l':
+		case L'l':
 			return 0xFFF0FAFF;//FloralWhite
-		case 'o':
+		case L'o':
 			return 0xFF228B22;//ForestGreen
-		case 'u':
+		case L'u':
 			return 0xFFFF00FF;//Fuchsia
 		}
 		break;
-	case 'g':
+	case L'g':
 		switch(tolower(name[1])) {
-		case 'a':
+		case L'a':
 			return 0xFFDCDCDC;//Gainsboro
-		case 'h':
+		case L'h':
 			return 0xFFFFF8F8;//GhostWhite
-		case 'o':
-			if (!strncasecmp(&name[2],"ld",2)) {//down
+		case L'o':
+			if (!wcsncasecmp (&name[2],L"ld",2)) {//down
 				if (valLenght == 4)
 					return 0xFF00D7FF;//Gold
-				if (!strcasecmp(&name[4],"enrod"))
+				if (!wcscasecmp (&name[4],L"enrod"))
 					return 0xFF20A5DA;//Goldenrod
 				else
 					return 0;//UNKNOWN COLOR
 			}
 			break;
-		case 'r':
+		case L'r':
 			switch(tolower(name[2])) {
-			case 'a':
+			case L'a':
 				return 0xFFBEBEBE;//Gray
-			case 'e':
-				if (!strncasecmp(&name[3],"en",2)) {//down
+			case L'e':
+				if (!wcsncasecmp (&name[3],L"en",2)) {//down
 					if (valLenght == 5)
 						return 0xFF00FF00;//Green
-					if (!strcasecmp(&name[5],"yellow"))
+					if (!wcscasecmp (&name[5],L"yellow"))
 						return 0xFF2FFFAD;//GreenYellow
 					else
 						return 0;//UNKNOWN COLOR
@@ -281,198 +284,198 @@ uint32_t parseColorName (const char* name) {
 			break;
 		}
 		break;
-	case 'h':
-		if (tolower(name[1]) == 'o') {//up
+	case L'h':
+		if (tolower(name[1]) == L'o') {//up
 			switch(tolower(name[2])) {
-			case 'n':
+			case L'n':
 				return 0xFFF0FFF0;//Honeydew
-			case 't':
+			case L't':
 				return 0xFFB469FF;//HotPink
 			}
 		} else
 			return 0;//UNKNOWN COLOR
 		break;
-	case 'i':
+	case L'i':
 		switch(tolower(name[1])) {
-		case 'n':
-			if (!strncasecmp(&name[2],"di",2)) {//up
+		case L'n':
+			if (!wcsncasecmp (&name[2],L"di",2)) {//up
 				switch(tolower(name[4])) {
-				case 'a':
+				case L'a':
 					return 0xFF5C5CCD;//IndianRed
-				case 'g':
+				case L'g':
 					return 0xFF82004B;//Indigo
 				}
 			} else
 				return 0;//UNKNOWN COLOR
 			break;
-		case 'v':
+		case L'v':
 			return 0xFFF0FFFF;//Ivory
 		}
 		break;
-	case 'k':
+	case L'k':
 		return 0xFF8CE6F0;//Khaki
-	case 'l':
+	case L'l':
 		switch(tolower(name[1])) {
-		case 'a':
+		case L'a':
 			switch(tolower(name[2])) {
-			case 'v':
-				if (!strncasecmp(&name[3],"ender",5)) {//down
+			case L'v':
+				if (!wcsncasecmp (&name[3],L"ender",5)) {//down
 					if (valLenght == 8)
 						return 0xFFFAE6E6;//Lavender
-					if (!strcasecmp(&name[8],"blush"))
+					if (!wcscasecmp (&name[8],L"blush"))
 						return 0xFFF5F0FF;//LavenderBlush
 					else
 						return 0;//UNKNOWN COLOR
 				}
 				break;
-			case 'w':
+			case L'w':
 				return 0xFF00FC7C;//LawnGreen
 			}
 			break;
-		case 'e':
+		case L'e':
 			return 0xFFCDFAFF;//LemonChiffon
-		case 'i':
+		case L'i':
 			switch(tolower(name[2])) {
-			case 'g':
-				if (!strncasecmp(&name[3],"ht",2)) {//up
+			case L'g':
+				if (!wcsncasecmp (&name[3],L"ht",2)) {//up
 					switch(tolower(name[5])) {
-					case 'b':
+					case L'b':
 						return 0xFFE6D8AD;//LightBlue
-					case 'c':
+					case L'c':
 						switch(tolower(name[6])) {
-						case 'o':
+						case L'o':
 							return 0xFF8080F0;//LightCoral
-						case 'y':
+						case L'y':
 							return 0xFFFFFFE0;//LightCyan
 						}
 						break;
-					case 'g':
+					case L'g':
 						switch(tolower(name[6])) {
-						case 'o':
+						case L'o':
 							return 0xFFD2FAFA;//LightGoldenrod
-						case 'r':
+						case L'r':
 							switch(tolower(name[7])) {
-							case 'a':
+							case L'a':
 								return 0xFFD3D3D3;//LightGray
-							case 'e':
+							case L'e':
 								return 0xFF90EE90;//LightGreen
 							}
 							break;
 						}
 						break;
-					case 'p':
+					case L'p':
 						return 0xFFC1B6FF;//LightPink
-					case 's':
+					case L's':
 						switch(tolower(name[6])) {
-						case 'a':
+						case L'a':
 							return 0xFF7AA0FF;//LightSalmon
-						case 'e':
+						case L'e':
 							return 0xFFAAB220;//LightSeaGreen
-						case 'k':
+						case L'k':
 							return 0xFFFACE87;//LightSkyBlue
-						case 'l':
+						case L'l':
 							return 0xFF998877;//LightSlateGray
-						case 't':
+						case L't':
 							return 0xFFDEC4B0;//LightSteelBlue
 						}
 						break;
-					case 'y':
+					case L'y':
 						return 0xFFE0FFFF;//LightYellow
 					}
 				} else
 					return 0;//UNKNOWN COLOR
 				break;
-			case 'm':
-				if (tolower(name[3]) == 'e') {//down
+			case L'm':
+				if (tolower(name[3]) == L'e') {//down
 					if (valLenght == 4)
 						return 0xFF00FF00;//Lime
-					if (!strcasecmp(&name[4],"green"))
+					if (!wcscasecmp (&name[4],L"green"))
 						return 0xFF32CD32;//LimeGreen
 					else
 						return 0;//UNKNOWN COLOR
 				}
 				break;
-			case 'n':
+			case L'n':
 				return 0xFFE6F0FA;//Linen
 			}
 			break;
 		}
 		break;
-	case 'm':
+	case L'm':
 		switch(tolower(name[1])) {
-		case 'a':
+		case L'a':
 			switch(tolower(name[2])) {
-			case 'g':
+			case L'g':
 				return 0xFFFF00FF;//Magenta
-			case 'r':
+			case L'r':
 				return 0xFF6030B0;//Maroon
 			}
 			break;
-		case 'e':
-			if (!strncasecmp(&name[2],"dium",4)) {//up
+		case L'e':
+			if (!wcsncasecmp (&name[2],L"dium",4)) {//up
 				switch(tolower(name[6])) {
-				case 'a':
+				case L'a':
 					return 0xFFAACD66;//MediumAquamarine
-				case 'b':
+				case L'b':
 					return 0xFFCD0000;//MediumBlue
-				case 'o':
+				case L'o':
 					return 0xFFD355BA;//MediumOrchid
-				case 'p':
+				case L'p':
 					return 0xFFDB7093;//MediumPurple
-				case 's':
+				case L's':
 					switch(tolower(name[7])) {
-					case 'e':
+					case L'e':
 						return 0xFF71B33C;//MediumSeaGreen
-					case 'l':
+					case L'l':
 						return 0xFFEE687B;//MediumSlateBlue
-					case 'p':
+					case L'p':
 						return 0xFF9AFA00;//MediumSpringGreen
 					}
 					break;
-				case 't':
+				case L't':
 					return 0xFFCCD148;//MediumTurquoise
-				case 'v':
+				case L'v':
 					return 0xFF8515C7;//MediumVioletRed
 				}
 			} else
 				return 0;//UNKNOWN COLOR
 			break;
-		case 'i':
+		case L'i':
 			switch(tolower(name[2])) {
-			case 'd':
+			case L'd':
 				return 0xFF701919;//MidnightBlue
-			case 'n':
+			case L'n':
 				return 0xFFFAFFF5;//MintCream
-			case 's':
+			case L's':
 				return 0xFFE1E4FF;//MistyRose
 			}
 			break;
-		case 'o':
+		case L'o':
 			return 0xFFB5E4FF;//Moccasin
 		}
 		break;
-	case 'n':
-		if (!strncasecmp(&name[1],"av",2)) {//up
+	case L'n':
+		if (!wcsncasecmp (&name[1],L"av",2)) {//up
 			switch(tolower(name[3])) {
-			case 'a':
+			case L'a':
 				return 0xFFADDEFF;//NavajoWhite
-			case 'y':
+			case L'y':
 				return 0xFF800000;//Navy
 			}
 		} else
 			return 0;//UNKNOWN COLOR
 		break;
-	case 'o':
+	case L'o':
 		switch(tolower(name[1])) {
-		case 'l':
+		case L'l':
 			switch(tolower(name[2])) {
-			case 'd':
+			case L'd':
 				return 0xFFE6F5FD;//OldLace
-			case 'i':
-				if (!strncasecmp(&name[3],"ve",2)) {//down
+			case L'i':
+				if (!wcsncasecmp (&name[3],L"ve",2)) {//down
 					if (valLenght == 5)
 						return 0xFF008080;//Olive
-					if (!strcasecmp(&name[5],"drab"))
+					if (!wcscasecmp (&name[5],L"drab"))
 						return 0xFF238E6B;//OliveDrab
 					else
 						return 0;//UNKNOWN COLOR
@@ -480,161 +483,161 @@ uint32_t parseColorName (const char* name) {
 				break;
 			}
 			break;
-		case 'r':
+		case L'r':
 			switch(tolower(name[2])) {
-			case 'a':
-				if (!strncasecmp(&name[3],"nge",3)) {//down
+			case L'a':
+				if (!wcsncasecmp (&name[3],L"nge",3)) {//down
 					if (valLenght == 6)
 						return 0xFF00A5FF;//Orange
-					if (!strcasecmp(&name[6],"red"))
+					if (!wcscasecmp (&name[6],L"red"))
 						return 0xFF0045FF;//OrangeRed
 					else
 						return 0;//UNKNOWN COLOR
 				}
 				break;
-			case 'c':
+			case L'c':
 				return 0xFFD670DA;//Orchid
 			}
 			break;
 		}
 		break;
-	case 'p':
+	case L'p':
 		switch(tolower(name[1])) {
-		case 'a':
+		case L'a':
 			switch(tolower(name[2])) {
-			case 'l':
-				if (tolower(name[3]) == 'e') {//up
+			case L'l':
+				if (tolower(name[3]) == L'e') {//up
 					switch(tolower(name[4])) {
-					case 'g':
+					case L'g':
 						switch(tolower(name[5])) {
-						case 'o':
+						case L'o':
 							return 0xFFAAE8EE;//PaleGoldenrod
-						case 'r':
+						case L'r':
 							return 0xFF98FB98;//PaleGreen
 						}
 						break;
-					case 't':
+					case L't':
 						return 0xFFEEEEAF;//PaleTurquoise
-					case 'v':
+					case L'v':
 						return 0xFF9370DB;//PaleVioletRed
 					}
 				} else
 					return 0;//UNKNOWN COLOR
 				break;
-			case 'p':
+			case L'p':
 				return 0xFFD5EFFF;//PapayaWhip
 			}
 			break;
-		case 'e':
+		case L'e':
 			switch(tolower(name[2])) {
-			case 'a':
+			case L'a':
 				return 0xFFB9DAFF;//PeachPuff
-			case 'r':
+			case L'r':
 				return 0xFF3F85CD;//Peru
 			}
 			break;
-		case 'i':
+		case L'i':
 			return 0xFFCBC0FF;//Pink
-		case 'l':
+		case L'l':
 			return 0xFFDDA0DD;//Plum
-		case 'o':
+		case L'o':
 			return 0xFFE6E0B0;//PowderBlue
-		case 'u':
+		case L'u':
 			return 0xFFF020A0;//Purple
 		}
 		break;
-	case 'r':
+	case L'r':
 		switch(tolower(name[1])) {
-		case 'e':
+		case L'e':
 			return 0xFF0000FF;//Red
-		case 'o':
+		case L'o':
 			switch(tolower(name[2])) {
-			case 's':
+			case L's':
 				return 0xFF8F8FBC;//RosyBrown
-			case 'y':
+			case L'y':
 				return 0xFFE16941;//RoyalBlue
 			}
 			break;
 		}
 		break;
-	case 's':
+	case L's':
 		switch(tolower(name[1])) {
-		case 'a':
+		case L'a':
 			switch(tolower(name[2])) {
-			case 'd':
+			case L'd':
 				return 0xFF13458B;//SaddleBrown
-			case 'l':
+			case L'l':
 				return 0xFF7280FA;//Salmon
-			case 'n':
+			case L'n':
 				return 0xFF60A4F4;//SandyBrown
 			}
 			break;
-		case 'e':
-			if (tolower(name[2]) == 'a') {//up
+		case L'e':
+			if (tolower(name[2]) == L'a') {//up
 				switch(tolower(name[3])) {
-				case 'g':
+				case L'g':
 					return 0xFF578B2E;//SeaGreen
-				case 's':
+				case L's':
 					return 0xFFEEF5FF;//Seashell
 				}
 			} else
 				return 0;//UNKNOWN COLOR
 			break;
-		case 'i':
+		case L'i':
 			switch(tolower(name[2])) {
-			case 'e':
+			case L'e':
 				return 0xFF2D52A0;//Sienna
-			case 'l':
+			case L'l':
 				return 0xFFC0C0C0;//Silver
 			}
 			break;
-		case 'k':
+		case L'k':
 			return 0xFFEBCE87;//SkyBlue
-		case 'l':
-			if (!strncasecmp(&name[2],"ate",3)) {//up
+		case L'l':
+			if (!wcsncasecmp (&name[2],L"ate",3)) {//up
 				switch(tolower(name[5])) {
-				case 'b':
+				case L'b':
 					return 0xFFCD5A6A;//SlateBlue
-				case 'g':
+				case L'g':
 					return 0xFF908070;//SlateGray
 				}
 			} else
 				return 0;//UNKNOWN COLOR
 			break;
-		case 'n':
+		case L'n':
 			return 0xFFFAFAFF;//Snow
-		case 'p':
+		case L'p':
 			return 0xFF7FFF00;//SpringGreen
-		case 't':
+		case L't':
 			return 0xFFB48246;//SteelBlue
 		}
 		break;
-	case 't':
+	case L't':
 		switch(tolower(name[1])) {
-		case 'a':
+		case L'a':
 			return 0xFF8CB4D2;//Tan
-		case 'e':
+		case L'e':
 			return 0xFF808000;//Teal
-		case 'h':
+		case L'h':
 			return 0xFFD8BFD8;//Thistle
-		case 'o':
+		case L'o':
 			return 0xFF4763FF;//Tomato
-		case 'u':
+		case L'u':
 			return 0xFFD0E040;//Turquoise
 		}
 		break;
-	case 'v':
+	case L'v':
 		return 0xFFEE82EE;//Violet
-	case 'w':
-		if (tolower(name[1]) == 'h') {//up
+	case L'w':
+		if (tolower(name[1]) == L'h') {//up
 			switch(tolower(name[2])) {
-			case 'e':
+			case L'e':
 				return 0xFFB3DEF5;//Wheat
-			case 'i':
-				if (!strncasecmp(&name[3],"te",2)) {//down
+			case L'i':
+				if (!wcsncasecmp (&name[3],L"te",2)) {//down
 					if (valLenght == 5)
 						return 0xFFFFFFFF;//White
-					if (!strcasecmp(&name[5],"smoke"))
+					if (!wcscasecmp (&name[5],L"smoke"))
 						return 0xFFF5F5F5;//WhiteSmoke
 					else
 						return 0;//UNKNOWN COLOR
@@ -644,11 +647,11 @@ uint32_t parseColorName (const char* name) {
 		} else
 			return 0;//UNKNOWN COLOR
 		break;
-	case 'y':
-		if (!strncasecmp(&name[1],"ellow",5)) {//down
+	case L'y':
+		if (!wcsncasecmp (&name[1],L"ellow",5)) {//down
 			if (valLenght == 6)
 				return 0xFF00FFFF;//Yellow
-			if (!strcasecmp(&name[6],"green"))
+			if (!wcscasecmp (&name[6],L"green"))
 				return 0xFF32CD9A;//YellowGreen
 			else
 				return 0;//UNKNOWN COLOR
@@ -662,8 +665,8 @@ bool parse_floats (FILE* f, int floatCount, ...) {
 
 	for (int i=0; i<floatCount; i++) {
 		float* pF = va_arg(args, float*);
-		fscanf(f, ",");
-		if (fscanf(f, " %f ", pF)!=1) {
+		fwscanf(f, L",");
+		if (fwscanf(f, L" %f ", pF)!=1) {
 			va_end(args);
 			return false;
 		}
@@ -671,18 +674,18 @@ bool parse_floats (FILE* f, int floatCount, ...) {
 	va_end(args);
 	return true;
 }
-float parse_lenghtOrPercentage (const char* measure) {
+float parse_lenghtOrPercentage (const wchar_t* measure) {
 	float m = 0;
 	res = sscanf(measure, "%f", &m);
 	return m;
 }
-bool parse_color (const char* colorString, bool* isEnabled, uint32_t* colorValue) {
+bool parse_color (const wchar_t* colorString, bool* isEnabled, uint32_t* colorValue) {
 
 	if (colorString[0] == '#') {
 		char color[7];
-		res = sscanf(&colorString[1], " %[0-9A-Fa-f]", color);
+		res = swscanf(&colorString[1], L" %[0-9A-Fa-f]", color);
 		char hexColorString[12];
-		if (strlen(color) == 3)
+		if (strlen (color) == 3)
 			sprintf(hexColorString, "0xff%c%c%c%c%c%c", color[2],color[2],color[1],color[1],color[0],color[0]);
 		else
 			sprintf(hexColorString, "0xff%c%c%c%c%c%c", color[4],color[5],color[2],color[3],color[0],color[1]);
@@ -690,14 +693,14 @@ bool parse_color (const char* colorString, bool* isEnabled, uint32_t* colorValue
 		*isEnabled = true;
 		return true;
 	}
-	uint32_t r = 0, g = 0, b = 0, a = 0;
-	if (sscanf(colorString, "rgb ( %d%*[ ,]%d%*[ ,]%d )", &r, &g, &b))
+	char r = 0, g = 0, b = 0, a = 0;
+	if (swscanf(colorString, L"rgb ( %d%*[ ,]%d%*[ ,]%d )", &r, &g, &b))
 		*colorValue = 0xff000000 + (b << 16) + (g << 8) + r;
-	else if (sscanf(colorString, "rgba ( %d%*[ ,]%d%*[ ,]%d%*[ ,]%d )", &r, &g, &b, &a))
+	else if (swscanf(colorString, L"rgba ( %d%*[ ,]%d%*[ ,]%d%*[ ,]%d )", &r, &g, &b, &a))
 		*colorValue = (a << 24) + (b << 16) + (g << 8) + r;
-	else if (!strcmp (colorString, "none"))
+	else if (!wcscasecmp (colorString, L"none"))
 		*colorValue = 0;
-	else if (strcasecmp (colorString, "currentColor"))
+	else if (wcscasecmp (colorString, L"currentColor"))
 		*colorValue = parseColorName(colorString);
 	*isEnabled = colorValue > 0;
 	return true;
@@ -719,37 +722,37 @@ int draw (svg_context* svg, bool hasStroke, bool hasFill, uint32_t stroke, uint3
 }
 
 int read_common_attributes (svg_context* svg, bool *hasStroke, bool *hasFill, uint32_t *stroke, uint32_t *fill) {
-	if (!strcmp(svg->att, "fill"))
+	if (!wcscasecmp(svg->att, L"fill"))
 		parse_color (svg->value, hasFill, fill);
-	else if (!strcmp(svg->att, "fill-rule")) {
-		if (!strcmp(svg->value, "evenodd"))
+	else if (!wcscasecmp(svg->att, L"fill-rule")) {
+		if (!wcscasecmp(svg->value, L"evenodd"))
 			vkvg_set_fill_rule(svg->ctx, VKVG_FILL_RULE_EVEN_ODD);
 		else
 			vkvg_set_fill_rule(svg->ctx, VKVG_FILL_RULE_NON_ZERO);
-	}else if (!strcmp(svg->att, "stroke"))
+	}else if (!wcscasecmp(svg->att, L"stroke"))
 		parse_color (svg->value, hasStroke, stroke);
-	else if (!strcmp (svg->att, "stroke-width"))
+	else if (!wcscasecmp (svg->att, L"stroke-width"))
 		vkvg_set_line_width(svg->ctx, parse_lenghtOrPercentage (svg->value));
-	else if (!strcmp (svg->att, "stroke-linecap")) {
-		if (!strcasecmp(svg->value, "round"))
+	else if (!wcscasecmp (svg->att, L"stroke-linecap")) {
+		if (!wcscasecmp(svg->value, L"round"))
 			vkvg_set_line_cap(svg->ctx, VKVG_LINE_CAP_ROUND);
-		else if (!strcasecmp(svg->value, "square"))
+		else if (!wcscasecmp(svg->value, L"square"))
 			vkvg_set_line_cap(svg->ctx, VKVG_LINE_CAP_SQUARE);
-		else if (!strcasecmp(svg->value, "butt"))
+		else if (!wcscasecmp(svg->value, L"butt"))
 			vkvg_set_line_cap(svg->ctx, VKVG_LINE_CAP_BUTT);
-	} else if (!strcmp (svg->att, "stroke-linejoin")) {
-		if (!strcasecmp(svg->value, "round"))
+	} else if (!wcscasecmp (svg->att, L"stroke-linejoin")) {
+		if (!wcscasecmp(svg->value, L"round"))
 			vkvg_set_line_join(svg->ctx, VKVG_LINE_JOIN_ROUND);
-		else if (!strcasecmp(svg->value, "bevel"))
+		else if (!wcscasecmp(svg->value, L"bevel"))
 			vkvg_set_line_join(svg->ctx, VKVG_LINE_JOIN_BEVEL);
-		else if (!strcasecmp(svg->value, "miter"))
+		else if (!wcscasecmp(svg->value, L"miter"))
 			vkvg_set_line_join(svg->ctx, VKVG_LINE_JOIN_MITER);
-	} else if (!strcmp (svg->att, "transform")) {
-		FILE *tmp = fmemopen(svg->value, strlen (svg->value), "r");
-		char transform[16];
+	} else if (!wcscasecmp (svg->att, L"transform")) {
+		FILE *tmp = fmemopen(svg->value, wcslen (svg->value), "r");
+		wchar_t transform[16];
 		while (!feof(tmp)) {
-			if (fscanf(tmp, " %[^(](", transform) == 1) {
-				if (!strcmp (transform, "matrix")) {
+			if (fwscanf(tmp, L" %[^(](", transform) == 1) {
+				if (!wcscasecmp (transform, L"matrix")) {
 					vkvg_matrix_t m, current, newMat;
 					if (!parse_floats(tmp, 6, &m.xx, &m.yx, &m.xy, &m.yy, &m.x0, &m.y0)) {
 						LOG ("error parsing transformation matrix\n");
@@ -760,7 +763,7 @@ int read_common_attributes (svg_context* svg, bool *hasStroke, bool *hasFill, ui
 					vkvg_matrix_multiply(&newMat, &m, &current);
 					vkvg_set_matrix(svg->ctx, &newMat);
 				}
-				char c = getc(tmp);
+				wchar_t c = getc(tmp);
 				if (c!=')') {
 					LOG ("error parsing transformation, expecting ')', having %c\n", c);
 					break;
@@ -889,30 +892,30 @@ int read_path_attributes (svg_context* svg, FILE* f, bool hasStroke, bool hasFil
 			float x, y, c1x, c1y, c2x, c2y, cpX, cpY, rx, ry, rotx, large, sweep;
 			enum prevCmd prev = none;
 			int repeat=0;
-			char c;
-			if (!strcmp (svg->att, "d")) {
-				FILE *tmp = fmemopen(svg->value, strlen (svg->value), "r");
+			wint_t c;
+			if (!wcscasecmp (svg->att, L"d")) {
+				FILE *tmp = fmemopen(svg->value, wcslen (svg->value), "r");
 				bool parseError = false, result = false;
 				while (!(parseError || feof(tmp))) {
-					if (!repeat && fscanf(tmp, " %c ", &c) != 1) {
+					if (!repeat && fwscanf(tmp, L" %lc ", &c) != 1) {
 						LOG ("error parsing path: expectin char\n");
 						break;
 					}
 
 					switch (c) {
-					case 'M':
+					case L'M':
 						if (parse_floats(tmp, 2, &x, &y))
 							vkvg_move_to (svg->ctx, x, y);
 						else
 							parseError = true;
 						break;
-					case 'm':
+					case L'm':
 						if (parse_floats(tmp, 2, &x, &y))
 							vkvg_rel_move_to (svg->ctx, x, y);
 						else
 							parseError = true;
 						break;
-					case 'L':
+					case L'L':
 						if (repeat)
 							result = parse_floats(tmp, 1, &y);
 						else
@@ -923,7 +926,7 @@ int read_path_attributes (svg_context* svg, FILE* f, bool hasStroke, bool hasFil
 						} else
 							parseError = true;
 						break;
-					case 'l':
+					case L'l':
 						if (repeat)
 							result = parse_floats(tmp, 1, &y);
 						else
@@ -934,33 +937,33 @@ int read_path_attributes (svg_context* svg, FILE* f, bool hasStroke, bool hasFil
 						} else
 							parseError = true;
 						break;
-					case 'H':
+					case L'H':
 						if (parse_floats(tmp, 1, &x)) {
 							vkvg_get_current_point (svg->ctx, &c1x, &c1y);
 							vkvg_line_to (svg->ctx, x, c1y);
 						} else
 							parseError = true;
 						break;
-					case 'h':
+					case L'h':
 						if (parse_floats(tmp, 1, &x))
 							vkvg_rel_line_to (svg->ctx, x, 0);
 						else
 							parseError = true;
 						break;
-					case 'V':
+					case L'V':
 						if (parse_floats(tmp, 1, &y)) {
 							vkvg_get_current_point (svg->ctx, &c1x, &c1y);
 							vkvg_line_to (svg->ctx, c1x, y);
 						} else
 							parseError = true;
 						break;
-					case 'v':
+					case L'v':
 						if (parse_floats(tmp, 1, &y))
 							vkvg_rel_line_to (svg->ctx, 0, y);
 						else
 							parseError = true;
 						break;
-					case 'Q':
+					case L'Q':
 						if (repeat)
 							result = parse_floats(tmp, 3, &c1y, &x, &y);
 						else
@@ -973,7 +976,7 @@ int read_path_attributes (svg_context* svg, FILE* f, bool hasStroke, bool hasFil
 						} else
 							parseError = true;
 						break;
-					case 'q':
+					case L'q':
 						if (repeat)
 							result = parse_floats(tmp, 3, &c1y, &x, &y);
 						else
@@ -989,7 +992,7 @@ int read_path_attributes (svg_context* svg, FILE* f, bool hasStroke, bool hasFil
 						} else
 							parseError = true;
 						break;
-					case 'T':
+					case L'T':
 						if (repeat)
 							result = parse_floats(tmp, 1, &y);
 						else
@@ -1010,7 +1013,7 @@ int read_path_attributes (svg_context* svg, FILE* f, bool hasStroke, bool hasFil
 						} else
 							parseError = true;
 						break;
-					case 't':
+					case L't':
 						if (repeat)
 							result = parse_floats(tmp, 1, &y);
 						else
@@ -1033,7 +1036,7 @@ int read_path_attributes (svg_context* svg, FILE* f, bool hasStroke, bool hasFil
 						} else
 							parseError = true;
 						break;
-					case 'C':
+					case L'C':
 						if (repeat)
 							result = parse_floats(tmp, 5, &c1y, &c2x, &c2y, &x, &y);
 						else
@@ -1046,7 +1049,7 @@ int read_path_attributes (svg_context* svg, FILE* f, bool hasStroke, bool hasFil
 						} else
 							parseError = true;
 						break;
-					case 'c':
+					case L'c':
 						if (repeat)
 							result = parse_floats(tmp, 5, &c1y, &c2x, &c2y, &x, &y);
 						else
@@ -1062,7 +1065,7 @@ int read_path_attributes (svg_context* svg, FILE* f, bool hasStroke, bool hasFil
 						} else
 							parseError = true;
 						break;
-					case 'S':
+					case L'S':
 						if (repeat)
 							result = parse_floats(tmp, 3, &c1y, &x, &y);
 						else
@@ -1082,7 +1085,7 @@ int read_path_attributes (svg_context* svg, FILE* f, bool hasStroke, bool hasFil
 						} else
 							parseError = true;
 						break;
-					case 's':
+					case L's':
 						if (repeat)
 							result = parse_floats(tmp, 3, &c1y, &x, &y);
 						else
@@ -1102,7 +1105,7 @@ int read_path_attributes (svg_context* svg, FILE* f, bool hasStroke, bool hasFil
 						} else
 							parseError = true;
 						break;
-					case 'A'://rx ry x-axis-rotation large-arc-flag sweep-flag x y
+					case L'A'://rx ry x-axis-rotation large-arc-flag sweep-flag x y
 						if (repeat)
 							result = parse_floats(tmp, 6, &ry, &rotx, &large, &sweep, &x, &y);
 						else
@@ -1117,7 +1120,7 @@ int read_path_attributes (svg_context* svg, FILE* f, bool hasStroke, bool hasFil
 						} else
 							parseError = true;
 						break;
-					case 'a'://rx ry x-axis-rotation large-arc-flag sweep-flag x y
+					case L'a'://rx ry x-axis-rotation large-arc-flag sweep-flag x y
 						if (repeat)
 							result = parse_floats(tmp, 6, &ry, &rotx, &large, &sweep, &x, &y);
 						else
@@ -1132,8 +1135,8 @@ int read_path_attributes (svg_context* svg, FILE* f, bool hasStroke, bool hasFil
 						} else
 							parseError = true;
 						break;
-					case 'z':
-					case 'Z':
+					case L'z':
+					case L'Z':
 						vkvg_close_path(svg->ctx);
 						break;
 					}
@@ -1169,14 +1172,14 @@ int read_svg_attributes (svg_context* svg, FILE* f, bool hasStroke, bool hasFill
 	int startingPos = ftell(f);
 	res = get_attribute;
 	while (res == 2) {
-		if (!strcmp(svg->att, "viewBox")) {
-			res = sscanf(svg->value, " %d%*1[ ,]%d%*1[ ,]%d%*1[ ,]%d", &x, &y, &w, &h);
+		if (!wcscasecmp (svg->att, L"viewBox")) {
+			res = swscanf(svg->value, L" %d%*1[ ,]%d%*1[ ,]%d%*1[ ,]%d", &x, &y, &w, &h);
 			if (res!=4)
 				return -1;
 			hasViewBox = true;
-		} else if (!strcmp(svg->att, "width"))
+		} else if (!wcscasecmp (svg->att, L"width"))
 			width = parse_lenghtOrPercentage (svg->value);
-		else if (!strcmp(svg->att, "height"))
+		else if (!wcscasecmp (svg->att, L"height"))
 			height = parse_lenghtOrPercentage (svg->value);
 		res = get_attribute;
 	}
@@ -1219,9 +1222,9 @@ int read_svg_attributes (svg_context* svg, FILE* f, bool hasStroke, bool hasFill
 	res = get_attribute;
 	while (res == 2) {
 		if (!read_common_attributes(svg, &hasStroke, &hasFill, &stroke, &fill) &&
-																	strcmp(svg->att, "viewBox") &&
-																	strcmp(svg->att, "width") &&
-																	strcmp(svg->att, "height"))
+																	wcscasecmp (svg->att, L"viewBox") &&
+																	wcscasecmp (svg->att, L"width") &&
+																	wcscasecmp (svg->att, L"height"))
 			LOG("Unprocessed attribute: %s->%s\n", svg->elt, svg->att);
 		res = get_attribute;
 	}
@@ -1243,18 +1246,18 @@ int read_attributes (svg_context* svg, FILE* f, bool hasStroke, bool hasFill, ui
 int read_tag (svg_context* svg, FILE* f, bool hasStroke, bool hasFill, uint32_t stroke, uint32_t fill) {
 
 	while (!feof (f)) {
-		res = fscanf(f, " <%[^> ]", svg->elt);
+		res = fwscanf(f, L" <%[^> ]", svg->elt);
 		if (res < 0)
 			return 0;
 		if (!res) {
-			res = fscanf(f, "%*[^<]<%[^> ]", svg->elt);
+			res = fwscanf(f, L"%*[^<]<%[^> ]", svg->elt);
 			if (!res) {
 				LOG("element name parsing error (%s)\n", svg->elt);
 				return -1;
 			}
 		}
-		if (svg->elt[0] == '/') {
-			if (getc(f) != '>') {
+		if (svg->elt[0] == L'/') {
+			if (getwc(f) != L'>') {
 				LOG("parsing error, expecting '>'\n");
 				return -1;
 			}
@@ -1262,14 +1265,14 @@ int read_tag (svg_context* svg, FILE* f, bool hasStroke, bool hasFill, uint32_t 
 			return 0;
 		}
 		if (svg->elt[0] == '!') {
-			if (!strcmp(svg->elt,"!DOCTYPE")) {
+			if (!wcscasecmp (svg->elt, L"!DOCTYPE")) {
 				while (!feof (f))
 					if (fgetc(f)=='>')
 						break;;
-			} if (!strncmp(svg->elt, "!--", 3)) {
+			} if (!wcsncasecmp (svg->elt, L"!--", 3)) {
 				while (!feof (f)) {
-					if (fgetc(f)=='-') {
-						if (fgetc(f)=='-' && fgetc(f)=='>')
+					if (fgetwc(f)==L'-') {
+						if (fgetwc(f)==L'-' && fgetwc(f)==L'>')
 							break;
 						else
 							fseek (f, -1, SEEK_CUR);
@@ -1278,29 +1281,29 @@ int read_tag (svg_context* svg, FILE* f, bool hasStroke, bool hasFill, uint32_t 
 			}
 			continue;
 		}
-		if (!strcmp(svg->elt,"svg"))
+		if (!wcscasecmp (svg->elt, L"svg"))
 			res = read_svg_attributes	(svg, f, hasStroke, hasFill, stroke, fill);
-		else if (!strcmp(svg->elt,"g")) {
+		else if (!wcscasecmp (svg->elt, L"g")) {
 			vkvg_save (svg->ctx);
 			res = read_g_attributes		(svg, f, hasStroke, hasFill, stroke, fill);
 			vkvg_restore (svg->ctx);
-		} else if (!strcmp(svg->elt,"rect")) {
+		} else if (!wcscasecmp (svg->elt, L"rect")) {
 			vkvg_save (svg->ctx);
 			res = read_rect_attributes	(svg, f, hasStroke, hasFill, stroke, fill);
 			vkvg_restore (svg->ctx);
-		} else if (!strcmp(svg->elt,"line")) {
+		} else if (!wcscasecmp (svg->elt, L"line")) {
 			vkvg_save (svg->ctx);
 			res = read_line_attributes	(svg, f, hasStroke, hasFill, stroke, fill);
 			vkvg_restore (svg->ctx);
-		} else if (!strcmp(svg->elt,"circle")) {
+		} else if (!wcscasecmp (svg->elt, L"circle")) {
 			vkvg_save (svg->ctx);
 			res = read_circle_attributes (svg, f, hasStroke, hasFill, stroke, fill);
 			vkvg_restore (svg->ctx);
-		} else if (!strcmp(svg->elt,"polyline")) {
+		} else if (!wcscasecmp (svg->elt, L"polyline")) {
 			vkvg_save (svg->ctx);
 			res = read_polyline_attributes (svg, f, hasStroke, hasFill, stroke, fill);
 			vkvg_restore (svg->ctx);
-		} else if (!strcmp(svg->elt,"path")) {
+		} else if (!wcscasecmp (svg->elt, L"path")) {
 			vkvg_save (svg->ctx);
 			res = read_path_attributes	(svg, f, hasStroke, hasFill, stroke, fill);
 			vkvg_restore (svg->ctx);
@@ -1311,6 +1314,12 @@ int read_tag (svg_context* svg, FILE* f, bool hasStroke, bool hasFill, uint32_t 
 }
 
 VkvgSurface parse_svg_file (VkvgDevice dev, const char* filename, uint32_t width, uint32_t height) {
+	if (!setlocale(LC_CTYPE, "")) {
+		printf( "Can't set the specified locale! "
+				"Check LANG, LC_CTYPE, LC_ALL.\n");
+		return NULL;
+	}
+
 	FILE* f = fopen(filename, "r");
 	if (f == NULL){
 		perror ("vkvg_svg: file not found");
@@ -1321,6 +1330,13 @@ VkvgSurface parse_svg_file (VkvgDevice dev, const char* filename, uint32_t width
 	svg.dev		= dev;
 	svg.width	= width;
 	svg.height	= height;
+
+//	res = fwscanf(f, L"%ls", svg.elt);
+
+	/*wint_t c = fgetwc(f);
+	while (c != WEOF) {
+		c = fgetwc(f);
+	}*/
 
 	read_tag (&svg, f, false, true, 0xffffffff, 0xffffffff);
 
