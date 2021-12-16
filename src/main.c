@@ -5,13 +5,12 @@
 #include <stddef.h>
 #include <errno.h>
 #include <stdint.h>
-#include <vkvg.h>
-#include "vkengine.h"
+
 #include <stdarg.h>
 #include <ctype.h>
 
 #include "vkvg_svg.h"
-
+#include "vkengine.h"
 
 static VkvgDevice dev;
 static VkvgSurface svgSurf = NULL;

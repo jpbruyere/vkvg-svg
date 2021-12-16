@@ -1,25 +1,7 @@
 #include "vkvg_extensions.h"
+#include "vkvg_context_internal.h"
 #include "vectors.h"
 
-#include "vkvg_context_internal.h"
-
-typedef struct {
-	vec2 row0;
-	vec2 row1;
-}mat2;
-
-const vec2 vec2_unit_x = {1,0};
-const vec2 vec2_unit_y = {0,1};
-
-vec2 mat2_mult_vec2 (mat2 m, vec2 v) {
-	return (vec2){
-		(m.row0.x * v.x) + (m.row0.y * v.y),
-		(m.row1.x * v.x) + (m.row1.y * v.y)
-	};
-}
-float mat2_det (mat2* m) {
-	return (m->row0.x * m->row1.y) - (m->row0.y * m->row1.y);
-}
 
 static vec2 _p0, _p1, _v1, _v2, _c;
 void _drawhilight (VkvgContext ctx, vec2 p, float r, float g, float b) {
@@ -62,7 +44,7 @@ void vkvg_elliptic_arc (VkvgContext ctx, float x1, float y1, float x2, float y2,
 
 	p = (vec2){rx * p1.y / ry, -ry * p1.x / rx};
 
-	vec2 cp = vec2_mult (p, sqrtf (fabsf (
+	vec2 cp = vec2_mult_s (p, sqrtf (fabsf (
 		(powf (rx,2) * powf (ry,2) - powf (rx,2) * powf (p1.y, 2) - powf (ry,2) * powf (p1.x, 2)) /
 		(powf (rx,2) * powf (p1.y, 2) + powf (ry,2) * powf (p1.x, 2))
 	)));
