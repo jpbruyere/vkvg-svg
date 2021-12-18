@@ -11,9 +11,11 @@
 
 #include "vkvg_svg.h"
 #include "vkvg_extensions.h"
+//#include "hashdict.h"
+#define DEBUG_LOG 1
 
 #ifdef DEBUG_LOG
-#define LOG(msg,...) fLOG (stdout, msg, __VA_ARGS__);
+#define LOG(...) fprintf (stdout, __VA_ARGS__);
 #else
 #define LOG
 #endif
@@ -29,6 +31,10 @@ typedef struct svg_context_t {
 	VkvgSurface surf;
 	uint32_t	width;//force surface width & height
 	uint32_t	height;
+	bool		skip;//skip tag and children
+	/*struct		dictionary*	dic;
+	long		currentTagStartPos;*/
+
 } svg_context;
 
 int read_tag (svg_context* svg, FILE* f, bool hasStroke, bool hasFill, uint32_t stroke, uint32_t fill);
@@ -36,23 +42,105 @@ int read_tag (svg_context* svg, FILE* f, bool hasStroke, bool hasFill, uint32_t 
 #define get_attribute fscanf(f, " %[^=>]=%*[\"']%[^\"']%*[\"']", svg->att, svg->value)
 
 #define read_tag_end \
-	if (res < 0) {											\
-		LOG("error parsing: %s\n", svg->att);				\
-		return -1;											\
-	}														\
-	if (res == 1) {											\
-		if (getc(f) != '>') {								\
-			LOG("parsing error, expecting '>'\n");			\
-			return -1;										\
-		}													\
-		return 0;											\
-	}														\
-	if (getc(f) != '>') {									\
-		LOG("parsing error, expecting '>'\n");			\
-		return -1;											\
-	}														\
-	res = read_tag(svg, f, hasStroke, hasFill, stroke, fill);\
+	if (res < 0) {												\
+		LOG("error parsing: %s\n", svg->att);					\
+		return -1;												\
+	}															\
+	if (res == 1) {												\
+		if (getc(f) != '>') {									\
+			LOG("parsing error, expecting '>'\n");				\
+			return -1;											\
+		}														\
+		return 0;												\
+	}															\
+	if (getc(f) != '>') {										\
+		LOG("parsing error, expecting '>'\n");					\
+		return -1;												\
+	}															\
+//	res = read_tag(svg, f, hasStroke, hasFill, stroke, fill);
 
+int skip_attributes_and_children (svg_context* svg, FILE* f, bool hasStroke, bool hasFill, uint32_t stroke, uint32_t fill);
+
+#define read_element_start										\
+	res = fscanf(f, " <%[^> \n\r]", svg->elt);					\
+	if (res < 0)												\
+		return 0;												\
+	if (!res) {													\
+		res = fscanf(f, "%*[^<]<%[^> \n\r]", svg->elt);			\
+		if (!res) {												\
+			LOG("element name parsing error (%s)\n", svg->elt);	\
+			return -1;											\
+		}														\
+	}															\
+	if (svg->elt[0] == '/') {									\
+		if (getc(f) != '>') {									\
+			LOG("parsing error, expecting '>'\n");				\
+			return -1;											\
+		}														\
+		return 0;												\
+	}															\
+	if (svg->elt[0] == '!') {									\
+		if (!strcmp(svg->elt,"!DOCTYPE")) {						\
+			while (!feof (f))									\
+				if (fgetc(f)=='>')								\
+					break;										\
+		} if (!strncmp(svg->elt, "!--", 3)) {					\
+			while (!feof (f)) {									\
+				if (fgetc(f)=='-') {							\
+					if (fgetc(f)=='-' && fgetc(f)=='>')			\
+						break;									\
+					else										\
+						fseek (f, -1, SEEK_CUR);				\
+				}												\
+			}													\
+		}														\
+		continue;												\
+	}															\
+	if (svg->skip) {											\
+		res = skip_attributes_and_children (svg, f, hasStroke, hasFill, stroke, fill);\
+		continue;												\
+	}															\
+
+#define skip_element {																\
+	svg->skip = true;																\
+	res = skip_attributes_and_children (svg, f, hasStroke, hasFill, stroke, fill);	\
+	svg->skip = false;																\
+}
+
+#define read_attributes_loop_start_lite \
+	while (style || res > 0) {														\
+		if (!style && res == 1 && svg->att[0] == '/')								\
+			break;																	\
+		if (!strcasecmp(svg->att, "style")) {										\
+			int styleLength = strlen (svg->value);									\
+			if (styleLength > 0) {													\
+				style = (char*)malloc(styleLength);									\
+				memccpy(style, svg->value, 0, styleLength);							\
+				pfStyle = fmemopen(style, styleLength, "r");						\
+				res = fscanf(pfStyle, " %[^:]:%[^;];", svg->att, svg->value);		\
+				continue;															\
+			}																		\
+		}																			\
+
+#define read_attributes_loop_start \
+	FILE* pfStyle = NULL;															\
+	char* style = NULL;																\
+	res = get_attribute;															\
+	read_attributes_loop_start_lite
+
+#define read_attributes_loop_end \
+	if (style) {																	\
+		if (feof(pfStyle)) {														\
+			fclose (pfStyle);														\
+			free (style);															\
+			style = NULL;															\
+		} else {																	\
+			res = fscanf(pfStyle, " %[^:]:%[^;];", svg->att, svg->value);			\
+			continue;																\
+		}																			\
+	}																				\
+	res = get_attribute;															\
+}
 
 
 uint32_t parseColorName (const char* name) {
@@ -671,10 +759,86 @@ bool parse_floats (FILE* f, int floatCount, ...) {
 	va_end(args);
 	return true;
 }
-float parse_lenghtOrPercentage (const char* measure) {
-	float m = 0;
-	res = sscanf(measure, "%f", &m);
-	return m;
+typedef enum _svg_unit {
+	svg_unit_cm,
+	svg_unit_mm,
+	svg_unit_Q,
+	svg_unit_in,
+	svg_unit_pt,
+	svg_unit_pc,
+	svg_unit_px,
+	svg_unit_percentage,
+}svg_unit;
+
+bool try_parse_lenghtOrPercentage (const char* measure, float* number, svg_unit* units) {
+	char str_units[16];
+	res = sscanf(measure, "%f%[^, ]", number, str_units);
+	if (res == 0)
+		return false;
+	if (res == 2) {
+		int l = strlen(str_units);
+		if (l == 1) {
+			switch (tolower(str_units[0])) {
+			case 'q':
+				*units = svg_unit_Q;
+				return true;
+			case '%':
+				*units = svg_unit_percentage;
+				return true;
+			default:
+				LOG ("error parsing measure: %s\n", measure);
+				return false;
+			}
+		}
+		if (l == 2) {
+			switch (tolower(str_units[0])) {
+			case 'p':
+				switch (tolower(str_units[1])) {
+				case 't':
+					*units = svg_unit_pt;
+					return true;
+				case 'c':
+					*units = svg_unit_pc;
+					return true;
+				case 'x':
+					*units = svg_unit_px;
+					return true;
+				default:
+					LOG ("error parsing measure: %s\n", measure);
+				}
+				break;
+			case 'i':
+				if (tolower(str_units[1]) != 'n') {
+					LOG ("error parsing measure: %s\n", measure);
+					return false;
+				}
+				*units = svg_unit_in;
+				return true;
+				break;
+			case 'm':
+				if (tolower(str_units[1]) != 'm') {
+					LOG ("error parsing measure: %s\n", measure);
+					return false;
+				}
+				*units = svg_unit_mm;
+				return true;
+				break;
+			case 'c':
+				if (tolower(str_units[1]) != 'm') {
+					LOG ("error parsing measure: %s\n", measure);
+					return false;
+				}
+				*units = svg_unit_cm;
+				return true;
+				break;
+			default:
+				LOG ("error parsing measure: %s\n", measure);
+				return false;
+			}
+
+		}
+	}
+	return true;
 }
 bool parse_color (const char* colorString, bool* isEnabled, uint32_t* colorValue) {
 
@@ -695,7 +859,7 @@ bool parse_color (const char* colorString, bool* isEnabled, uint32_t* colorValue
 		*colorValue = 0xff000000 + (b << 16) + (g << 8) + r;
 	else if (sscanf(colorString, "rgba ( %d%*[ ,]%d%*[ ,]%d%*[ ,]%d )", &r, &g, &b, &a))
 		*colorValue = (a << 24) + (b << 16) + (g << 8) + r;
-	else if (!strcmp (colorString, "none"))
+	else if (!strcasecmp (colorString, "none"))
 		*colorValue = 0;
 	else if (strcasecmp (colorString, "currentColor"))
 		*colorValue = parseColorName(colorString);
@@ -719,37 +883,55 @@ int draw (svg_context* svg, bool hasStroke, bool hasFill, uint32_t stroke, uint3
 }
 
 int read_common_attributes (svg_context* svg, bool *hasStroke, bool *hasFill, uint32_t *stroke, uint32_t *fill) {
-	if (!strcmp(svg->att, "fill"))
+	if (!strcasecmp(svg->att, "id")) {
+		//dic_add(svg->dic, svg->value, strlen(svg->value));
+
+	} else if (!strcasecmp(svg->att, "color")) {
 		parse_color (svg->value, hasFill, fill);
-	else if (!strcmp(svg->att, "fill-rule")) {
-		if (!strcmp(svg->value, "evenodd"))
+		*hasStroke = *hasFill;
+		*stroke = *hasStroke;
+	}else if (!strcasecmp(svg->att, "fill"))
+			parse_color (svg->value, hasFill, fill);
+	else if (!strcasecmp(svg->att, "fill-rule")) {
+		if (!strcasecmp(svg->value, "evenodd"))
 			vkvg_set_fill_rule(svg->ctx, VKVG_FILL_RULE_EVEN_ODD);
 		else
 			vkvg_set_fill_rule(svg->ctx, VKVG_FILL_RULE_NON_ZERO);
-	}else if (!strcmp(svg->att, "stroke"))
+	}else if (!strcasecmp(svg->att, "stroke"))
 		parse_color (svg->value, hasStroke, stroke);
-	else if (!strcmp (svg->att, "stroke-width"))
-		vkvg_set_line_width(svg->ctx, parse_lenghtOrPercentage (svg->value));
-	else if (!strcmp (svg->att, "stroke-linecap")) {
+	else if (!strcasecmp (svg->att, "stroke-width")) {
+		svg_unit units;
+		float value;
+		if (!try_parse_lenghtOrPercentage(svg->value, &value, &units)) {
+			LOG ("error parsing %s: %s\n", svg->att, svg->value);
+			return 1;
+		}
+		vkvg_set_line_width(svg->ctx, value);
+	}else if (!strcasecmp (svg->att, "stroke-linecap")) {
 		if (!strcasecmp(svg->value, "round"))
 			vkvg_set_line_cap(svg->ctx, VKVG_LINE_CAP_ROUND);
 		else if (!strcasecmp(svg->value, "square"))
 			vkvg_set_line_cap(svg->ctx, VKVG_LINE_CAP_SQUARE);
 		else if (!strcasecmp(svg->value, "butt"))
 			vkvg_set_line_cap(svg->ctx, VKVG_LINE_CAP_BUTT);
-	} else if (!strcmp (svg->att, "stroke-linejoin")) {
+	} else if (!strcasecmp (svg->att, "stroke-linejoin")) {
 		if (!strcasecmp(svg->value, "round"))
 			vkvg_set_line_join(svg->ctx, VKVG_LINE_JOIN_ROUND);
 		else if (!strcasecmp(svg->value, "bevel"))
 			vkvg_set_line_join(svg->ctx, VKVG_LINE_JOIN_BEVEL);
 		else if (!strcasecmp(svg->value, "miter"))
 			vkvg_set_line_join(svg->ctx, VKVG_LINE_JOIN_MITER);
-	} else if (!strcmp (svg->att, "transform")) {
+	} else if (!strcasecmp (svg->att, "clip-rule")) {
+		if (!strcasecmp(svg->value, "nonzero"))
+			vkvg_set_fill_rule (svg->ctx, VKVG_FILL_RULE_NON_ZERO);
+		else if (!strcasecmp(svg->value, "evenodd"))
+			vkvg_set_fill_rule (svg->ctx, VKVG_FILL_RULE_EVEN_ODD);
+	} else if (!strcasecmp (svg->att, "transform")) {
 		FILE *tmp = fmemopen(svg->value, strlen (svg->value), "r");
 		char transform[16];
 		while (!feof(tmp)) {
 			if (fscanf(tmp, " %[^(](", transform) == 1) {
-				if (!strcmp (transform, "matrix")) {
+				if (!strcasecmp (transform, "matrix")) {
 					vkvg_matrix_t m, current, newMat;
 					if (!parse_floats(tmp, 6, &m.xx, &m.yx, &m.xy, &m.yy, &m.x0, &m.y0)) {
 						LOG ("error parsing transformation matrix\n");
@@ -778,26 +960,34 @@ int read_common_attributes (svg_context* svg, bool *hasStroke, bool *hasFill, ui
 
 int read_rect_attributes (svg_context* svg, FILE* f, bool hasStroke, bool hasFill, uint32_t stroke, uint32_t fill) {
 	int x = 0, y = 0, w = 0, h = 0, rx = 0, ry = 0;
-	res = get_attribute;
-	while (res == 2) {
+
+	read_attributes_loop_start
+
 		if (!read_common_attributes(svg, &hasStroke, &hasFill, &stroke, &fill)) {
-			if (!strcmp (svg->att, "x"))
-				x = parse_lenghtOrPercentage(svg->value);
-			else if (!strcmp (svg->att, "y"))
-				y = parse_lenghtOrPercentage(svg->value);
-			else if (!strcmp (svg->att, "width"))
-				w = parse_lenghtOrPercentage(svg->value);
-			else if (!strcmp (svg->att, "height"))
-				h = parse_lenghtOrPercentage(svg->value);
-			else if (!strcmp (svg->att, "rx"))
-				rx = parse_lenghtOrPercentage(svg->value);
-			else if (!strcmp (svg->att, "ry"))
-				ry = parse_lenghtOrPercentage(svg->value);
-			else
-				LOG("Unprocessed attribute: %s->%s\n", svg->elt, svg->att);
+			svg_unit units;
+			float value;
+			if (try_parse_lenghtOrPercentage(svg->value, &value, &units)) {
+				if (!strcasecmp (svg->att, "x"))
+					x = value;
+				else if (!strcasecmp (svg->att, "y"))
+					y = value;
+				else if (!strcasecmp (svg->att, "width"))
+					w = value;
+				else if (!strcasecmp (svg->att, "height"))
+					h = value;
+				else if (!strcasecmp (svg->att, "rx"))
+					rx = value;
+				else if (!strcasecmp (svg->att, "ry"))
+					ry = value;
+				else
+					LOG("Unprocessed attribute: %s->%s\n", svg->elt, svg->att);
+			}else
+				LOG ("error parsing %s: %s\n", svg->att, svg->value);
+
 		}
-		res = get_attribute;
-	}
+
+	read_attributes_loop_end
+
 	if (w && h && (hasFill || hasStroke)) {
 		vkvg_rectangle(svg->ctx, x, y, w, h);
 		draw (svg, hasStroke, hasFill, stroke, fill);
@@ -807,22 +997,29 @@ int read_rect_attributes (svg_context* svg, FILE* f, bool hasStroke, bool hasFil
 }
 int read_line_attributes (svg_context* svg, FILE* f, bool hasStroke, bool hasFill, uint32_t stroke, uint32_t fill) {
 	int x1 = 0, y1 = 0, x2 = 0, y2;
-	res = get_attribute;
-	while (res == 2) {
+
+	read_attributes_loop_start
+
 		if (!read_common_attributes(svg, &hasStroke, &hasFill, &stroke, &fill)) {
-			if (!strcmp (svg->att, "x1"))
-				x1 = parse_lenghtOrPercentage(svg->value);
-			else if (!strcmp (svg->att, "y1"))
-				y1 = parse_lenghtOrPercentage(svg->value);
-			else if (!strcmp (svg->att, "x2"))
-				x2 = parse_lenghtOrPercentage(svg->value);
-			else if (!strcmp (svg->att, "y2"))
-				y2 = parse_lenghtOrPercentage(svg->value);
-			else
-				LOG("Unprocessed attribute: %s->%s\n", svg->elt, svg->att);
+			svg_unit units;
+			float value;
+			if (try_parse_lenghtOrPercentage(svg->value, &value, &units)) {
+				if (!strcasecmp (svg->att, "x1"))
+					x1 = value;
+				else if (!strcasecmp (svg->att, "y1"))
+					y1 = value;
+				else if (!strcasecmp (svg->att, "x2"))
+					x2 = value;
+				else if (!strcasecmp (svg->att, "y2"))
+					y2 = value;
+				else
+					LOG("Unprocessed attribute: %s->%s\n", svg->elt, svg->att);
+			}else
+				LOG ("error parsing %s: %s\n", svg->att, svg->value);
 		}
-		res = get_attribute;
-	}
+
+	read_attributes_loop_end
+
 	if (hasStroke) {
 		vkvg_move_to(svg->ctx, x1, y1);
 		vkvg_line_to(svg->ctx, x2, y2);
@@ -833,20 +1030,27 @@ int read_line_attributes (svg_context* svg, FILE* f, bool hasStroke, bool hasFil
 }
 int read_circle_attributes (svg_context* svg, FILE* f, bool hasStroke, bool hasFill, uint32_t stroke, uint32_t fill) {
 	int cx = 0, cy = 0, r;
-	res = get_attribute;
-	while (res == 2) {
+
+	read_attributes_loop_start
+
 		if (!read_common_attributes(svg, &hasStroke, &hasFill, &stroke, &fill)) {
-			if (!strcmp (svg->att, "cx"))
-				cx = parse_lenghtOrPercentage(svg->value);
-			else if (!strcmp (svg->att, "cy"))
-				cy = parse_lenghtOrPercentage(svg->value);
-			else if (!strcmp (svg->att, "r"))
-				r = parse_lenghtOrPercentage(svg->value);
-			else
-				LOG("Unprocessed attribute: %s->%s\n", svg->elt, svg->att);
+			svg_unit units;
+			float value;
+			if (try_parse_lenghtOrPercentage(svg->value, &value, &units)) {
+				if (!strcasecmp (svg->att, "cx"))
+					cx = value;
+				else if (!strcasecmp (svg->att, "cy"))
+					cy = value;
+				else if (!strcasecmp (svg->att, "r"))
+					r = value;
+				else
+					LOG("Unprocessed attribute: %s->%s\n", svg->elt, svg->att);
+			}else
+				LOG ("error parsing %s: %s\n", svg->att, svg->value);
 		}
-		res = get_attribute;
-	}
+
+	read_attributes_loop_end
+
 	if (r > 0 && (hasFill || hasStroke)) {
 		vkvg_arc(svg->ctx, cx, cy, r, 0, M_PI * 2);
 		draw (svg, hasStroke, hasFill, stroke, fill);
@@ -854,10 +1058,11 @@ int read_circle_attributes (svg_context* svg, FILE* f, bool hasStroke, bool hasF
 	read_tag_end
 	return res;
 }
-int read_polyline_attributes (svg_context* svg, FILE* f, bool hasStroke, bool hasFill, uint32_t stroke, uint32_t fill) {
+int read_polyline_attributes (svg_context* svg, FILE* f, bool close, bool hasStroke, bool hasFill, uint32_t stroke, uint32_t fill) {
 	float x = 0, y = 0;
-	res = get_attribute;
-	while (res == 2) {
+
+	read_attributes_loop_start
+
 		if (!read_common_attributes(svg, &hasStroke, &hasFill, &stroke, &fill)) {
 			if (!strcasecmp (svg->att, "points")) {
 				FILE *tmp = fmemopen(svg->value, strlen (svg->value), "r");
@@ -874,23 +1079,28 @@ int read_polyline_attributes (svg_context* svg, FILE* f, bool hasStroke, bool ha
 			} else
 				LOG("Unprocessed attribute: %s->%s\n", svg->elt, svg->att);
 		}
-		res = get_attribute;
-	}
-	if (hasFill || hasStroke)
+
+	read_attributes_loop_end
+
+	if (hasFill || hasStroke) {
+		if (close)
+			vkvg_close_path (svg->ctx);
 		draw (svg, hasStroke, hasFill, stroke, fill);
+	}
 	read_tag_end
 	return res;
 }
 enum prevCmd {none, quad, cubic};
 int read_path_attributes (svg_context* svg, FILE* f, bool hasStroke, bool hasFill, uint32_t stroke, uint32_t fill) {
-	res = get_attribute;
-	while (res == 2) {
+
+	read_attributes_loop_start
+
 		if (!read_common_attributes(svg, &hasStroke, &hasFill, &stroke, &fill)) {
 			float x, y, c1x, c1y, c2x, c2y, cpX, cpY, rx, ry, rotx, large, sweep;
 			enum prevCmd prev = none;
 			int repeat=0;
 			char c;
-			if (!strcmp (svg->att, "d")) {
+			if (!strcasecmp (svg->att, "d")) {
 				FILE *tmp = fmemopen(svg->value, strlen (svg->value), "r");
 				bool parseError = false, result = false;
 				while (!(parseError || feof(tmp))) {
@@ -1143,43 +1353,80 @@ int read_path_attributes (svg_context* svg, FILE* f, bool hasStroke, bool hasFil
 			} else
 				LOG("Unprocessed attribute: %s->%s\n", svg->elt, svg->att);
 		}
-		res = get_attribute;
-	}
+
+	read_attributes_loop_end
+
 	if (hasFill || hasStroke)
 		draw (svg, hasStroke, hasFill, stroke, fill);
 	//_highlight (svg->ctx);
 	read_tag_end
-	return res;
+	return read_tag(svg, f, hasStroke, hasFill, stroke, fill);
 }
 
 int read_g_attributes (svg_context* svg, FILE* f, bool hasStroke, bool hasFill, uint32_t stroke, uint32_t fill) {
-	res = get_attribute;
-	while (res == 2) {
+	read_attributes_loop_start
+
 		if (!read_common_attributes(svg, &hasStroke, &hasFill, &stroke, &fill)) {
 			LOG("Unprocessed attribute: %s->%s\n", svg->elt, svg->att);
 		}
-		res = get_attribute;
-	}
+
+	read_attributes_loop_end
+
 	read_tag_end
-	return res;
+	return read_tag(svg, f, hasStroke, hasFill, stroke, fill);
 }
 int read_svg_attributes (svg_context* svg, FILE* f, bool hasStroke, bool hasFill, uint32_t stroke, uint32_t fill) {
 	bool hasViewBox = false;
-	int x, y, w, h, width = 0, height = 0;
+	float x, y, w, h, width = 0, height = 0;
 	int startingPos = ftell(f);
-	res = get_attribute;
-	while (res == 2) {
-		if (!strcmp(svg->att, "viewBox")) {
-			res = sscanf(svg->value, " %d%*1[ ,]%d%*1[ ,]%d%*1[ ,]%d", &x, &y, &w, &h);
+
+	read_attributes_loop_start
+
+		svg_unit units;
+		float value;
+
+		if (!strcasecmp(svg->att, "viewBox")) {
+			char strX[64], strY[64], strW[64], strH[64];
+			res = sscanf(svg->value, " %s%*1[ ,]%s%*1[ ,]%s%*1[ ,]%s", strX, strY, strW, strH);
 			if (res!=4)
 				return -1;
+
+			if (try_parse_lenghtOrPercentage(strX, &value, &units))
+				x = value;
+			else
+				LOG ("error parsing viewbox x: %s\n", strX);
+
+			if (try_parse_lenghtOrPercentage(strY, &value, &units))
+				y = value;
+			else
+				LOG ("error parsing viewbox y: %s\n", strY);
+
+			if (try_parse_lenghtOrPercentage(strW, &value, &units))
+				w = value;
+			else
+				LOG ("error parsing viewbox w: %s\n", strW);
+
+
+			if (try_parse_lenghtOrPercentage(strH, &value, &units))
+				h = value;
+			else
+				LOG ("error parsing viewbox h: %s\n", strH);
+
 			hasViewBox = true;
-		} else if (!strcmp(svg->att, "width"))
-			width = parse_lenghtOrPercentage (svg->value);
-		else if (!strcmp(svg->att, "height"))
-			height = parse_lenghtOrPercentage (svg->value);
-		res = get_attribute;
-	}
+		} else if (!strcasecmp(svg->att, "width")) {
+			if (try_parse_lenghtOrPercentage (svg->value, &value, &units))
+				width = value;
+			else
+				LOG ("error parsing %s: %s\n", svg->att, svg->value);
+		} else if (!strcasecmp(svg->att, "height")) {
+			if (try_parse_lenghtOrPercentage (svg->value, &value, &units))
+				height = value;
+			else
+				LOG ("error parsing %s: %s\n", svg->att, svg->value);
+		}
+
+	read_attributes_loop_end
+
 	int surfW = 0, surfH = 0;
 	float xScale = 1, yScale = 1;
 	if (svg->width)
@@ -1216,96 +1463,214 @@ int read_svg_attributes (svg_context* svg, FILE* f, bool hasStroke, bool hasFill
 	vkvg_clear(svg->ctx);
 
 	fseek (f, startingPos, SEEK_SET);
-	res = get_attribute;
-	while (res == 2) {
-		if (!read_common_attributes(svg, &hasStroke, &hasFill, &stroke, &fill) &&
-																	strcmp(svg->att, "viewBox") &&
-																	strcmp(svg->att, "width") &&
-																	strcmp(svg->att, "height"))
-			LOG("Unprocessed attribute: %s->%s\n", svg->elt, svg->att);
-		res = get_attribute;
-	}
 
-	read_tag_end
+	read_attributes_loop_start_lite
+
+		if (!read_common_attributes(svg, &hasStroke, &hasFill, &stroke, &fill) &&
+																	strcasecmp(svg->att, "viewBox") &&
+																	strcasecmp(svg->att, "width") &&
+																	strcasecmp(svg->att, "height"))
+			LOG("Unprocessed attribute: %s->%s\n", svg->elt, svg->att);
+
+	read_attributes_loop_end
+
+	res = read_tag(svg, f, hasStroke, hasFill, stroke, fill);
 	vkvg_destroy(svg->ctx);
 	return res;
 }
 int read_attributes (svg_context* svg, FILE* f, bool hasStroke, bool hasFill, uint32_t stroke, uint32_t fill) {
+	read_attributes_loop_start
+
+	if (res == 2) {
+		if (!read_common_attributes(svg, &hasStroke, &hasFill, &stroke, &fill))
+			LOG("Unprocessed attribute: %s->%s\n", svg->elt, svg->att);
+	}
+
+	read_attributes_loop_end
+
+	read_tag_end
+	return read_tag(svg, f, hasStroke, hasFill, stroke, fill);
+}
+int read_stop_attributes (svg_context* svg, FILE* f, VkvgPattern pat, bool hasStroke, bool hasFill, uint32_t stroke, uint32_t fill) {
+	uint32_t stop_color = 0;
+	float offset = 0;
+	svg_unit offset_unit = svg_unit_px;
+
 	res = get_attribute;
-	while (res == 2) {
+	while (res > 0) {
+		if (res == 1 && svg->att[0] == '/')
+			break;//self closing tag
+		if (!read_common_attributes(svg, &hasStroke, &hasFill, &stroke, &fill)) {
+			if (!strcasecmp (svg->att, "stop-color")) {
+				bool enabled;
+				parse_color(svg->value, &enabled, &stop_color);
+			} else if (!strcasecmp (svg->att, "offset")) {
+				if (!try_parse_lenghtOrPercentage(svg->value, &offset, &offset_unit))
+					LOG ("error parsing gradient offset: %s\n", svg->value);
+			} else
+				LOG("Unprocessed attribute: %s->%s\n", svg->elt, svg->att);
+		}
+		res = get_attribute;
+	}
+
+	//todo multiple compress/decompress of colors
+
+	float  a = (float)(((const uint8_t *)&stop_color)[0]) / 255.0f;
+	float  b = (float)(((const uint8_t *)&stop_color)[1]) / 255.0f;
+	float  g = (float)(((const uint8_t *)&stop_color)[2]) / 255.0f;
+	float  r = (float)(((const uint8_t *)&stop_color)[3]) / 255.0f;
+
+	vkvg_pattern_add_color_stop(pat, offset, r, g, b, a);
+	read_tag_end
+	return read_tag(svg, f, hasStroke, hasFill, stroke, fill);
+}
+int read_gradient_children (svg_context* svg, FILE* f, VkvgPattern pat,  bool hasStroke, bool hasFill, uint32_t stroke, uint32_t fill) {
+	while (!feof (f)) {
+		read_element_start
+		if (!strcasecmp(svg->elt,"stop"))
+			res = read_stop_attributes	(svg, f, pat, hasStroke, hasFill, stroke, fill);
+		else
+			skip_element
+	}
+	return res;
+}
+int read_radialgradient_attributes (svg_context* svg, FILE* f, bool hasStroke, bool hasFill, uint32_t stroke, uint32_t fill) {
+	int cx = 0, cy = 0, fx = 0, fy, r = 0;
+	res = get_attribute;
+	while (res > 0) {
+		if (res == 1 && svg->att[0] == '/')
+			break;//self closing tag
+		if (!read_common_attributes(svg, &hasStroke, &hasFill, &stroke, &fill)) {
+			svg_unit units;
+			float value;
+			if (try_parse_lenghtOrPercentage(svg->value, &value, &units)) {
+				if (!strcasecmp (svg->att, "cx"))
+					cx = value;
+				else if (!strcasecmp (svg->att, "cy"))
+					cy = value;
+				else if (!strcasecmp (svg->att, "fx"))
+					fx = value;
+				else if (!strcasecmp (svg->att, "fy"))
+					fy = value;
+				else if (!strcasecmp (svg->att, "r"))
+					r = value;
+				else
+					LOG("Unprocessed attribute: %s->%s\n", svg->elt, svg->att);
+			}else
+				LOG ("error parsing %s: %s\n", svg->att, svg->value);
+		}
+		res = get_attribute;
+	}
+	VkvgPattern pat = vkvg_pattern_create_radial (fx, fy, 0, cx, cy, r);
+	read_tag_end
+	return read_gradient_children (svg, f, pat, hasStroke, hasFill, stroke, fill);
+}
+int read_lineargradient_attributes (svg_context* svg, FILE* f, bool hasStroke, bool hasFill, uint32_t stroke, uint32_t fill) {
+	int x1 = 0, y1 = 0, x2 = 0, y2;
+	res = get_attribute;
+	while (res > 0) {
+		if (res == 1 && svg->att[0] == '/')
+			break;//self closing tag
+		if (!read_common_attributes(svg, &hasStroke, &hasFill, &stroke, &fill)) {
+			svg_unit units;
+			float value;
+			if (try_parse_lenghtOrPercentage(svg->value, &value, &units)) {
+				if (!strcasecmp (svg->att, "x1"))
+					x1 = value;
+				else if (!strcasecmp (svg->att, "y1"))
+					y1 = value;
+				else if (!strcasecmp (svg->att, "x2"))
+					x2 = value;
+				else if (!strcasecmp (svg->att, "y2"))
+					y2 = value;
+				else
+					LOG("Unprocessed attribute: %s->%s\n", svg->elt, svg->att);
+			}else
+				LOG ("error parsing %s: %s\n", svg->att, svg->value);
+		}
+		res = get_attribute;
+	}
+	VkvgPattern pat = vkvg_pattern_create_linear (x1, y1, x2, y2);
+	read_tag_end
+	return read_gradient_children (svg, f, pat, hasStroke, hasFill, stroke, fill);
+}
+int read_defs_children (svg_context* svg, FILE* f, bool hasStroke, bool hasFill, uint32_t stroke, uint32_t fill) {
+	while (!feof (f)) {
+		read_element_start
+		if (!strcasecmp(svg->elt,"lineargradient"))
+			res = read_lineargradient_attributes	(svg, f, hasStroke, hasFill, stroke, fill);
+		else if (!strcasecmp(svg->elt,"radialgradient"))
+			res = read_radialgradient_attributes	(svg, f, hasStroke, hasFill, stroke, fill);
+		else
+			skip_element
+	}
+	return res;
+}
+
+int read_defs_attributes (svg_context* svg, FILE* f, bool hasStroke, bool hasFill, uint32_t stroke, uint32_t fill) {
+	res = get_attribute;
+	while (res > 0) {
+		if (res == 1 && svg->att[0] == '/')
+			break;//self closing tag
 		if (!read_common_attributes(svg, &hasStroke, &hasFill, &stroke, &fill)) {
 			LOG("Unprocessed attribute: %s->%s\n", svg->elt, svg->att);
 		}
 		res = get_attribute;
 	}
 	read_tag_end
+	return read_defs_children(svg, f, hasStroke, hasFill, stroke, fill);
+
+}
+int skip_attributes_and_children (svg_context* svg, FILE* f, bool hasStroke, bool hasFill, uint32_t stroke, uint32_t fill) {
+	res = get_attribute;
+	while (res > 0) {
+		if (res == 1 && (svg->att[0] == '/' || svg->att[0] == '?'))
+			break;//self closing tag
+		res = get_attribute;
+	}
+	read_tag_end
+	return read_tag(svg, f, hasStroke, hasFill, stroke, fill);
 }
 int read_tag (svg_context* svg, FILE* f, bool hasStroke, bool hasFill, uint32_t stroke, uint32_t fill) {
 
 	while (!feof (f)) {
-		res = fscanf(f, " <%[^> ]", svg->elt);
-		if (res < 0)
-			return 0;
-		if (!res) {
-			res = fscanf(f, "%*[^<]<%[^> ]", svg->elt);
-			if (!res) {
-				LOG("element name parsing error (%s)\n", svg->elt);
-				return -1;
-			}
-		}
-		if (svg->elt[0] == '/') {
-			if (getc(f) != '>') {
-				LOG("parsing error, expecting '>'\n");
-				return -1;
-			}
-			//read_attributes_ptr = NULL;
-			return 0;
-		}
-		if (svg->elt[0] == '!') {
-			if (!strcmp(svg->elt,"!DOCTYPE")) {
-				while (!feof (f))
-					if (fgetc(f)=='>')
-						break;;
-			} if (!strncmp(svg->elt, "!--", 3)) {
-				while (!feof (f)) {
-					if (fgetc(f)=='-') {
-						if (fgetc(f)=='-' && fgetc(f)=='>')
-							break;
-						else
-							fseek (f, -1, SEEK_CUR);
-					}
-				}
-			}
-			continue;
-		}
-		if (!strcmp(svg->elt,"svg"))
+
+		read_element_start
+
+		if (!strcasecmp(svg->elt,"svg"))
 			res = read_svg_attributes	(svg, f, hasStroke, hasFill, stroke, fill);
-		else if (!strcmp(svg->elt,"g")) {
+		else if (!strcasecmp(svg->elt,"g")) {
 			vkvg_save (svg->ctx);
 			res = read_g_attributes		(svg, f, hasStroke, hasFill, stroke, fill);
 			vkvg_restore (svg->ctx);
-		} else if (!strcmp(svg->elt,"rect")) {
+		} else if (!strcasecmp(svg->elt,"rect")) {
 			vkvg_save (svg->ctx);
 			res = read_rect_attributes	(svg, f, hasStroke, hasFill, stroke, fill);
 			vkvg_restore (svg->ctx);
-		} else if (!strcmp(svg->elt,"line")) {
+		} else if (!strcasecmp(svg->elt,"line")) {
 			vkvg_save (svg->ctx);
 			res = read_line_attributes	(svg, f, hasStroke, hasFill, stroke, fill);
 			vkvg_restore (svg->ctx);
-		} else if (!strcmp(svg->elt,"circle")) {
+		} else if (!strcasecmp(svg->elt,"circle")) {
 			vkvg_save (svg->ctx);
 			res = read_circle_attributes (svg, f, hasStroke, hasFill, stroke, fill);
 			vkvg_restore (svg->ctx);
-		} else if (!strcmp(svg->elt,"polyline")) {
+		} else if (!strcasecmp(svg->elt,"polyline")) {
 			vkvg_save (svg->ctx);
-			res = read_polyline_attributes (svg, f, hasStroke, hasFill, stroke, fill);
+			res = read_polyline_attributes (svg, f, false, hasStroke, hasFill, stroke, fill);
 			vkvg_restore (svg->ctx);
-		} else if (!strcmp(svg->elt,"path")) {
+		} else if (!strcasecmp(svg->elt,"polygon")) {
+			vkvg_save (svg->ctx);
+			res = read_polyline_attributes (svg, f, true, hasStroke, hasFill, stroke, fill);
+			vkvg_restore (svg->ctx);
+		} else if (!strcasecmp(svg->elt,"path")) {
 			vkvg_save (svg->ctx);
 			res = read_path_attributes	(svg, f, hasStroke, hasFill, stroke, fill);
 			vkvg_restore (svg->ctx);
+		} else if (!strcasecmp(svg->elt,"defs")) {
+			res = read_defs_attributes (svg, f, hasStroke, hasFill, stroke, fill);
 		} else
-			res = read_attributes		(svg, f, hasStroke, hasFill, stroke, fill);
+			skip_element
 	}
 	return res;
 }
@@ -1321,6 +1686,7 @@ VkvgSurface parse_svg_file (VkvgDevice dev, const char* filename, uint32_t width
 	svg.dev		= dev;
 	svg.width	= width;
 	svg.height	= height;
+	//svg.dic		= dic_new (0);
 
 	read_tag (&svg, f, false, true, 0xffffffff, 0xffffffff);
 
