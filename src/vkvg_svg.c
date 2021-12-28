@@ -11,7 +11,9 @@
 
 #include "vkvg_svg.h"
 #include "vkvg_extensions.h"
-//#include "hashdict.h"
+
+
+
 #define DEBUG_LOG 1
 
 #ifdef DEBUG_LOG
@@ -21,6 +23,27 @@
 #endif
 
 static int res;
+
+typedef enum _svg_element_type {
+	svg_element_pattern
+}svg_element_type;
+
+typedef struct _svg_element_t {
+	uint32_t			hash;
+	svg_element_type	type;
+	void*				data;
+}svg_element_t;
+
+typedef enum _svg_paint_type {
+	svg_paint_type_none,
+	svg_paint_type_solid,
+	svg_paint_type_pattern,
+}svg_paint_type;
+
+#define ARRAY_INIT	8
+#define ARRAY_ELEMENT_TYPE svg_element_t
+#define ARRAY_IMPLEMENTATION
+#include "array.h"
 
 typedef struct svg_context_t {
 	char		elt[128];
@@ -32,12 +55,13 @@ typedef struct svg_context_t {
 	uint32_t	width;//force surface width & height
 	uint32_t	height;
 	bool		skip;//skip tag and children
-	/*struct		dictionary*	dic;
-	long		currentTagStartPos;*/
+	uint32_t	currentIdHash;
+	array_t*	idList;
+	/*long		currentTagStartPos;*/
 
 } svg_context;
 
-int read_tag (svg_context* svg, FILE* f, bool hasStroke, bool hasFill, uint32_t stroke, uint32_t fill);
+int read_tag (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_paint_type hasFill, uint32_t stroke, uint32_t fill);
 
 #define get_attribute fscanf(f, " %[^=>]=%*[\"']%[^\"']%*[\"']", svg->att, svg->value)
 
@@ -56,10 +80,9 @@ int read_tag (svg_context* svg, FILE* f, bool hasStroke, bool hasFill, uint32_t 
 	if (getc(f) != '>') {										\
 		LOG("parsing error, expecting '>'\n");					\
 		return -1;												\
-	}															\
-//	res = read_tag(svg, f, hasStroke, hasFill, stroke, fill);
+	}
 
-int skip_attributes_and_children (svg_context* svg, FILE* f, bool hasStroke, bool hasFill, uint32_t stroke, uint32_t fill);
+int skip_attributes_and_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_paint_type hasFill, uint32_t stroke, uint32_t fill);
 
 #define read_element_start										\
 	res = fscanf(f, " <%[^> \n\r]", svg->elt);					\
@@ -142,6 +165,23 @@ int skip_attributes_and_children (svg_context* svg, FILE* f, bool hasStroke, boo
 	res = get_attribute;															\
 }
 
+uint32_t hash_string(const char * s)
+{
+	uint32_t hash = 0;
+
+	for(; *s; ++s)
+	{
+		hash += *s;
+		hash += (hash << 10);
+		hash ^= (hash >> 6);
+	}
+
+	hash += (hash << 3);
+	hash ^= (hash >> 11);
+	hash += (hash << 15);
+
+	return hash;
+}
 
 uint32_t parseColorName (const char* name) {
 	int valLenght = strlen (name);
@@ -840,8 +880,7 @@ bool try_parse_lenghtOrPercentage (const char* measure, float* number, svg_unit*
 	}
 	return true;
 }
-bool parse_color (const char* colorString, bool* isEnabled, uint32_t* colorValue) {
-
+bool try_parse_color (const char* colorString, svg_paint_type* isEnabled, uint32_t* colorValue) {
 	if (colorString[0] == '#') {
 		char color[7];
 		res = sscanf(&colorString[1], " %[0-9A-Fa-f]", color);
@@ -853,6 +892,18 @@ bool parse_color (const char* colorString, bool* isEnabled, uint32_t* colorValue
 		sscanf(hexColorString, "%x", colorValue);
 		*isEnabled = true;
 		return true;
+	}
+	if (!strncmp (colorString, "url", 3)) {
+		char iri[128];
+		if (sscanf(&colorString[3], " (%[^)])", iri)) {
+			if (iri[0] == '#') {
+				*colorValue = hash_string(&iri[1]);
+				*isEnabled = svg_paint_type_pattern;
+				return true;
+			}
+		}
+		LOG ("error parsing uri: %s\n", colorString);
+		return false;
 	}
 	uint32_t r = 0, g = 0, b = 0, a = 0;
 	if (sscanf(colorString, "rgb ( %d%*[ ,]%d%*[ ,]%d )", &r, &g, &b))
@@ -866,39 +917,83 @@ bool parse_color (const char* colorString, bool* isEnabled, uint32_t* colorValue
 	*isEnabled = colorValue > 0;
 	return true;
 }
+bool try_find_by_id (svg_context* svg, uint32_t hash, svg_element_t** elt) {
+	for (uint32_t i=0; i < svg->idList->count; i++) {
+		if (svg->idList->elements[i].hash == hash) {
+			*elt = &svg->idList->elements[i];
+			return true;
+		}
+	}
+	return false;
+}
+void set_pattern (svg_context* svg, uint32_t patternHash) {
+	float x0,y0,x1,y1;
+	vkvg_path_extents(svg->ctx, &x0, &y0, &x1, &y1);
+	svg_element_t* elt;
+	vkvg_pattern_type_t pat_type;
+	if (try_find_by_id(svg, patternHash, &elt)) {
+		switch (elt->type) {
+		case svg_element_pattern:
+			pat_type = vkvg_pattern_get_type(elt->data);
+			if (pat_type == VKVG_PATTERN_TYPE_LINEAR) {
+				float px0,py0,px1,py1;
+				float w = x1 - x0;
+				float h = y1 - y0;
+				vkvg_pattern_get_linear_points (elt->data, &px0, &py0, &px1, &py1);
+				vkvg_pattern_edit_linear(elt->data, x0, y0, x0 + w*px1, y0 + h*py1);
+			}
 
-int draw (svg_context* svg, bool hasStroke, bool hasFill, uint32_t stroke, uint32_t fill) {
+			vkvg_set_source(svg->ctx, elt->data);
+		}
+	} else
+		LOG ("pattern hash not resolved: %d\n", patternHash);
+}
+int draw (svg_context* svg, svg_paint_type hasStroke, svg_paint_type hasFill, uint32_t stroke, uint32_t fill) {
 	if (hasFill) {
-		vkvg_set_source_color(svg->ctx, fill);
+		if (hasFill == svg_paint_type_pattern)
+			set_pattern(svg, fill);
+		else
+			vkvg_set_source_color(svg->ctx, fill);
 		if (hasStroke) {
 			vkvg_fill_preserve(svg->ctx);
-			vkvg_set_source_color(svg->ctx, stroke);
+			if (hasStroke == svg_paint_type_pattern)
+				set_pattern(svg, stroke);
+			else
+				vkvg_set_source_color(svg->ctx, stroke);
 			vkvg_stroke(svg->ctx);
 		} else
 			vkvg_fill (svg->ctx);
 	} else if (hasStroke) {
-		vkvg_set_source_color(svg->ctx, stroke);
+		if (hasStroke == svg_paint_type_pattern)
+			set_pattern(svg, stroke);
+		else
+			vkvg_set_source_color(svg->ctx, stroke);
 		vkvg_stroke(svg->ctx);
 	}
 }
 
-int read_common_attributes (svg_context* svg, bool *hasStroke, bool *hasFill, uint32_t *stroke, uint32_t *fill) {
+int read_core_attributes (svg_context* svg) {
 	if (!strcasecmp(svg->att, "id")) {
-		//dic_add(svg->dic, svg->value, strlen(svg->value));
+		svg->currentIdHash = hash_string(svg->value);
+	} else
+		return 0;
+	return 1;
+}
 
-	} else if (!strcasecmp(svg->att, "color")) {
-		parse_color (svg->value, hasFill, fill);
+int read_common_attributes (svg_context* svg, svg_paint_type *hasStroke, svg_paint_type *hasFill, uint32_t *stroke, uint32_t *fill) {
+	if (!strcasecmp(svg->att, "color")) {
+		try_parse_color (svg->value, hasFill, fill);
 		*hasStroke = *hasFill;
 		*stroke = *hasStroke;
 	}else if (!strcasecmp(svg->att, "fill"))
-			parse_color (svg->value, hasFill, fill);
+			try_parse_color (svg->value, hasFill, fill);
 	else if (!strcasecmp(svg->att, "fill-rule")) {
 		if (!strcasecmp(svg->value, "evenodd"))
 			vkvg_set_fill_rule(svg->ctx, VKVG_FILL_RULE_EVEN_ODD);
 		else
 			vkvg_set_fill_rule(svg->ctx, VKVG_FILL_RULE_NON_ZERO);
 	}else if (!strcasecmp(svg->att, "stroke"))
-		parse_color (svg->value, hasStroke, stroke);
+		try_parse_color (svg->value, hasStroke, stroke);
 	else if (!strcasecmp (svg->att, "stroke-width")) {
 		svg_unit units;
 		float value;
@@ -958,12 +1053,14 @@ int read_common_attributes (svg_context* svg, bool *hasStroke, bool *hasFill, ui
 	return 1;
 }
 
-int read_rect_attributes (svg_context* svg, FILE* f, bool hasStroke, bool hasFill, uint32_t stroke, uint32_t fill) {
-	int x = 0, y = 0, w = 0, h = 0, rx = 0, ry = 0;
+int read_rect_attributes (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_paint_type hasFill, uint32_t stroke, uint32_t fill) {
+	float x = 0, y = 0, w = 0, h = 0, rx = 0, ry = 0;
 
 	read_attributes_loop_start
 
-		if (!read_common_attributes(svg, &hasStroke, &hasFill, &stroke, &fill)) {
+		if (!read_core_attributes(svg) &&
+			!read_common_attributes(svg, &hasStroke, &hasFill, &stroke, &fill)) {
+
 			svg_unit units;
 			float value;
 			if (try_parse_lenghtOrPercentage(svg->value, &value, &units)) {
@@ -986,6 +1083,7 @@ int read_rect_attributes (svg_context* svg, FILE* f, bool hasStroke, bool hasFil
 
 		}
 
+
 	read_attributes_loop_end
 
 	if (w && h && (hasFill || hasStroke)) {
@@ -995,12 +1093,14 @@ int read_rect_attributes (svg_context* svg, FILE* f, bool hasStroke, bool hasFil
 	read_tag_end
 	return res;
 }
-int read_line_attributes (svg_context* svg, FILE* f, bool hasStroke, bool hasFill, uint32_t stroke, uint32_t fill) {
+int read_line_attributes (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_paint_type hasFill, uint32_t stroke, uint32_t fill) {
 	int x1 = 0, y1 = 0, x2 = 0, y2;
 
 	read_attributes_loop_start
 
-		if (!read_common_attributes(svg, &hasStroke, &hasFill, &stroke, &fill)) {
+			if (!read_core_attributes(svg) &&
+				!read_common_attributes(svg, &hasStroke, &hasFill, &stroke, &fill)) {
+
 			svg_unit units;
 			float value;
 			if (try_parse_lenghtOrPercentage(svg->value, &value, &units)) {
@@ -1028,12 +1128,14 @@ int read_line_attributes (svg_context* svg, FILE* f, bool hasStroke, bool hasFil
 	read_tag_end
 	return res;
 }
-int read_circle_attributes (svg_context* svg, FILE* f, bool hasStroke, bool hasFill, uint32_t stroke, uint32_t fill) {
+int read_circle_attributes (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_paint_type hasFill, uint32_t stroke, uint32_t fill) {
 	int cx = 0, cy = 0, r;
 
 	read_attributes_loop_start
 
-		if (!read_common_attributes(svg, &hasStroke, &hasFill, &stroke, &fill)) {
+		if (!read_core_attributes(svg) &&
+			!read_common_attributes(svg, &hasStroke, &hasFill, &stroke, &fill)) {
+
 			svg_unit units;
 			float value;
 			if (try_parse_lenghtOrPercentage(svg->value, &value, &units)) {
@@ -1058,12 +1160,14 @@ int read_circle_attributes (svg_context* svg, FILE* f, bool hasStroke, bool hasF
 	read_tag_end
 	return res;
 }
-int read_polyline_attributes (svg_context* svg, FILE* f, bool close, bool hasStroke, bool hasFill, uint32_t stroke, uint32_t fill) {
+int read_polyline_attributes (svg_context* svg, FILE* f, bool close, svg_paint_type hasStroke, svg_paint_type hasFill, uint32_t stroke, uint32_t fill) {
 	float x = 0, y = 0;
 
 	read_attributes_loop_start
 
-		if (!read_common_attributes(svg, &hasStroke, &hasFill, &stroke, &fill)) {
+		if (!read_core_attributes(svg) &&
+			!read_common_attributes(svg, &hasStroke, &hasFill, &stroke, &fill)) {
+
 			if (!strcasecmp (svg->att, "points")) {
 				FILE *tmp = fmemopen(svg->value, strlen (svg->value), "r");
 				if (parse_floats(tmp, 2, &x, &y)) {
@@ -1091,11 +1195,13 @@ int read_polyline_attributes (svg_context* svg, FILE* f, bool close, bool hasStr
 	return res;
 }
 enum prevCmd {none, quad, cubic};
-int read_path_attributes (svg_context* svg, FILE* f, bool hasStroke, bool hasFill, uint32_t stroke, uint32_t fill) {
+int read_path_attributes (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_paint_type hasFill, uint32_t stroke, uint32_t fill) {
 
 	read_attributes_loop_start
 
-		if (!read_common_attributes(svg, &hasStroke, &hasFill, &stroke, &fill)) {
+		if (!read_core_attributes(svg) &&
+			!read_common_attributes(svg, &hasStroke, &hasFill, &stroke, &fill)) {
+
 			float x, y, c1x, c1y, c2x, c2y, cpX, cpY, rx, ry, rotx, large, sweep;
 			enum prevCmd prev = none;
 			int repeat=0;
@@ -1363,10 +1469,12 @@ int read_path_attributes (svg_context* svg, FILE* f, bool hasStroke, bool hasFil
 	return read_tag(svg, f, hasStroke, hasFill, stroke, fill);
 }
 
-int read_g_attributes (svg_context* svg, FILE* f, bool hasStroke, bool hasFill, uint32_t stroke, uint32_t fill) {
+int read_g_attributes (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_paint_type hasFill, uint32_t stroke, uint32_t fill) {
 	read_attributes_loop_start
 
-		if (!read_common_attributes(svg, &hasStroke, &hasFill, &stroke, &fill)) {
+		if (!read_core_attributes(svg) &&
+			!read_common_attributes(svg, &hasStroke, &hasFill, &stroke, &fill)) {
+
 			LOG("Unprocessed attribute: %s->%s\n", svg->elt, svg->att);
 		}
 
@@ -1375,7 +1483,7 @@ int read_g_attributes (svg_context* svg, FILE* f, bool hasStroke, bool hasFill, 
 	read_tag_end
 	return read_tag(svg, f, hasStroke, hasFill, stroke, fill);
 }
-int read_svg_attributes (svg_context* svg, FILE* f, bool hasStroke, bool hasFill, uint32_t stroke, uint32_t fill) {
+int read_svg_attributes (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_paint_type hasFill, uint32_t stroke, uint32_t fill) {
 	bool hasViewBox = false;
 	float x, y, w, h, width = 0, height = 0;
 	int startingPos = ftell(f);
@@ -1465,8 +1573,8 @@ int read_svg_attributes (svg_context* svg, FILE* f, bool hasStroke, bool hasFill
 	fseek (f, startingPos, SEEK_SET);
 
 	read_attributes_loop_start_lite
-
-		if (!read_common_attributes(svg, &hasStroke, &hasFill, &stroke, &fill) &&
+		if (!read_core_attributes(svg) &&
+			!read_common_attributes(svg, &hasStroke, &hasFill, &stroke, &fill) &&
 																	strcasecmp(svg->att, "viewBox") &&
 																	strcasecmp(svg->att, "width") &&
 																	strcasecmp(svg->att, "height"))
@@ -1478,11 +1586,12 @@ int read_svg_attributes (svg_context* svg, FILE* f, bool hasStroke, bool hasFill
 	vkvg_destroy(svg->ctx);
 	return res;
 }
-int read_attributes (svg_context* svg, FILE* f, bool hasStroke, bool hasFill, uint32_t stroke, uint32_t fill) {
+int read_attributes (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_paint_type hasFill, uint32_t stroke, uint32_t fill) {
 	read_attributes_loop_start
 
 	if (res == 2) {
-		if (!read_common_attributes(svg, &hasStroke, &hasFill, &stroke, &fill))
+		if (!read_core_attributes(svg) &&
+			!read_common_attributes(svg, &hasStroke, &hasFill, &stroke, &fill))
 			LOG("Unprocessed attribute: %s->%s\n", svg->elt, svg->att);
 	}
 
@@ -1491,40 +1600,49 @@ int read_attributes (svg_context* svg, FILE* f, bool hasStroke, bool hasFill, ui
 	read_tag_end
 	return read_tag(svg, f, hasStroke, hasFill, stroke, fill);
 }
-int read_stop_attributes (svg_context* svg, FILE* f, VkvgPattern pat, bool hasStroke, bool hasFill, uint32_t stroke, uint32_t fill) {
+int read_stop_attributes (svg_context* svg, FILE* f, VkvgPattern pat, svg_paint_type hasStroke, svg_paint_type hasFill, uint32_t stroke, uint32_t fill) {
 	uint32_t stop_color = 0;
 	float offset = 0;
 	svg_unit offset_unit = svg_unit_px;
 
-	res = get_attribute;
-	while (res > 0) {
-		if (res == 1 && svg->att[0] == '/')
-			break;//self closing tag
-		if (!read_common_attributes(svg, &hasStroke, &hasFill, &stroke, &fill)) {
+	read_attributes_loop_start
+
+		if (!read_core_attributes(svg) &&
+			!read_common_attributes(svg, &hasStroke, &hasFill, &stroke, &fill)) {
+
 			if (!strcasecmp (svg->att, "stop-color")) {
-				bool enabled;
-				parse_color(svg->value, &enabled, &stop_color);
+				svg_paint_type enabled;
+				try_parse_color(svg->value, &enabled, &stop_color);
 			} else if (!strcasecmp (svg->att, "offset")) {
 				if (!try_parse_lenghtOrPercentage(svg->value, &offset, &offset_unit))
 					LOG ("error parsing gradient offset: %s\n", svg->value);
+				switch (offset_unit) {
+				case svg_unit_percentage:
+					offset /= 100.0f;
+					break;
+				default:
+					LOG("unandled unit for gradient offset: %s\n", svg->value);
+					break;
+				}
+
 			} else
 				LOG("Unprocessed attribute: %s->%s\n", svg->elt, svg->att);
 		}
-		res = get_attribute;
-	}
+
+	read_attributes_loop_end
 
 	//todo multiple compress/decompress of colors
 
-	float  a = (float)(((const uint8_t *)&stop_color)[0]) / 255.0f;
-	float  b = (float)(((const uint8_t *)&stop_color)[1]) / 255.0f;
-	float  g = (float)(((const uint8_t *)&stop_color)[2]) / 255.0f;
-	float  r = (float)(((const uint8_t *)&stop_color)[3]) / 255.0f;
+	float  a = (float)((stop_color&0xff000000)>>24) / 255.0f;
+	float  b = (float)((stop_color&0x00ff0000)>>16) / 255.0f;
+	float  g = (float)((stop_color&0x0000ff00)>> 8) / 255.0f;
+	float  r = (float)( stop_color&0x000000ff) / 255.0f;
 
 	vkvg_pattern_add_color_stop(pat, offset, r, g, b, a);
 	read_tag_end
 	return read_tag(svg, f, hasStroke, hasFill, stroke, fill);
 }
-int read_gradient_children (svg_context* svg, FILE* f, VkvgPattern pat,  bool hasStroke, bool hasFill, uint32_t stroke, uint32_t fill) {
+int read_gradient_children (svg_context* svg, FILE* f, VkvgPattern pat,  svg_paint_type hasStroke, svg_paint_type hasFill, uint32_t stroke, uint32_t fill) {
 	while (!feof (f)) {
 		read_element_start
 		if (!strcasecmp(svg->elt,"stop"))
@@ -1534,13 +1652,13 @@ int read_gradient_children (svg_context* svg, FILE* f, VkvgPattern pat,  bool ha
 	}
 	return res;
 }
-int read_radialgradient_attributes (svg_context* svg, FILE* f, bool hasStroke, bool hasFill, uint32_t stroke, uint32_t fill) {
-	int cx = 0, cy = 0, fx = 0, fy, r = 0;
-	res = get_attribute;
-	while (res > 0) {
-		if (res == 1 && svg->att[0] == '/')
-			break;//self closing tag
-		if (!read_common_attributes(svg, &hasStroke, &hasFill, &stroke, &fill)) {
+int read_radialgradient_attributes (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_paint_type hasFill, uint32_t stroke, uint32_t fill) {
+	float cx = 0, cy = 0, fx = 0, fy, r = 0;
+	read_attributes_loop_start
+
+		if (!read_core_attributes(svg) &&
+			!read_common_attributes(svg, &hasStroke, &hasFill, &stroke, &fill)) {
+
 			svg_unit units;
 			float value;
 			if (try_parse_lenghtOrPercentage(svg->value, &value, &units)) {
@@ -1559,47 +1677,57 @@ int read_radialgradient_attributes (svg_context* svg, FILE* f, bool hasStroke, b
 			}else
 				LOG ("error parsing %s: %s\n", svg->att, svg->value);
 		}
-		res = get_attribute;
-	}
+
+	read_attributes_loop_end
+
 	VkvgPattern pat = vkvg_pattern_create_radial (fx, fy, 0, cx, cy, r);
+	array_add (svg->idList, (svg_element_t){svg->currentIdHash, svg_element_pattern, pat});
 	read_tag_end
 	return read_gradient_children (svg, f, pat, hasStroke, hasFill, stroke, fill);
 }
-int read_lineargradient_attributes (svg_context* svg, FILE* f, bool hasStroke, bool hasFill, uint32_t stroke, uint32_t fill) {
-	int x1 = 0, y1 = 0, x2 = 0, y2;
-	res = get_attribute;
-	while (res > 0) {
-		if (res == 1 && svg->att[0] == '/')
-			break;//self closing tag
-		if (!read_common_attributes(svg, &hasStroke, &hasFill, &stroke, &fill)) {
-			svg_unit units;
-			float value;
-			if (try_parse_lenghtOrPercentage(svg->value, &value, &units)) {
-				if (!strcasecmp (svg->att, "x1"))
-					x1 = value;
-				else if (!strcasecmp (svg->att, "y1"))
-					y1 = value;
-				else if (!strcasecmp (svg->att, "x2"))
-					x2 = value;
-				else if (!strcasecmp (svg->att, "y2"))
-					y2 = value;
-				else
-					LOG("Unprocessed attribute: %s->%s\n", svg->elt, svg->att);
-			}else
-				LOG ("error parsing %s: %s\n", svg->att, svg->value);
+int read_lineargradient_attributes (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_paint_type hasFill, uint32_t stroke, uint32_t fill) {
+	float x1 = 0, y1 = 0, x2 = 100.0f, y2 = 100.0f;
+
+	read_attributes_loop_start
+
+		if (!read_core_attributes(svg) &&
+			!read_common_attributes(svg, &hasStroke, &hasFill, &stroke, &fill)) {
+
+			if (!strcasecmp(svg->att, "gradientUnits"))	{
+
+			} else {
+				svg_unit units;
+				float value;
+				if (try_parse_lenghtOrPercentage(svg->value, &value, &units)) {
+					if (!strcasecmp (svg->att, "x1"))
+						x1 = value;
+					else if (!strcasecmp (svg->att, "y1"))
+						y1 = value;
+					else if (!strcasecmp (svg->att, "x2"))
+						x2 = value;
+					else if (!strcasecmp (svg->att, "y2"))
+						y2 = value;
+					else
+						LOG("Unprocessed attribute: %s->%s\n", svg->elt, svg->att);
+				}else
+					LOG ("error parsing %s: %s\n", svg->att, svg->value);
+			}
 		}
-		res = get_attribute;
-	}
+
+	read_attributes_loop_end
+
 	VkvgPattern pat = vkvg_pattern_create_linear (x1, y1, x2, y2);
+	svg_element_t elt = {svg->currentIdHash, svg_element_pattern, pat};
+	array_add (svg->idList, elt);
 	read_tag_end
 	return read_gradient_children (svg, f, pat, hasStroke, hasFill, stroke, fill);
 }
-int read_defs_children (svg_context* svg, FILE* f, bool hasStroke, bool hasFill, uint32_t stroke, uint32_t fill) {
+int read_defs_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_paint_type hasFill, uint32_t stroke, uint32_t fill) {
 	while (!feof (f)) {
 		read_element_start
-		if (!strcasecmp(svg->elt,"lineargradient"))
+		if (!strcasecmp (svg->elt, "lineargradient"))
 			res = read_lineargradient_attributes	(svg, f, hasStroke, hasFill, stroke, fill);
-		else if (!strcasecmp(svg->elt,"radialgradient"))
+		else if (!strcasecmp (svg->elt, "radialgradient"))
 			res = read_radialgradient_attributes	(svg, f, hasStroke, hasFill, stroke, fill);
 		else
 			skip_element
@@ -1607,21 +1735,20 @@ int read_defs_children (svg_context* svg, FILE* f, bool hasStroke, bool hasFill,
 	return res;
 }
 
-int read_defs_attributes (svg_context* svg, FILE* f, bool hasStroke, bool hasFill, uint32_t stroke, uint32_t fill) {
-	res = get_attribute;
-	while (res > 0) {
-		if (res == 1 && svg->att[0] == '/')
-			break;//self closing tag
-		if (!read_common_attributes(svg, &hasStroke, &hasFill, &stroke, &fill)) {
+int read_defs_attributes (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_paint_type hasFill, uint32_t stroke, uint32_t fill) {
+	read_attributes_loop_start
+		if (!read_core_attributes(svg) &&
+			!read_common_attributes(svg, &hasStroke, &hasFill, &stroke, &fill)) {
+
 			LOG("Unprocessed attribute: %s->%s\n", svg->elt, svg->att);
 		}
-		res = get_attribute;
-	}
+	read_attributes_loop_end
+
 	read_tag_end
 	return read_defs_children(svg, f, hasStroke, hasFill, stroke, fill);
 
 }
-int skip_attributes_and_children (svg_context* svg, FILE* f, bool hasStroke, bool hasFill, uint32_t stroke, uint32_t fill) {
+int skip_attributes_and_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_paint_type hasFill, uint32_t stroke, uint32_t fill) {
 	res = get_attribute;
 	while (res > 0) {
 		if (res == 1 && (svg->att[0] == '/' || svg->att[0] == '?'))
@@ -1631,7 +1758,7 @@ int skip_attributes_and_children (svg_context* svg, FILE* f, bool hasStroke, boo
 	read_tag_end
 	return read_tag(svg, f, hasStroke, hasFill, stroke, fill);
 }
-int read_tag (svg_context* svg, FILE* f, bool hasStroke, bool hasFill, uint32_t stroke, uint32_t fill) {
+int read_tag (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_paint_type hasFill, uint32_t stroke, uint32_t fill) {
 
 	while (!feof (f)) {
 
@@ -1686,10 +1813,20 @@ VkvgSurface parse_svg_file (VkvgDevice dev, const char* filename, uint32_t width
 	svg.dev		= dev;
 	svg.width	= width;
 	svg.height	= height;
-	//svg.dic		= dic_new (0);
+	svg.idList	= array_create();
 
-	read_tag (&svg, f, false, true, 0xffffffff, 0xffffffff);
+	read_tag (&svg, f, svg_paint_type_none, svg_paint_type_solid, 0xffffffff, 0xffffffff);
 
 	fclose(f);
+
+	for (uint32_t i=0; i<svg.idList->count; i++) {
+		switch (svg.idList->elements[i].type) {
+		case svg_element_pattern:
+			vkvg_pattern_destroy(svg.idList->elements[i].data);
+			break;
+		}
+	}
+	array_destroy (svg.idList);
+
 	return svg.surf;
 }
