@@ -171,7 +171,7 @@ static void scroll_callback(GLFWwindow* window, double x, double y) {
 
 void print_help_and_exit () {
 	printf("VKVG svg parser\n");
-	exit(EXIT_SUCCESS);
+	exit(-1);
 }
 
 int main (int argc, char *argv[]){
@@ -185,27 +185,27 @@ int main (int argc, char *argv[]){
 
 			switch (argv[i][1]) {
 			case 'd':
-				if (argc < i + 1) print_help_and_exit();
-				directory = argv[++i];
+				if (argc < ++i + 1) print_help_and_exit();
+				directory = argv[i];
 				break;
 			case 'w':
-				if (argc < i + 1) print_help_and_exit();
-				width = atoi(argv[++i]);
+				if (argc < ++i + 1) print_help_and_exit();
+				width = atoi(argv[i]);
 				break;
 			case 'h':
-				if (argc < i + 1) print_help_and_exit();
-				height = atoi(argv[++i]);
+				if (argc < ++i + 1) print_help_and_exit();
+				height = atoi(argv[i]);
 				break;
 			case 's':
-				if (argc < i + 1) print_help_and_exit();
-				samples = (VkSampleCountFlags)atoi(argv[++i]);
+				if (argc < ++i + 1) print_help_and_exit();
+				samples = (VkSampleCountFlags)atoi(argv[i]);
 				break;
 			case 'i':
-				if (argc < i + 1) print_help_and_exit();
-				iconSize = atoi(argv[++i]);
+				if (argc < ++i + 1) print_help_and_exit();
+				iconSize = atoi(argv[i]);
 				break;
 			case 'm':
-				if (argc < i + 1) print_help_and_exit();
+				if (argc < ++i + 1) print_help_and_exit();
 				margin = atoi(argv[++i]);
 				break;
 			default:
@@ -239,6 +239,8 @@ int main (int argc, char *argv[]){
 			exit(VK_SUCCESS);
 		}
 	}
+
+	//vkvg_log_level = VKVG_LOG_INFO;
 
 	while (!vkengine_should_close (e)) {
 

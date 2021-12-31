@@ -97,20 +97,22 @@ vk_engine_t* vkengine_create (VkPresentModeKHR presentMode, uint32_t width, uint
 	glfwInit();
 	assert (glfwVulkanSupported()==GLFW_TRUE);
 
-	uint32_t enabledExtsCount = 0, phyCount = 0;
+	uint32_t enabledLayersCount = 0, enabledExtsCount = 0, phyCount = 0;
 	const char** gflwExts = glfwGetRequiredInstanceExtensions (&enabledExtsCount);
 
 	const char* enabledExts [10];
+	const char* enabledLayers[10];
 
 	for (uint32_t i=0;i<enabledExtsCount;i++)
 		enabledExts[i] = gflwExts[i];
 
 #if defined(DEBUG)
-	enabledExts[enabledExtsCount] = "VK_EXT_debug_utils";
-	enabledExtsCount++;
+	enabledLayers[enabledLayersCount++] = "VK_LAYER_KHRONOS_validation";
+	//enabledLayers[enabledLayersCount++] = "VK_LAYER_RENDERDOC_Capture";
+	enabledExts[enabledExtsCount++] = "VK_EXT_debug_utils";
 #endif
 
-	e->app = vkh_app_create(1,2,"vkvgTest", 0, NULL, enabledExtsCount, enabledExts);
+	e->app = vkh_app_create(1,2,"vkvgTest", enabledLayersCount, enabledLayers, enabledExtsCount, enabledExts);
 
 	glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
 	glfwWindowHint(GLFW_RESIZABLE,  GLFW_TRUE);

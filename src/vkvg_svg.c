@@ -17,35 +17,88 @@
 #define DEBUG_LOG 1
 
 #ifdef DEBUG_LOG
-#define LOG(...) fprintf (stdout, __VA_ARGS__);
+#define LOG(...) fprintf (stdout, __VA_ARGS__)
 #else
 #define LOG
 #endif
 
 static int res;
 
-typedef enum _svg_element_type {
-	svg_element_pattern
+typedef enum {
+	svg_element_type_linear_gradient,
+	svg_element_type_radial_gradient
 }svg_element_type;
 
-typedef struct _svg_element_t {
-	uint32_t			hash;
-	svg_element_type	type;
-	void*				data;
-}svg_element_t;
-
-typedef enum _svg_paint_type {
+typedef enum {
 	svg_paint_type_none,
 	svg_paint_type_solid,
 	svg_paint_type_pattern,
 }svg_paint_type;
 
 #define ARRAY_INIT	8
-#define ARRAY_ELEMENT_TYPE svg_element_t
+#define ARRAY_ELEMENT_TYPE void*
 #define ARRAY_IMPLEMENTATION
 #include "array.h"
 
-typedef struct svg_context_t {
+
+typedef enum {
+	svg_unit_cm,
+	svg_unit_mm,
+	svg_unit_Q,
+	svg_unit_in,
+	svg_unit_pt,
+	svg_unit_pc,
+	svg_unit_px,
+	svg_unit_percentage,
+}svg_unit;
+typedef enum {
+	svg_gradient_unit_objectBoundingBox,
+	svg_gradient_unit_userSpaceOnUse
+}svg_gradient_unit;
+
+typedef struct {
+	float number;
+	svg_unit units;
+} svg_length_or_percentage;
+typedef struct {
+	uint32_t hash;
+	svg_element_type type;
+} svg_element_id;
+
+typedef struct {
+	svg_element_id id;
+	svg_gradient_unit gradientUnits;
+	svg_length_or_percentage cx;
+	svg_length_or_percentage cy;
+	svg_length_or_percentage fx;
+	svg_length_or_percentage fy;
+	svg_length_or_percentage r;
+	VkvgPattern pattern;
+}svg_element_radial_gradient;
+typedef struct {
+	svg_element_id id;
+	svg_gradient_unit gradientUnits;
+	svg_length_or_percentage x1;
+	svg_length_or_percentage x2;
+	svg_length_or_percentage y1;
+	svg_length_or_percentage y2;
+	VkvgPattern pattern;
+}svg_element_linear_gradient;
+
+uint32_t _get_element_hash (void* elt) {
+	return ((svg_element_id*)elt)->hash;
+}
+svg_element_type _get_element_type (void* elt) {
+	return ((svg_element_id*)elt)->type;
+}
+typedef struct {
+	float x;
+	float y;
+	float w;
+	float h;
+} svg_viewbox;
+
+typedef struct {
 	char		elt[128];
 	char		att[1024];
 	char		value[1024*1024];
@@ -54,12 +107,16 @@ typedef struct svg_context_t {
 	VkvgSurface surf;
 	uint32_t	width;//force surface width & height
 	uint32_t	height;
+	svg_viewbox viewBox;
+	bool		preserveAspectRatio;
 	bool		skip;//skip tag and children
 	uint32_t	currentIdHash;
 	array_t*	idList;
 	/*long		currentTagStartPos;*/
 
 } svg_context;
+
+enum prevCmd {none, quad, cubic};
 
 int read_tag (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_paint_type hasFill, uint32_t stroke, uint32_t fill);
 
@@ -799,17 +856,6 @@ bool parse_floats (FILE* f, int floatCount, ...) {
 	va_end(args);
 	return true;
 }
-typedef enum _svg_unit {
-	svg_unit_cm,
-	svg_unit_mm,
-	svg_unit_Q,
-	svg_unit_in,
-	svg_unit_pt,
-	svg_unit_pc,
-	svg_unit_px,
-	svg_unit_percentage,
-}svg_unit;
-
 bool try_parse_lenghtOrPercentage (const char* measure, float* number, svg_unit* units) {
 	char str_units[16];
 	res = sscanf(measure, "%f%[^, ]", number, str_units);
@@ -880,6 +926,77 @@ bool try_parse_lenghtOrPercentage (const char* measure, float* number, svg_unit*
 	}
 	return true;
 }
+
+bool try_parse_lenghtOrPercentage2 (const char* measure, svg_length_or_percentage* lop) {
+	char str_units[16];
+	res = sscanf(measure, "%f%[^, ]", &lop->number, str_units);
+	if (res == 0)
+		return false;
+	if (res == 2) {
+		int l = strlen(str_units);
+		if (l == 1) {
+			switch (tolower(str_units[0])) {
+			case 'q':
+				lop->units = svg_unit_Q;
+				return true;
+			case '%':
+				lop->units = svg_unit_percentage;
+				return true;
+			default:
+				LOG ("error parsing measure: %s\n", measure);
+				return false;
+			}
+		}
+		if (l == 2) {
+			switch (tolower(str_units[0])) {
+			case 'p':
+				switch (tolower(str_units[1])) {
+				case 't':
+					lop->units = svg_unit_pt;
+					return true;
+				case 'c':
+					lop->units = svg_unit_pc;
+					return true;
+				case 'x':
+					lop->units = svg_unit_px;
+					return true;
+				default:
+					LOG ("error parsing measure: %s\n", measure);
+				}
+				break;
+			case 'i':
+				if (tolower(str_units[1]) != 'n') {
+					LOG ("error parsing measure: %s\n", measure);
+					return false;
+				}
+				lop->units = svg_unit_in;
+				return true;
+				break;
+			case 'm':
+				if (tolower(str_units[1]) != 'm') {
+					LOG ("error parsing measure: %s\n", measure);
+					return false;
+				}
+				lop->units = svg_unit_mm;
+				return true;
+				break;
+			case 'c':
+				if (tolower(str_units[1]) != 'm') {
+					LOG ("error parsing measure: %s\n", measure);
+					return false;
+				}
+				lop->units = svg_unit_cm;
+				return true;
+				break;
+			default:
+				LOG ("error parsing measure: %s\n", measure);
+				return false;
+			}
+
+		}
+	}
+	return true;
+}
 bool try_parse_color (const char* colorString, svg_paint_type* isEnabled, uint32_t* colorValue) {
 	if (colorString[0] == '#') {
 		char color[7];
@@ -890,7 +1007,7 @@ bool try_parse_color (const char* colorString, svg_paint_type* isEnabled, uint32
 		else
 			sprintf(hexColorString, "0xff%c%c%c%c%c%c", color[4],color[5],color[2],color[3],color[0],color[1]);
 		sscanf(hexColorString, "%x", colorValue);
-		*isEnabled = true;
+		*isEnabled = svg_paint_type_solid;
 		return true;
 	}
 	if (!strncmp (colorString, "url", 3)) {
@@ -914,36 +1031,92 @@ bool try_parse_color (const char* colorString, svg_paint_type* isEnabled, uint32
 		*colorValue = 0;
 	else if (strcasecmp (colorString, "currentColor"))
 		*colorValue = parseColorName(colorString);
-	*isEnabled = colorValue > 0;
+	if (*colorValue > 0)
+		*isEnabled = svg_paint_type_solid;
+	else
+		*isEnabled = svg_paint_type_none;
 	return true;
 }
-bool try_find_by_id (svg_context* svg, uint32_t hash, svg_element_t** elt) {
+bool try_find_by_id (svg_context* svg, uint32_t hash, void** elt) {
 	for (uint32_t i=0; i < svg->idList->count; i++) {
-		if (svg->idList->elements[i].hash == hash) {
-			*elt = &svg->idList->elements[i];
+		if (_get_element_hash (svg->idList->elements[i]) == hash) {
+			*elt = svg->idList->elements[i];
 			return true;
 		}
 	}
 	return false;
 }
+float _get_pixel_coord (float reference, svg_length_or_percentage* lop) {
+	switch (lop->units) {
+	case svg_unit_percentage:
+		 return reference * lop->number / 100.0f;
+	default:
+		return lop->number;
+	}
+}
 void set_pattern (svg_context* svg, uint32_t patternHash) {
-	float x0,y0,x1,y1;
-	vkvg_path_extents(svg->ctx, &x0, &y0, &x1, &y1);
-	svg_element_t* elt;
+	void* elt;
 	vkvg_pattern_type_t pat_type;
+	VkvgPattern pat;
 	if (try_find_by_id(svg, patternHash, &elt)) {
-		switch (elt->type) {
-		case svg_element_pattern:
-			pat_type = vkvg_pattern_get_type(elt->data);
-			if (pat_type == VKVG_PATTERN_TYPE_LINEAR) {
-				float px0,py0,px1,py1;
+		switch (_get_element_type(elt)) {
+		case svg_element_type_linear_gradient:
+			{
+				svg_element_linear_gradient* lg = (svg_element_linear_gradient*)elt;
+				pat = lg->pattern;
+
+				float x0 = 0, y0 = 0, x1, y1;
+				if (lg->gradientUnits == svg_gradient_unit_objectBoundingBox)
+					vkvg_path_extents(svg->ctx, &x0, &y0, &x1, &y1);
+				else {
+					x0 = svg->viewBox.x;
+					y0 = svg->viewBox.y;
+					x1 = svg->viewBox.x + svg->viewBox.w;
+					y1 = svg->viewBox.y + svg->viewBox.h;
+				}
+
 				float w = x1 - x0;
 				float h = y1 - y0;
-				vkvg_pattern_get_linear_points (elt->data, &px0, &py0, &px1, &py1);
-				vkvg_pattern_edit_linear(elt->data, x0, y0, x0 + w*px1, y0 + h*py1);
+
+				float px0,py0,px1,py1;
+				px0 = _get_pixel_coord (w, &lg->x1);
+				py0 = _get_pixel_coord (h, &lg->y1);
+				px1 = _get_pixel_coord (w, &lg->x2);
+				py1 = _get_pixel_coord (h, &lg->y2);
+
+				vkvg_pattern_edit_linear(lg->pattern, px0, py0, px1, py1);
+				vkvg_set_source(svg->ctx, lg->pattern);
 			}
 
-			vkvg_set_source(svg->ctx, elt->data);
+			break;
+		case svg_element_type_radial_gradient:
+			{
+				svg_element_radial_gradient* lg = (svg_element_radial_gradient*)elt;
+				pat = lg->pattern;
+				float x0 = 0, y0 = 0, x1, y1;
+				if (lg->gradientUnits == svg_gradient_unit_objectBoundingBox)
+					vkvg_path_extents(svg->ctx, &x0, &y0, &x1, &y1);
+				else {
+					x0 = svg->viewBox.x;
+					y0 = svg->viewBox.y;
+					x1 = svg->viewBox.x + svg->viewBox.w;
+					y1 = svg->viewBox.y + svg->viewBox.h;
+				}
+
+				float w = x1 - x0;
+				float h = y1 - y0;
+
+				float cx,cy,fx,fy,r;
+				cx = _get_pixel_coord (w, &lg->cx)+x0;
+				cy = _get_pixel_coord (h, &lg->cy)+y0;
+				fx = _get_pixel_coord (w, &lg->fx)+x0;
+				fy = _get_pixel_coord (h, &lg->fy)+y0;
+				r = _get_pixel_coord (w, &lg->r);
+
+				vkvg_pattern_edit_radial (lg->pattern, cx, cy, 0, cx, cy, r);
+				vkvg_set_source(svg->ctx, lg->pattern);
+			}
+			break;
 		}
 	} else
 		LOG ("pattern hash not resolved: %d\n", patternHash);
@@ -1029,13 +1202,20 @@ int read_common_attributes (svg_context* svg, svg_paint_type *hasStroke, svg_pai
 				if (!strcasecmp (transform, "matrix")) {
 					vkvg_matrix_t m, current, newMat;
 					if (!parse_floats(tmp, 6, &m.xx, &m.yx, &m.xy, &m.yy, &m.x0, &m.y0)) {
-						LOG ("error parsing transformation matrix\n");
+						LOG ("error parsing transformation matrix: %s\n", svg->value);
 						break;
 					}
 					//vkvg_matrix_init_identity(&m);
 					vkvg_get_matrix(svg->ctx, &current);
 					vkvg_matrix_multiply(&newMat, &m, &current);
 					vkvg_set_matrix(svg->ctx, &newMat);
+				} else if (!strcasecmp (transform, "translate")) {
+					float dx, dy;
+					if (!parse_floats(tmp, 2, &dx, &dy)) {
+						LOG ("error parsing translation transform: %s\n", svg->value);
+						break;
+					}
+					vkvg_translate(svg->ctx, dx, dy);
 				}
 				char c = getc(tmp);
 				if (c!=')') {
@@ -1194,7 +1374,6 @@ int read_polyline_attributes (svg_context* svg, FILE* f, bool close, svg_paint_t
 	read_tag_end
 	return res;
 }
-enum prevCmd {none, quad, cubic};
 int read_path_attributes (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_paint_type hasFill, uint32_t stroke, uint32_t fill) {
 
 	read_attributes_loop_start
@@ -1217,15 +1396,31 @@ int read_path_attributes (svg_context* svg, FILE* f, svg_paint_type hasStroke, s
 
 					switch (c) {
 					case 'M':
-						if (parse_floats(tmp, 2, &x, &y))
-							vkvg_move_to (svg->ctx, x, y);
+						if (repeat)
+							result = parse_floats(tmp, 1, &y);
 						else
+							result = parse_floats(tmp, 2, &x, &y);
+						if (result) {
+							if (repeat)
+								vkvg_line_to (svg->ctx, x, y);
+							else
+								vkvg_move_to (svg->ctx, x, y);
+							repeat = parse_floats(tmp, 1, &x);
+						} else
 							parseError = true;
 						break;
 					case 'm':
-						if (parse_floats(tmp, 2, &x, &y))
-							vkvg_rel_move_to (svg->ctx, x, y);
+						if (repeat)
+							result = parse_floats(tmp, 1, &y);
 						else
+							result = parse_floats(tmp, 2, &x, &y);
+						if (result) {
+							if (repeat)
+								vkvg_rel_line_to (svg->ctx, x, y);
+							else
+								vkvg_rel_move_to (svg->ctx, x, y);
+							repeat = parse_floats(tmp, 1, &x);
+						} else
 							parseError = true;
 						break;
 					case 'L':
@@ -1485,7 +1680,7 @@ int read_g_attributes (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_
 }
 int read_svg_attributes (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_paint_type hasFill, uint32_t stroke, uint32_t fill) {
 	bool hasViewBox = false;
-	float x, y, w, h, width = 0, height = 0;
+	float width = 0, height = 0;
 	int startingPos = ftell(f);
 
 	read_attributes_loop_start
@@ -1500,23 +1695,22 @@ int read_svg_attributes (svg_context* svg, FILE* f, svg_paint_type hasStroke, sv
 				return -1;
 
 			if (try_parse_lenghtOrPercentage(strX, &value, &units))
-				x = value;
+				svg->viewBox.x = value;
 			else
 				LOG ("error parsing viewbox x: %s\n", strX);
 
 			if (try_parse_lenghtOrPercentage(strY, &value, &units))
-				y = value;
+				svg->viewBox.y = value;
 			else
 				LOG ("error parsing viewbox y: %s\n", strY);
 
 			if (try_parse_lenghtOrPercentage(strW, &value, &units))
-				w = value;
+				svg->viewBox.w = value;
 			else
 				LOG ("error parsing viewbox w: %s\n", strW);
 
-
 			if (try_parse_lenghtOrPercentage(strH, &value, &units))
-				h = value;
+				svg->viewBox.h = value;
 			else
 				LOG ("error parsing viewbox h: %s\n", strH);
 
@@ -1550,14 +1744,15 @@ int read_svg_attributes (svg_context* svg, FILE* f, svg_paint_type hasStroke, sv
 	//TODO viewbox x,y
 	if (hasViewBox) {
 		if (surfW)
-			xScale = (float)surfW / w;
+			xScale = (float)surfW / svg->viewBox.w;
 		else
-			surfW = w;
+			surfW = svg->viewBox.w;
 		if (surfH)
-			yScale = (float)surfH / h;
+			yScale = (float)surfH / svg->viewBox.h;
 		else
-			surfH = h;
-	}
+			surfH = svg->viewBox.h;
+	} else
+		svg->viewBox = (svg_viewbox) {0,0,surfW,surfH};
 
 	svg->surf = vkvg_surface_create(svg->dev, surfW, surfH);
 	svg->ctx = vkvg_create (svg->surf);
@@ -1603,6 +1798,7 @@ int read_attributes (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_pa
 int read_stop_attributes (svg_context* svg, FILE* f, VkvgPattern pat, svg_paint_type hasStroke, svg_paint_type hasFill, uint32_t stroke, uint32_t fill) {
 	uint32_t stop_color = 0;
 	float offset = 0;
+	float opacity = 1.0f;
 	svg_unit offset_unit = svg_unit_px;
 
 	read_attributes_loop_start
@@ -1613,15 +1809,16 @@ int read_stop_attributes (svg_context* svg, FILE* f, VkvgPattern pat, svg_paint_
 			if (!strcasecmp (svg->att, "stop-color")) {
 				svg_paint_type enabled;
 				try_parse_color(svg->value, &enabled, &stop_color);
+			} else if (!strcasecmp (svg->att, "stop-opacity")) {
+				svg_unit opacityUnit;
+				if (!try_parse_lenghtOrPercentage(svg->value, &opacity, &opacityUnit))
+					LOG ("error parsing gradient offset: %s\n", svg->value);
 			} else if (!strcasecmp (svg->att, "offset")) {
 				if (!try_parse_lenghtOrPercentage(svg->value, &offset, &offset_unit))
 					LOG ("error parsing gradient offset: %s\n", svg->value);
 				switch (offset_unit) {
 				case svg_unit_percentage:
 					offset /= 100.0f;
-					break;
-				default:
-					LOG("unandled unit for gradient offset: %s\n", svg->value);
 					break;
 				}
 
@@ -1638,7 +1835,7 @@ int read_stop_attributes (svg_context* svg, FILE* f, VkvgPattern pat, svg_paint_
 	float  g = (float)((stop_color&0x0000ff00)>> 8) / 255.0f;
 	float  r = (float)( stop_color&0x000000ff) / 255.0f;
 
-	vkvg_pattern_add_color_stop(pat, offset, r, g, b, a);
+	vkvg_pattern_add_color_stop(pat, offset, r, g, b, a * opacity);
 	read_tag_end
 	return read_tag(svg, f, hasStroke, hasFill, stroke, fill);
 }
@@ -1653,74 +1850,158 @@ int read_gradient_children (svg_context* svg, FILE* f, VkvgPattern pat,  svg_pai
 	return res;
 }
 int read_radialgradient_attributes (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_paint_type hasFill, uint32_t stroke, uint32_t fill) {
-	float cx = 0, cy = 0, fx = 0, fy, r = 0;
-	read_attributes_loop_start
 
-		if (!read_core_attributes(svg) &&
-			!read_common_attributes(svg, &hasStroke, &hasFill, &stroke, &fill)) {
+	svg_element_radial_gradient* rg = (svg_element_radial_gradient*)malloc(sizeof(svg_element_radial_gradient));
+	rg->id.type = svg_element_type_radial_gradient;
+	rg->gradientUnits = svg_gradient_unit_objectBoundingBox;
+	rg->cx = (svg_length_or_percentage){50,svg_unit_percentage};
+	rg->cy = (svg_length_or_percentage){50,svg_unit_percentage};
+	rg->fx = (svg_length_or_percentage){0};
+	rg->fy = (svg_length_or_percentage){0};
+	rg->r = (svg_length_or_percentage){50,svg_unit_percentage};
 
-			svg_unit units;
-			float value;
-			if (try_parse_lenghtOrPercentage(svg->value, &value, &units)) {
-				if (!strcasecmp (svg->att, "cx"))
-					cx = value;
-				else if (!strcasecmp (svg->att, "cy"))
-					cy = value;
-				else if (!strcasecmp (svg->att, "fx"))
-					fx = value;
-				else if (!strcasecmp (svg->att, "fy"))
-					fy = value;
-				else if (!strcasecmp (svg->att, "r"))
-					r = value;
-				else
-					LOG("Unprocessed attribute: %s->%s\n", svg->elt, svg->att);
-			}else
-				LOG ("error parsing %s: %s\n", svg->att, svg->value);
-		}
-
-	read_attributes_loop_end
-
-	VkvgPattern pat = vkvg_pattern_create_radial (fx, fy, 0, cx, cy, r);
-	array_add (svg->idList, (svg_element_t){svg->currentIdHash, svg_element_pattern, pat});
-	read_tag_end
-	return read_gradient_children (svg, f, pat, hasStroke, hasFill, stroke, fill);
-}
-int read_lineargradient_attributes (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_paint_type hasFill, uint32_t stroke, uint32_t fill) {
-	float x1 = 0, y1 = 0, x2 = 100.0f, y2 = 100.0f;
+	VkvgPattern refPatter = NULL;
 
 	read_attributes_loop_start
 
 		if (!read_core_attributes(svg) &&
 			!read_common_attributes(svg, &hasStroke, &hasFill, &stroke, &fill)) {
 
-			if (!strcasecmp(svg->att, "gradientUnits"))	{
-
-			} else {
-				svg_unit units;
-				float value;
-				if (try_parse_lenghtOrPercentage(svg->value, &value, &units)) {
-					if (!strcasecmp (svg->att, "x1"))
-						x1 = value;
-					else if (!strcasecmp (svg->att, "y1"))
-						y1 = value;
-					else if (!strcasecmp (svg->att, "x2"))
-						x2 = value;
-					else if (!strcasecmp (svg->att, "y2"))
-						y2 = value;
+			if (!strcasecmp(svg->att, "xlink:href")) {
+				if (svg->value[0] == '#') {
+					void* referencedPattern = NULL;
+					if (!try_find_by_id(svg, hash_string(&svg->value[1]), &referencedPattern))
+						LOG ("xlink:href not found %s\n", svg->value);
+					else if (_get_element_type(referencedPattern) == svg_element_type_radial_gradient)
+						refPatter = (VkvgPattern) ((svg_element_radial_gradient*)referencedPattern)->pattern;
 					else
-						LOG("Unprocessed attribute: %s->%s\n", svg->elt, svg->att);
-				}else
+						LOG ("xlink:href svg element mismatch  %s\n", svg->value);
+				} else
+					LOG ("xlink:href type not handled %s\n", svg->value);
+			} else if (!strcasecmp (svg->att, "gradientUnits")) {
+				if (!strcasecmp (svg->att, "objectBoundingBox"))
+					rg->gradientUnits = svg_gradient_unit_objectBoundingBox;
+				else if (!strcasecmp (svg->att, "userSpaceOnUse"))
+					rg->gradientUnits = svg_gradient_unit_userSpaceOnUse;
+				else
 					LOG ("error parsing %s: %s\n", svg->att, svg->value);
+			} else {
+				svg_length_or_percentage* tmp = NULL;
+
+				if (!strcasecmp (svg->att, "cx"))
+					tmp = &rg->cx;
+				else if (!strcasecmp (svg->att, "cy"))
+					tmp = &rg->cy;
+				else if (!strcasecmp (svg->att, "fx"))
+					tmp = &rg->fx;
+				else if (!strcasecmp (svg->att, "fy"))
+					tmp = &rg->fy;
+				else if (!strcasecmp (svg->att, "r"))
+					tmp = &rg->r;
+
+				if (tmp) {
+					if (!try_parse_lenghtOrPercentage2(svg->value, tmp))
+						LOG ("error parsing %s: %s\n", svg->att, svg->value);
+				} else
+					LOG("Unprocessed attribute: %s->%s\n", svg->elt, svg->att);
 			}
 		}
 
 	read_attributes_loop_end
 
-	VkvgPattern pat = vkvg_pattern_create_linear (x1, y1, x2, y2);
-	svg_element_t elt = {svg->currentIdHash, svg_element_pattern, pat};
-	array_add (svg->idList, elt);
+	rg->pattern = vkvg_pattern_create_radial (rg->fx.number, rg->fy.number, 0, rg->cx.number, rg->cy.number, rg->r.number);
+	rg->id.hash = svg->currentIdHash;
+
+	if (refPatter != NULL) {
+		uint32_t stopCount;
+		if (vkvg_pattern_get_color_stop_count(refPatter, &stopCount) == VKVG_STATUS_SUCCESS) {
+			for (uint32_t i=0; i<stopCount; i++) {
+				float offset, r, g, b, a;
+				vkvg_pattern_get_color_stop_rgba(refPatter, i, &offset, &r, &g, &b, &a);
+				vkvg_pattern_add_color_stop(rg->pattern, offset, r, g, b, a);
+			}
+		} else
+			LOG ("Error processing referenced pattern  %s\n", svg->value);
+	}
+
+	array_add (svg->idList, rg);
 	read_tag_end
-	return read_gradient_children (svg, f, pat, hasStroke, hasFill, stroke, fill);
+	return read_gradient_children (svg, f, rg->pattern, hasStroke, hasFill, stroke, fill);
+}
+int read_lineargradient_attributes (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_paint_type hasFill, uint32_t stroke, uint32_t fill) {
+	VkvgPattern refPatter = NULL;
+
+	svg_element_linear_gradient* rg = (svg_element_linear_gradient*)malloc(sizeof(svg_element_linear_gradient));
+	rg->id.type = svg_element_type_linear_gradient;
+	rg->x1 = (svg_length_or_percentage){0,svg_unit_percentage};
+	rg->y1 = (svg_length_or_percentage){0,svg_unit_percentage};
+	rg->x2 = (svg_length_or_percentage){100,svg_unit_percentage};
+	rg->y2 = (svg_length_or_percentage){100,svg_unit_percentage};
+
+
+	read_attributes_loop_start
+
+		if (!read_core_attributes(svg) &&
+			!read_common_attributes(svg, &hasStroke, &hasFill, &stroke, &fill)) {
+
+			if (!strcasecmp(svg->att, "xlink:href")) {
+				if (svg->value[0] == '#') {
+					void* referencedPattern = NULL;
+					if (!try_find_by_id(svg, hash_string(&svg->value[1]), &referencedPattern))
+						LOG ("xlink:href not found %s\n", svg->value);
+					else if (_get_element_type(referencedPattern) == svg_element_type_linear_gradient)
+						refPatter = (VkvgPattern) ((svg_element_linear_gradient*)referencedPattern)->pattern;
+					else
+						LOG ("xlink:href svg element mismatch  %s\n", svg->value);
+				} else
+					LOG ("xlink:href type not handled %s\n", svg->value);
+			} else if (!strcasecmp (svg->att, "gradientUnits")) {
+				if (!strcasecmp (svg->att, "objectBoundingBox"))
+					rg->gradientUnits = svg_gradient_unit_objectBoundingBox;
+				else if (!strcasecmp (svg->att, "userSpaceOnUse"))
+					rg->gradientUnits = svg_gradient_unit_userSpaceOnUse;
+				else
+					LOG ("error parsing %s: %s\n", svg->att, svg->value);
+
+			} else {
+				svg_length_or_percentage* tmp = NULL;
+
+				if (!strcasecmp (svg->att, "x1"))
+					tmp = &rg->x1;
+				else if (!strcasecmp (svg->att, "y1"))
+					tmp = &rg->y1;
+				else if (!strcasecmp (svg->att, "x2"))
+					tmp = &rg->x2;
+				else if (!strcasecmp (svg->att, "y2"))
+					tmp = &rg->y2;
+
+				if (tmp) {
+					if (!try_parse_lenghtOrPercentage2(svg->value, tmp))
+						LOG ("error parsing %s: %s\n", svg->att, svg->value);
+				} else
+					LOG("Unprocessed attribute: %s->%s\n", svg->elt, svg->att);
+			}
+		}
+
+	read_attributes_loop_end
+
+	rg->pattern = vkvg_pattern_create_linear (rg->x1.number, rg->y1.number, rg->x2.number, rg->y2.number);
+	rg->id.hash = svg->currentIdHash;
+
+	if (refPatter != NULL) {
+		uint32_t stopCount;
+		if (vkvg_pattern_get_color_stop_count(refPatter, &stopCount) == VKVG_STATUS_SUCCESS) {
+			for (uint32_t i=0; i<stopCount; i++) {
+				float offset, r, g, b, a;
+				vkvg_pattern_get_color_stop_rgba(refPatter, i, &offset, &r, &g, &b, &a);
+				vkvg_pattern_add_color_stop(rg->pattern, offset, r, g, b, a);
+			}
+		} else
+			LOG ("Error processing referenced pattern  %s\n", svg->value);
+	}
+	array_add (svg->idList, rg);
+	read_tag_end
+	return read_gradient_children (svg, f, rg->pattern, hasStroke, hasFill, stroke, fill);
 }
 int read_defs_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_paint_type hasFill, uint32_t stroke, uint32_t fill) {
 	while (!feof (f)) {
@@ -1820,11 +2101,15 @@ VkvgSurface parse_svg_file (VkvgDevice dev, const char* filename, uint32_t width
 	fclose(f);
 
 	for (uint32_t i=0; i<svg.idList->count; i++) {
-		switch (svg.idList->elements[i].type) {
-		case svg_element_pattern:
-			vkvg_pattern_destroy(svg.idList->elements[i].data);
+		switch (_get_element_type (svg.idList->elements[i])) {
+		case svg_element_type_linear_gradient:
+			vkvg_pattern_destroy((VkvgPattern) ((svg_element_linear_gradient*)svg.idList->elements[i])->pattern);
+			break;
+		case svg_element_type_radial_gradient:
+			vkvg_pattern_destroy((VkvgPattern) ((svg_element_radial_gradient*)svg.idList->elements[i])->pattern);
 			break;
 		}
+		free (svg.idList->elements[i]);
 	}
 	array_destroy (svg.idList);
 
