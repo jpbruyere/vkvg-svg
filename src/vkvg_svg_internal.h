@@ -18,7 +18,7 @@
 #define ARRAY_ELEMENT_TYPE void*
 #include "array.h"
 
-#define DEBUG_LOG 1
+//#define DEBUG_LOG
 
 #ifdef DEBUG_LOG
 #define LOG(...) fprintf (stdout, __VA_ARGS__)
@@ -81,12 +81,9 @@ typedef struct {
 	VkvgPattern pattern;
 }svg_element_linear_gradient;
 
-uint32_t _get_element_hash (void* elt) {
-	return ((svg_element_id*)elt)->hash;
-}
-svg_element_type _get_element_type (void* elt) {
-	return ((svg_element_id*)elt)->type;
-}
+uint32_t _get_element_hash (void* elt);
+svg_element_type _get_element_type (void* elt);
+
 typedef struct {
 	float x;
 	float y;
@@ -107,6 +104,7 @@ typedef struct {
 	bool		preserveAspectRatio;
 	bool		skip;//skip tag and children
 	uint32_t	currentIdHash;
+	void*		currentXlinkHref;
 	array_t*	idList;
 	/*long		currentTagStartPos;*/
 
@@ -114,26 +112,28 @@ typedef struct {
 
 enum prevCmd {none, quad, cubic};
 
+int skip_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_paint_type hasFill, uint32_t stroke, uint32_t fill, void* parentData);
 int read_tag (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_paint_type hasFill, uint32_t stroke, uint32_t fill);
 
 #define get_attribute fscanf(f, " %[^=>]=%*[\"']%[^\"']%*[\"']", svg->att, svg->value)
 
 #define read_tag_end \
+	svg->currentXlinkHref = NULL;								\
+	svg->currentIdHash = 0;										\
 	if (res < 0) {												\
 		LOG("error parsing: %s\n", svg->att);					\
-		return -1;												\
-	}															\
-	if (res == 1) {												\
+		res -1;													\
+	}else if (res == 1) {										\
 		if (getc(f) != '>') {									\
 			LOG("parsing error, expecting '>'\n");				\
-			return -1;											\
-		}														\
-		return 0;												\
-	}															\
-	if (getc(f) != '>') {										\
+			res = -1;											\
+		} else													\
+			res = 0;											\
+	}else if (getc(f) != '>') {									\
 		LOG("parsing error, expecting '>'\n");					\
-		return -1;												\
-	}
+		res -1;													\
+	}else\
+		res = 1;
 
 int skip_attributes_and_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_paint_type hasFill, uint32_t stroke, uint32_t fill);
 
