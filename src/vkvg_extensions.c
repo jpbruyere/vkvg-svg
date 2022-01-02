@@ -23,6 +23,11 @@ void _highlight (VkvgContext ctx) {
 	vkvg_set_source_rgb(ctx, 0,1,0);
 	vkvg_stroke(ctx);*/
 }
+void vkvg_elliptical_arc (VkvgContext ctx, float x2, float y2, bool largeArc, bool counterClockWise, float rx, float ry, float phi) {
+	float x1, y1;
+	vkvg_get_current_point(ctx, &x1, &y1);
+	vkvg_elliptic_arc(ctx, x1, y1, x2, y2, largeArc, counterClockWise, rx, ry, phi);
+}
 void vkvg_elliptic_arc (VkvgContext ctx, float x1, float y1, float x2, float y2, bool largeArc, bool counterClockWise, float rx, float ry, float phi) {
 	if (ctx->status)
 		return;
@@ -97,7 +102,7 @@ void vkvg_elliptic_arc (VkvgContext ctx, float x1, float y1, float x2, float y2,
 
 	float step = _get_arc_step(ctx, fminf (rx, ry))*0.1f;
 
-	_finish_path (ctx);
+	//_finish_path (ctx);
 
 	p = (vec2) {
 		rx * cosf (sa),
@@ -142,4 +147,47 @@ void vkvg_elliptic_arc (VkvgContext ctx, float x1, float y1, float x2, float y2,
 	vec2 xy = vec2_add (mat2_mult_vec2 (m, p), c);
 	_add_point (ctx, xy.x, xy.y);
 	_set_curve_end(ctx);
+}
+void vkvg_ellipse (VkvgContext ctx, float radiusX, float radiusY, float x, float y, float rotationAngle) {
+	float width_two_thirds = radiusX * 4 / 3;
+
+	float dx1 = sinf(rotationAngle) * radiusY;
+	float dy1 = cosf(rotationAngle) * radiusY;
+	float dx2 = cosf(rotationAngle) * width_two_thirds;
+	float dy2 = sinf(rotationAngle) * width_two_thirds;
+
+	float topCenterX = x - dx1;
+	float topCenterY = y + dy1;
+	float topRightX = topCenterX + dx2;
+	float topRightY = topCenterY + dy2;
+	float topLeftX = topCenterX - dx2;
+	float topLeftY = topCenterY - dy2;
+
+	float bottomCenterX = x + dx1;
+	float bottomCenterY = y - dy1;
+	float bottomRightX = bottomCenterX + dx2;
+	float bottomRightY = bottomCenterY + dy2;
+	float bottomLeftX = bottomCenterX - dx2;
+	float bottomLeftY = bottomCenterY - dy2;
+
+	vkvg_move_to (ctx, bottomCenterX, bottomCenterY);
+	vkvg_curve_to (ctx, bottomRightX, bottomRightY, topRightX, topRightY, topCenterX, topCenterY);
+	vkvg_curve_to (ctx, topLeftX, topLeftY, bottomLeftX, bottomLeftY, bottomCenterX, bottomCenterY);
+	vkvg_close_path (ctx);
+}
+void vkvg_rounded_rectangle2 (VkvgContext ctx, float x, float y, float w, float h, float rx, float ry){
+	vkvg_move_to (ctx, x+rx, y);
+	vkvg_line_to (ctx, x+w-rx, y);
+	vkvg_elliptical_arc(ctx, x+w, y+ry, false, true, rx, ry, 0);
+
+	vkvg_line_to (ctx, x+w, y+h-ry);
+	vkvg_elliptical_arc(ctx, x+w-rx, y+h, false, true, rx, ry, 0);
+
+	vkvg_line_to (ctx, x+rx, y+h);
+	vkvg_elliptical_arc(ctx, x, y+h-ry , false, true, rx, ry, 0);
+
+	vkvg_line_to (ctx, x, y+ry);
+	vkvg_elliptical_arc(ctx, x+rx, y , false, true, rx, ry, 0);
+
+	vkvg_close_path(ctx);
 }

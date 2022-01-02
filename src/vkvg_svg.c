@@ -833,7 +833,24 @@ bool try_parse_color (const char* colorString, svg_paint_type* isEnabled, uint32
 		*isEnabled = svg_paint_type_none;
 	return true;
 }
-
+void _parse_lenghtOrPercentage (svg_context* svg, svg_length_or_percentage* lop) {
+	svg_length_or_percentage result;
+	if (try_parse_lenghtOrPercentage2(svg->value, &result))
+		*lop = result;
+	else
+		LOG("error parsing attribute: %s->%s=%s\n", svg->elt, svg->att, svg->value);
+}
+float _parse_opacity (svg_context* svg) {
+	svg_length_or_percentage opacity;
+	if (!try_parse_lenghtOrPercentage2(svg->value, &opacity)) {
+		LOG ("error parsing gradient opacity: %s\n", svg->value);
+		return 1;
+	}
+	if (opacity.units == svg_unit_percentage)
+		return opacity.number / 100.0f;
+	else
+		return opacity.number;
+}
 void _parse_transform (svg_context* svg) {
 	FILE *tmp = fmemopen(svg->value, strlen (svg->value), "r");
 	char transform[16];
@@ -1314,52 +1331,6 @@ void _copy_pattern_color_stops (VkvgPattern orig, VkvgPattern dest) {
 #define PROCESS_POLYLINE_TRANSFORM	_parse_transform (svg);
 #define PROCESS_POLYGON_TRANSFORM	_parse_transform (svg);
 
-//========RECT============
-#define HEADING_RECT \
-	vkvg_save (svg->ctx);\
-	float x = 0, y = 0, w = 0, h = 0, rx = 0, ry = 0;\
-	svg_unit units;\
-	float value;
-#define ELEMENT_PRE_PROCESS_RECT \
-	if (w && h && (hasFill || hasStroke)) {\
-		vkvg_rectangle(svg->ctx, x, y, w, h);\
-		draw (svg, hasStroke, hasFill, stroke, fill);\
-	}
-#define ELEMENT_POST_PROCESS_RECT vkvg_restore (svg->ctx);
-
-#define PROCESS_RECT_X \
-	if (try_parse_lenghtOrPercentage(svg->value, &value, &units))\
-		x = value;\
-	else\
-		LOG("error parsing attribute: %s->%s=%s\n", svg->elt, svg->att, svg->value);
-#define PROCESS_RECT_Y \
-	if (try_parse_lenghtOrPercentage(svg->value, &value, &units))\
-		y = value;\
-	else\
-		LOG("error parsing attribute: %s->%s=%s\n", svg->elt, svg->att, svg->value);
-#define PROCESS_RECT_WIDTH \
-	if (try_parse_lenghtOrPercentage(svg->value, &value, &units))\
-		w = value;\
-	else\
-		LOG("error parsing attribute: %s->%s=%s\n", svg->elt, svg->att, svg->value);
-#define PROCESS_RECT_HEIGHT \
-	if (try_parse_lenghtOrPercentage(svg->value, &value, &units))\
-		h = value;\
-	else\
-		LOG("error parsing attribute: %s->%s=%s\n", svg->elt, svg->att, svg->value);
-#define PROCESS_RECT_RX \
-	if (try_parse_lenghtOrPercentage(svg->value, &value, &units))\
-		rx = value;\
-	else\
-		LOG("error parsing attribute: %s->%s=%s\n", svg->elt, svg->att, svg->value);
-#define PROCESS_RECT_RY \
-	if (try_parse_lenghtOrPercentage(svg->value, &value, &units))\
-		ry = value;\
-	else\
-		LOG("error parsing attribute: %s->%s=%s\n", svg->elt, svg->att, svg->value);
-//========================
-
-
 //========SVG============
 #define HEADING_SVG				\
 	bool hasViewBox = false;	\
@@ -1469,6 +1440,33 @@ void _copy_pattern_color_stops (VkvgPattern orig, VkvgPattern dest) {
 							y2 = value;
 //=============================
 
+//========RECT============
+#define HEADING_RECT \
+	vkvg_save (svg->ctx);\
+	svg_length_or_percentage x = {0}, y = {0}, w = {0}, h = {0}, rx = {0}, ry = {0};
+#define ELEMENT_PRE_PROCESS_RECT \
+	if (w.number && h.number && (hasFill || hasStroke)) {\
+		if (rx.number > w.number / 2.0f)\
+			rx.number = w.number / 2.0f;\
+		if (ry.number > h.number / 2.0f)\
+			ry.number = h.number / 2.0f;\
+		if (rx.number > 0 || ry.number > 0)\
+			vkvg_rounded_rectangle2(svg->ctx, x.number, y.number, w.number, h.number, rx.number, ry.number);\
+		else\
+			vkvg_rectangle(svg->ctx, x.number, y.number, w.number, h.number);\
+		draw (svg, hasStroke, hasFill, stroke, fill);\
+	}
+
+#define ELEMENT_POST_PROCESS_RECT vkvg_restore (svg->ctx);
+
+#define PROCESS_RECT_X		_parse_lenghtOrPercentage(svg, &x);
+#define PROCESS_RECT_Y		_parse_lenghtOrPercentage(svg, &y);
+#define PROCESS_RECT_WIDTH	_parse_lenghtOrPercentage(svg, &w);
+#define PROCESS_RECT_HEIGHT	_parse_lenghtOrPercentage(svg, &h);
+#define PROCESS_RECT_RX		_parse_lenghtOrPercentage(svg, &rx);
+#define PROCESS_RECT_RY		_parse_lenghtOrPercentage(svg, &ry);
+//========================
+
 //========CIRCLE============
 #define HEADING_CIRCLE \
 	vkvg_save (svg->ctx);\
@@ -1490,6 +1488,24 @@ void _copy_pattern_color_stops (VkvgPattern orig, VkvgPattern dest) {
 							r = value;
 
 //=============================
+
+//========ELLIPSE============
+#define HEADING_ELLIPSE \
+	vkvg_save (svg->ctx);\
+	svg_length_or_percentage cx = {0}, cy = {0}, rx = {0}, ry = {0};
+#define ELEMENT_PRE_PROCESS_ELLIPSE \
+	if (rx.number && ry.number && (hasFill || hasStroke)) {\
+		vkvg_ellipse (svg->ctx, rx.number, ry.number, cx.number, cy.number, 0);\
+		draw (svg, hasStroke, hasFill, stroke, fill);\
+	}
+#define ELEMENT_POST_PROCESS_ELLIPSE vkvg_restore (svg->ctx);
+
+#define PROCESS_ELLIPSE_CX _parse_lenghtOrPercentage(svg, &cx);
+#define PROCESS_ELLIPSE_CY _parse_lenghtOrPercentage(svg, &cy);
+#define PROCESS_ELLIPSE_RX _parse_lenghtOrPercentage(svg, &rx);
+#define PROCESS_ELLIPSE_RY _parse_lenghtOrPercentage(svg, &ry);
+//=============================
+
 
 //========POLYLINE============
 #define HEADING_POLYLINE vkvg_save (svg->ctx);
@@ -1544,10 +1560,10 @@ void _copy_pattern_color_stops (VkvgPattern orig, VkvgPattern dest) {
 	array_add (svg->idList, rg);\
 	parentData = (void*)rg->pattern;
 
-#define PROCESS_LINEARGRADIENT_X1 try_parse_lenghtOrPercentage2(svg->value, &rg->x1);
-#define PROCESS_LINEARGRADIENT_Y1 try_parse_lenghtOrPercentage2(svg->value, &rg->y1);
-#define PROCESS_LINEARGRADIENT_X2 try_parse_lenghtOrPercentage2(svg->value, &rg->x2);
-#define PROCESS_LINEARGRADIENT_Y2 try_parse_lenghtOrPercentage2(svg->value, &rg->y2);
+#define PROCESS_LINEARGRADIENT_X1 _parse_lenghtOrPercentage(svg, &rg->x1);
+#define PROCESS_LINEARGRADIENT_Y1 _parse_lenghtOrPercentage(svg, &rg->y1);
+#define PROCESS_LINEARGRADIENT_X2 _parse_lenghtOrPercentage(svg, &rg->x2);
+#define PROCESS_LINEARGRADIENT_Y2 _parse_lenghtOrPercentage(svg, &rg->y2);
 #define PROCESS_LINEARGRADIENT_GRADIENTUNITS_USERSPACEONUSE		rg->gradientUnits = svg_gradient_unit_userSpaceOnUse;
 #define PROCESS_LINEARGRADIENT_GRADIENTUNITS_OBJECTBOUNDINGBOX	rg->gradientUnits = svg_gradient_unit_objectBoundingBox;
 //#define PROCESS_LINEARGRADIENT_GRADIENTTRANSFORM _parse_transform(svg);
@@ -1578,11 +1594,11 @@ void _copy_pattern_color_stops (VkvgPattern orig, VkvgPattern dest) {
 	array_add (svg->idList, rg);\
 	parentData = (void*)rg->pattern;
 
-#define PROCESS_RADIALGRADIENT_CX try_parse_lenghtOrPercentage2(svg->value, &rg->cx);
-#define PROCESS_RADIALGRADIENT_CY try_parse_lenghtOrPercentage2(svg->value, &rg->cy);
-#define PROCESS_RADIALGRADIENT_R  try_parse_lenghtOrPercentage2(svg->value, &rg->r);
-#define PROCESS_RADIALGRADIENT_FX try_parse_lenghtOrPercentage2(svg->value, &rg->fx);
-#define PROCESS_RADIALGRADIENT_FY try_parse_lenghtOrPercentage2(svg->value, &rg->fy);
+#define PROCESS_RADIALGRADIENT_CX _parse_lenghtOrPercentage(svg, &rg->cx);
+#define PROCESS_RADIALGRADIENT_CY _parse_lenghtOrPercentage(svg, &rg->cy);
+#define PROCESS_RADIALGRADIENT_R  _parse_lenghtOrPercentage(svg, &rg->r);
+#define PROCESS_RADIALGRADIENT_FX _parse_lenghtOrPercentage(svg, &rg->fx);
+#define PROCESS_RADIALGRADIENT_FY _parse_lenghtOrPercentage(svg, &rg->fy);
 #define PROCESS_RADIALGRADIENT_GRADIENTUNITS_USERSPACEONUSE		rg->gradientUnits = svg_gradient_unit_userSpaceOnUse;
 #define PROCESS_RADIALGRADIENT_GRADIENTUNITS_OBJECTBOUNDINGBOX	rg->gradientUnits = svg_gradient_unit_objectBoundingBox;
 //#define PROCESS_RADIALGRADIENT_GRADIENTTRANSFORM _parse_transform(svg);
@@ -1602,7 +1618,7 @@ void _copy_pattern_color_stops (VkvgPattern orig, VkvgPattern dest) {
 	float  b = (float)((stop_color&0x00ff0000)>>16) / 255.0f;\
 	float  g = (float)((stop_color&0x0000ff00)>> 8) / 255.0f;\
 	float  r = (float)( stop_color&0x000000ff) / 255.0f;\
-	vkvg_pattern_add_color_stop(pat, offset, r, g, b, a * opacity);
+	vkvg_pattern_add_color_stop(pat, offset, r, g, b, a * grad_opacity);
 
 #define PROCESS_STOP_OFFSET \
 {\
@@ -1617,21 +1633,24 @@ void _copy_pattern_color_stops (VkvgPattern orig, VkvgPattern dest) {
 
 #define HEADING_SVG_GRADIENT_ATTRIB \
 	uint32_t stop_color = 0;\
-	float opacity = 1.0f;
+	float grad_opacity = 1.0f;
 
 #define PROCESS_SVG_GRADIENT_ATTRIB_STOP_COLOR {\
 	svg_paint_type enabled;\
 	try_parse_color(svg->value, &enabled, &stop_color);\
 }
 
-#define PROCESS_SVG_GRADIENT_ATTRIB_STOP_OPACITY {\
-	svg_unit opacityUnit;\
-	if (!try_parse_lenghtOrPercentage(svg->value, &opacity, &opacityUnit))\
-		LOG ("error parsing gradient opacity: %s\n", svg->value);\
-}
+#define PROCESS_SVG_GRADIENT_ATTRIB_STOP_OPACITY grad_opacity = _parse_opacity (svg);
+
 
 //=============================
 
+#define HEADING_SVG_OPACITY_ATTRIB \
+	float opacity = 1.0f, fill_opacity = 1.0f, stroke_opacity = 1.0f;
+#define PROCESS_SVG_OPACITY_ATTRIB //TODO
+#define PROCESS_SVG_OPACITY_ATTRIB_OPACITY			opacity			= _parse_opacity (svg);
+#define PROCESS_SVG_OPACITY_ATTRIB_FILL_OPACITY		fill_opacity	= _parse_opacity (svg);
+#define PROCESS_SVG_OPACITY_ATTRIB_STROKE_OPACITY	stroke_opacity	= _parse_opacity (svg);
 
 
 #define PARSER_GEN_IMPLEMENTATION
@@ -1716,7 +1735,7 @@ VkvgSurface parse_svg_file (VkvgDevice dev, const char* filename, uint32_t width
 	svg.height	= height;
 	svg.idList	= array_create();
 
-	read_tag (&svg, f, svg_paint_type_none, svg_paint_type_solid, 0xffffffff, 0xffffffff);
+	read_tag (&svg, f, svg_paint_type_none, svg_paint_type_solid, 0xff000000, 0xff000000);
 
 	fclose(f);
 
