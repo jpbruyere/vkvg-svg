@@ -102,40 +102,41 @@ void vkvg_elliptic_arc (VkvgContext ctx, float x1, float y1, float x2, float y2,
 
 	float step = _get_arc_step(ctx, fminf (rx, ry))*0.1f;
 
-	//_finish_path (ctx);
+	p = (vec2) {
+		rx * cosf (theta),
+		ry * sinf (theta)
+	};
+	vec2 xy = vec2_add (mat2_mult_vec2 (m, p), c);
 
-	p = (vec2) {
-		rx * cosf (sa),
-		ry * sinf (sa)
-	};
-	//_p0 = vec2_add (mat2_mult_vec2 (m, p), c);
-	p = (vec2) {
-		rx * cosf (ea),
-		ry * sinf (ea)
-	};
-	//_p1 = vec2_add (mat2_mult_vec2 (m, p), c);
+	if (_current_path_is_empty(ctx)){
+		_set_curve_start (ctx);
+		_add_point (ctx, xy.x, xy.y);
+	}else{
+		vkvg_line_to(ctx, xy.x, xy.y);
+		_set_curve_start (ctx);
+	}
 
 	_set_curve_start (ctx);
 
-	//_add_point (ctx, c.x, c.y);
-
 	if (sa < ea) {
+		theta += step;
 		while (theta < ea) {
 			p = (vec2) {
 				rx * cosf (theta),
 				ry * sinf (theta)
 			};
-			vec2 xy = vec2_add (mat2_mult_vec2 (m, p), c);
+			xy = vec2_add (mat2_mult_vec2 (m, p), c);
 			_add_point (ctx, xy.x, xy.y);
 			theta += step;
 		}
 	} else {
+		theta -= step;
 		while (theta > ea) {
 			p = (vec2) {
 				rx * cosf (theta),
 				ry * sinf (theta)
 			};
-			vec2 xy = vec2_add (mat2_mult_vec2 (m, p), c);
+			xy = vec2_add (mat2_mult_vec2 (m, p), c);
 			_add_point (ctx, xy.x, xy.y);
 			theta -= step;
 		}
@@ -144,7 +145,7 @@ void vkvg_elliptic_arc (VkvgContext ctx, float x1, float y1, float x2, float y2,
 		rx * cosf (ea),
 		ry * sinf (ea)
 	};
-	vec2 xy = vec2_add (mat2_mult_vec2 (m, p), c);
+	xy = vec2_add (mat2_mult_vec2 (m, p), c);
 	_add_point (ctx, xy.x, xy.y);
 	_set_curve_end(ctx);
 }

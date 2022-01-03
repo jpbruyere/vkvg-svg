@@ -3236,157 +3236,157 @@
 #ifndef ELEMENT_POST_PROCESS_FOREIGNOBJECT
 	#define ELEMENT_POST_PROCESS_FOREIGNOBJECT
 #endif
-int read_svg_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_paint_type hasFill, uint32_t stroke, uint32_t fill, void* parentData);
-int read_g_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_paint_type hasFill, uint32_t stroke, uint32_t fill, void* parentData);
-int read_defs_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_paint_type hasFill, uint32_t stroke, uint32_t fill, void* parentData);
-int read_symbol_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_paint_type hasFill, uint32_t stroke, uint32_t fill, void* parentData);
-int read_use_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_paint_type hasFill, uint32_t stroke, uint32_t fill, void* parentData);
-int read_switch_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_paint_type hasFill, uint32_t stroke, uint32_t fill, void* parentData);
-int read_image_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_paint_type hasFill, uint32_t stroke, uint32_t fill, void* parentData);
-int read_path_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_paint_type hasFill, uint32_t stroke, uint32_t fill, void* parentData);
-int read_rect_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_paint_type hasFill, uint32_t stroke, uint32_t fill, void* parentData);
-int read_circle_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_paint_type hasFill, uint32_t stroke, uint32_t fill, void* parentData);
-int read_line_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_paint_type hasFill, uint32_t stroke, uint32_t fill, void* parentData);
-int read_ellipse_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_paint_type hasFill, uint32_t stroke, uint32_t fill, void* parentData);
-int read_polyline_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_paint_type hasFill, uint32_t stroke, uint32_t fill, void* parentData);
-int read_polygon_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_paint_type hasFill, uint32_t stroke, uint32_t fill, void* parentData);
-int read_text_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_paint_type hasFill, uint32_t stroke, uint32_t fill, void* parentData);
-int read_tspan_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_paint_type hasFill, uint32_t stroke, uint32_t fill, void* parentData);
-int read_tref_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_paint_type hasFill, uint32_t stroke, uint32_t fill, void* parentData);
-int read_textPath_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_paint_type hasFill, uint32_t stroke, uint32_t fill, void* parentData);
-int read_altGlyphDef_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_paint_type hasFill, uint32_t stroke, uint32_t fill, void* parentData);
-int read_altGlyphItem_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_paint_type hasFill, uint32_t stroke, uint32_t fill, void* parentData);
-int read_marker_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_paint_type hasFill, uint32_t stroke, uint32_t fill, void* parentData);
-int read_color_profile_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_paint_type hasFill, uint32_t stroke, uint32_t fill, void* parentData);
-int read_linearGradient_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_paint_type hasFill, uint32_t stroke, uint32_t fill, void* parentData);
-int read_radialGradient_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_paint_type hasFill, uint32_t stroke, uint32_t fill, void* parentData);
-int read_stop_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_paint_type hasFill, uint32_t stroke, uint32_t fill, void* parentData);
-int read_pattern_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_paint_type hasFill, uint32_t stroke, uint32_t fill, void* parentData);
-int read_clipPath_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_paint_type hasFill, uint32_t stroke, uint32_t fill, void* parentData);
-int read_mask_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_paint_type hasFill, uint32_t stroke, uint32_t fill, void* parentData);
-int read_filter_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_paint_type hasFill, uint32_t stroke, uint32_t fill, void* parentData);
-int read_feBlend_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_paint_type hasFill, uint32_t stroke, uint32_t fill, void* parentData);
-int read_feColorMatrix_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_paint_type hasFill, uint32_t stroke, uint32_t fill, void* parentData);
-int read_feComponentTransfer_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_paint_type hasFill, uint32_t stroke, uint32_t fill, void* parentData);
-int read_feComposite_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_paint_type hasFill, uint32_t stroke, uint32_t fill, void* parentData);
-int read_feConvolveMatrix_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_paint_type hasFill, uint32_t stroke, uint32_t fill, void* parentData);
-int read_feDiffuseLighting_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_paint_type hasFill, uint32_t stroke, uint32_t fill, void* parentData);
-int read_feDisplacementMap_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_paint_type hasFill, uint32_t stroke, uint32_t fill, void* parentData);
-int read_feFlood_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_paint_type hasFill, uint32_t stroke, uint32_t fill, void* parentData);
-int read_feGaussianBlur_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_paint_type hasFill, uint32_t stroke, uint32_t fill, void* parentData);
-int read_feImage_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_paint_type hasFill, uint32_t stroke, uint32_t fill, void* parentData);
-int read_feMerge_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_paint_type hasFill, uint32_t stroke, uint32_t fill, void* parentData);
-int read_feMergeNode_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_paint_type hasFill, uint32_t stroke, uint32_t fill, void* parentData);
-int read_feMorphology_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_paint_type hasFill, uint32_t stroke, uint32_t fill, void* parentData);
-int read_feOffset_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_paint_type hasFill, uint32_t stroke, uint32_t fill, void* parentData);
-int read_feSpecularLighting_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_paint_type hasFill, uint32_t stroke, uint32_t fill, void* parentData);
-int read_feTile_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_paint_type hasFill, uint32_t stroke, uint32_t fill, void* parentData);
-int read_feTurbulence_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_paint_type hasFill, uint32_t stroke, uint32_t fill, void* parentData);
-int read_feDistantLight_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_paint_type hasFill, uint32_t stroke, uint32_t fill, void* parentData);
-int read_fePointLight_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_paint_type hasFill, uint32_t stroke, uint32_t fill, void* parentData);
-int read_feSpotLight_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_paint_type hasFill, uint32_t stroke, uint32_t fill, void* parentData);
-int read_feFuncR_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_paint_type hasFill, uint32_t stroke, uint32_t fill, void* parentData);
-int read_feFuncG_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_paint_type hasFill, uint32_t stroke, uint32_t fill, void* parentData);
-int read_feFuncB_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_paint_type hasFill, uint32_t stroke, uint32_t fill, void* parentData);
-int read_feFuncA_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_paint_type hasFill, uint32_t stroke, uint32_t fill, void* parentData);
-int read_cursor_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_paint_type hasFill, uint32_t stroke, uint32_t fill, void* parentData);
-int read_a_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_paint_type hasFill, uint32_t stroke, uint32_t fill, void* parentData);
-int read_view_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_paint_type hasFill, uint32_t stroke, uint32_t fill, void* parentData);
-int read_animate_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_paint_type hasFill, uint32_t stroke, uint32_t fill, void* parentData);
-int read_set_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_paint_type hasFill, uint32_t stroke, uint32_t fill, void* parentData);
-int read_animateMotion_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_paint_type hasFill, uint32_t stroke, uint32_t fill, void* parentData);
-int read_animateColor_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_paint_type hasFill, uint32_t stroke, uint32_t fill, void* parentData);
-int read_animateTransform_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_paint_type hasFill, uint32_t stroke, uint32_t fill, void* parentData);
-int read_mpath_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_paint_type hasFill, uint32_t stroke, uint32_t fill, void* parentData);
-int read_font_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_paint_type hasFill, uint32_t stroke, uint32_t fill, void* parentData);
-int read_font_face_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_paint_type hasFill, uint32_t stroke, uint32_t fill, void* parentData);
-int read_glyph_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_paint_type hasFill, uint32_t stroke, uint32_t fill, void* parentData);
-int read_missing_glyph_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_paint_type hasFill, uint32_t stroke, uint32_t fill, void* parentData);
-int read_font_face_src_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_paint_type hasFill, uint32_t stroke, uint32_t fill, void* parentData);
-int read_font_face_uri_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_paint_type hasFill, uint32_t stroke, uint32_t fill, void* parentData);
-int read_svg_attributes (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_paint_type hasFill, uint32_t stroke, uint32_t fill, void* parentData);
-int read_g_attributes (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_paint_type hasFill, uint32_t stroke, uint32_t fill, void* parentData);
-int read_defs_attributes (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_paint_type hasFill, uint32_t stroke, uint32_t fill, void* parentData);
-int read_desc_attributes (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_paint_type hasFill, uint32_t stroke, uint32_t fill, void* parentData);
-int read_title_attributes (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_paint_type hasFill, uint32_t stroke, uint32_t fill, void* parentData);
-int read_metadata_attributes (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_paint_type hasFill, uint32_t stroke, uint32_t fill, void* parentData);
-int read_symbol_attributes (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_paint_type hasFill, uint32_t stroke, uint32_t fill, void* parentData);
-int read_use_attributes (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_paint_type hasFill, uint32_t stroke, uint32_t fill, void* parentData);
-int read_switch_attributes (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_paint_type hasFill, uint32_t stroke, uint32_t fill, void* parentData);
-int read_image_attributes (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_paint_type hasFill, uint32_t stroke, uint32_t fill, void* parentData);
-int read_style_attributes (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_paint_type hasFill, uint32_t stroke, uint32_t fill, void* parentData);
-int read_path_attributes (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_paint_type hasFill, uint32_t stroke, uint32_t fill, void* parentData);
-int read_rect_attributes (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_paint_type hasFill, uint32_t stroke, uint32_t fill, void* parentData);
-int read_circle_attributes (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_paint_type hasFill, uint32_t stroke, uint32_t fill, void* parentData);
-int read_line_attributes (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_paint_type hasFill, uint32_t stroke, uint32_t fill, void* parentData);
-int read_ellipse_attributes (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_paint_type hasFill, uint32_t stroke, uint32_t fill, void* parentData);
-int read_polyline_attributes (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_paint_type hasFill, uint32_t stroke, uint32_t fill, void* parentData);
-int read_polygon_attributes (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_paint_type hasFill, uint32_t stroke, uint32_t fill, void* parentData);
-int read_text_attributes (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_paint_type hasFill, uint32_t stroke, uint32_t fill, void* parentData);
-int read_tspan_attributes (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_paint_type hasFill, uint32_t stroke, uint32_t fill, void* parentData);
-int read_tref_attributes (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_paint_type hasFill, uint32_t stroke, uint32_t fill, void* parentData);
-int read_textPath_attributes (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_paint_type hasFill, uint32_t stroke, uint32_t fill, void* parentData);
-int read_altGlyph_attributes (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_paint_type hasFill, uint32_t stroke, uint32_t fill, void* parentData);
-int read_altGlyphDef_attributes (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_paint_type hasFill, uint32_t stroke, uint32_t fill, void* parentData);
-int read_altGlyphItem_attributes (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_paint_type hasFill, uint32_t stroke, uint32_t fill, void* parentData);
-int read_glyphRef_attributes (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_paint_type hasFill, uint32_t stroke, uint32_t fill, void* parentData);
-int read_marker_attributes (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_paint_type hasFill, uint32_t stroke, uint32_t fill, void* parentData);
-int read_color_profile_attributes (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_paint_type hasFill, uint32_t stroke, uint32_t fill, void* parentData);
-int read_linearGradient_attributes (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_paint_type hasFill, uint32_t stroke, uint32_t fill, void* parentData);
-int read_radialGradient_attributes (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_paint_type hasFill, uint32_t stroke, uint32_t fill, void* parentData);
-int read_stop_attributes (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_paint_type hasFill, uint32_t stroke, uint32_t fill, void* parentData);
-int read_pattern_attributes (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_paint_type hasFill, uint32_t stroke, uint32_t fill, void* parentData);
-int read_clipPath_attributes (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_paint_type hasFill, uint32_t stroke, uint32_t fill, void* parentData);
-int read_mask_attributes (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_paint_type hasFill, uint32_t stroke, uint32_t fill, void* parentData);
-int read_filter_attributes (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_paint_type hasFill, uint32_t stroke, uint32_t fill, void* parentData);
-int read_feBlend_attributes (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_paint_type hasFill, uint32_t stroke, uint32_t fill, void* parentData);
-int read_feColorMatrix_attributes (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_paint_type hasFill, uint32_t stroke, uint32_t fill, void* parentData);
-int read_feComponentTransfer_attributes (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_paint_type hasFill, uint32_t stroke, uint32_t fill, void* parentData);
-int read_feComposite_attributes (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_paint_type hasFill, uint32_t stroke, uint32_t fill, void* parentData);
-int read_feConvolveMatrix_attributes (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_paint_type hasFill, uint32_t stroke, uint32_t fill, void* parentData);
-int read_feDiffuseLighting_attributes (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_paint_type hasFill, uint32_t stroke, uint32_t fill, void* parentData);
-int read_feDisplacementMap_attributes (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_paint_type hasFill, uint32_t stroke, uint32_t fill, void* parentData);
-int read_feFlood_attributes (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_paint_type hasFill, uint32_t stroke, uint32_t fill, void* parentData);
-int read_feGaussianBlur_attributes (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_paint_type hasFill, uint32_t stroke, uint32_t fill, void* parentData);
-int read_feImage_attributes (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_paint_type hasFill, uint32_t stroke, uint32_t fill, void* parentData);
-int read_feMerge_attributes (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_paint_type hasFill, uint32_t stroke, uint32_t fill, void* parentData);
-int read_feMergeNode_attributes (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_paint_type hasFill, uint32_t stroke, uint32_t fill, void* parentData);
-int read_feMorphology_attributes (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_paint_type hasFill, uint32_t stroke, uint32_t fill, void* parentData);
-int read_feOffset_attributes (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_paint_type hasFill, uint32_t stroke, uint32_t fill, void* parentData);
-int read_feSpecularLighting_attributes (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_paint_type hasFill, uint32_t stroke, uint32_t fill, void* parentData);
-int read_feTile_attributes (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_paint_type hasFill, uint32_t stroke, uint32_t fill, void* parentData);
-int read_feTurbulence_attributes (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_paint_type hasFill, uint32_t stroke, uint32_t fill, void* parentData);
-int read_feDistantLight_attributes (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_paint_type hasFill, uint32_t stroke, uint32_t fill, void* parentData);
-int read_fePointLight_attributes (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_paint_type hasFill, uint32_t stroke, uint32_t fill, void* parentData);
-int read_feSpotLight_attributes (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_paint_type hasFill, uint32_t stroke, uint32_t fill, void* parentData);
-int read_feFuncR_attributes (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_paint_type hasFill, uint32_t stroke, uint32_t fill, void* parentData);
-int read_feFuncG_attributes (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_paint_type hasFill, uint32_t stroke, uint32_t fill, void* parentData);
-int read_feFuncB_attributes (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_paint_type hasFill, uint32_t stroke, uint32_t fill, void* parentData);
-int read_feFuncA_attributes (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_paint_type hasFill, uint32_t stroke, uint32_t fill, void* parentData);
-int read_cursor_attributes (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_paint_type hasFill, uint32_t stroke, uint32_t fill, void* parentData);
-int read_a_attributes (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_paint_type hasFill, uint32_t stroke, uint32_t fill, void* parentData);
-int read_view_attributes (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_paint_type hasFill, uint32_t stroke, uint32_t fill, void* parentData);
-int read_script_attributes (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_paint_type hasFill, uint32_t stroke, uint32_t fill, void* parentData);
-int read_animate_attributes (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_paint_type hasFill, uint32_t stroke, uint32_t fill, void* parentData);
-int read_set_attributes (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_paint_type hasFill, uint32_t stroke, uint32_t fill, void* parentData);
-int read_animateMotion_attributes (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_paint_type hasFill, uint32_t stroke, uint32_t fill, void* parentData);
-int read_animateColor_attributes (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_paint_type hasFill, uint32_t stroke, uint32_t fill, void* parentData);
-int read_animateTransform_attributes (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_paint_type hasFill, uint32_t stroke, uint32_t fill, void* parentData);
-int read_mpath_attributes (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_paint_type hasFill, uint32_t stroke, uint32_t fill, void* parentData);
-int read_font_attributes (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_paint_type hasFill, uint32_t stroke, uint32_t fill, void* parentData);
-int read_font_face_attributes (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_paint_type hasFill, uint32_t stroke, uint32_t fill, void* parentData);
-int read_glyph_attributes (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_paint_type hasFill, uint32_t stroke, uint32_t fill, void* parentData);
-int read_missing_glyph_attributes (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_paint_type hasFill, uint32_t stroke, uint32_t fill, void* parentData);
-int read_hkern_attributes (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_paint_type hasFill, uint32_t stroke, uint32_t fill, void* parentData);
-int read_vkern_attributes (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_paint_type hasFill, uint32_t stroke, uint32_t fill, void* parentData);
-int read_font_face_src_attributes (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_paint_type hasFill, uint32_t stroke, uint32_t fill, void* parentData);
-int read_font_face_uri_attributes (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_paint_type hasFill, uint32_t stroke, uint32_t fill, void* parentData);
-int read_font_face_format_attributes (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_paint_type hasFill, uint32_t stroke, uint32_t fill, void* parentData);
-int read_font_face_name_attributes (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_paint_type hasFill, uint32_t stroke, uint32_t fill, void* parentData);
-int read_foreignObject_attributes (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_paint_type hasFill, uint32_t stroke, uint32_t fill, void* parentData);
+int read_svg_children (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData);
+int read_g_children (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData);
+int read_defs_children (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData);
+int read_symbol_children (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData);
+int read_use_children (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData);
+int read_switch_children (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData);
+int read_image_children (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData);
+int read_path_children (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData);
+int read_rect_children (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData);
+int read_circle_children (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData);
+int read_line_children (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData);
+int read_ellipse_children (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData);
+int read_polyline_children (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData);
+int read_polygon_children (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData);
+int read_text_children (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData);
+int read_tspan_children (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData);
+int read_tref_children (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData);
+int read_textPath_children (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData);
+int read_altGlyphDef_children (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData);
+int read_altGlyphItem_children (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData);
+int read_marker_children (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData);
+int read_color_profile_children (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData);
+int read_linearGradient_children (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData);
+int read_radialGradient_children (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData);
+int read_stop_children (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData);
+int read_pattern_children (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData);
+int read_clipPath_children (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData);
+int read_mask_children (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData);
+int read_filter_children (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData);
+int read_feBlend_children (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData);
+int read_feColorMatrix_children (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData);
+int read_feComponentTransfer_children (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData);
+int read_feComposite_children (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData);
+int read_feConvolveMatrix_children (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData);
+int read_feDiffuseLighting_children (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData);
+int read_feDisplacementMap_children (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData);
+int read_feFlood_children (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData);
+int read_feGaussianBlur_children (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData);
+int read_feImage_children (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData);
+int read_feMerge_children (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData);
+int read_feMergeNode_children (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData);
+int read_feMorphology_children (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData);
+int read_feOffset_children (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData);
+int read_feSpecularLighting_children (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData);
+int read_feTile_children (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData);
+int read_feTurbulence_children (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData);
+int read_feDistantLight_children (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData);
+int read_fePointLight_children (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData);
+int read_feSpotLight_children (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData);
+int read_feFuncR_children (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData);
+int read_feFuncG_children (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData);
+int read_feFuncB_children (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData);
+int read_feFuncA_children (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData);
+int read_cursor_children (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData);
+int read_a_children (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData);
+int read_view_children (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData);
+int read_animate_children (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData);
+int read_set_children (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData);
+int read_animateMotion_children (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData);
+int read_animateColor_children (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData);
+int read_animateTransform_children (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData);
+int read_mpath_children (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData);
+int read_font_children (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData);
+int read_font_face_children (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData);
+int read_glyph_children (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData);
+int read_missing_glyph_children (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData);
+int read_font_face_src_children (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData);
+int read_font_face_uri_children (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData);
+int read_svg_attributes (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData);
+int read_g_attributes (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData);
+int read_defs_attributes (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData);
+int read_desc_attributes (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData);
+int read_title_attributes (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData);
+int read_metadata_attributes (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData);
+int read_symbol_attributes (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData);
+int read_use_attributes (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData);
+int read_switch_attributes (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData);
+int read_image_attributes (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData);
+int read_style_attributes (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData);
+int read_path_attributes (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData);
+int read_rect_attributes (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData);
+int read_circle_attributes (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData);
+int read_line_attributes (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData);
+int read_ellipse_attributes (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData);
+int read_polyline_attributes (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData);
+int read_polygon_attributes (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData);
+int read_text_attributes (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData);
+int read_tspan_attributes (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData);
+int read_tref_attributes (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData);
+int read_textPath_attributes (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData);
+int read_altGlyph_attributes (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData);
+int read_altGlyphDef_attributes (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData);
+int read_altGlyphItem_attributes (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData);
+int read_glyphRef_attributes (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData);
+int read_marker_attributes (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData);
+int read_color_profile_attributes (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData);
+int read_linearGradient_attributes (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData);
+int read_radialGradient_attributes (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData);
+int read_stop_attributes (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData);
+int read_pattern_attributes (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData);
+int read_clipPath_attributes (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData);
+int read_mask_attributes (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData);
+int read_filter_attributes (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData);
+int read_feBlend_attributes (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData);
+int read_feColorMatrix_attributes (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData);
+int read_feComponentTransfer_attributes (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData);
+int read_feComposite_attributes (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData);
+int read_feConvolveMatrix_attributes (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData);
+int read_feDiffuseLighting_attributes (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData);
+int read_feDisplacementMap_attributes (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData);
+int read_feFlood_attributes (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData);
+int read_feGaussianBlur_attributes (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData);
+int read_feImage_attributes (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData);
+int read_feMerge_attributes (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData);
+int read_feMergeNode_attributes (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData);
+int read_feMorphology_attributes (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData);
+int read_feOffset_attributes (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData);
+int read_feSpecularLighting_attributes (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData);
+int read_feTile_attributes (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData);
+int read_feTurbulence_attributes (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData);
+int read_feDistantLight_attributes (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData);
+int read_fePointLight_attributes (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData);
+int read_feSpotLight_attributes (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData);
+int read_feFuncR_attributes (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData);
+int read_feFuncG_attributes (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData);
+int read_feFuncB_attributes (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData);
+int read_feFuncA_attributes (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData);
+int read_cursor_attributes (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData);
+int read_a_attributes (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData);
+int read_view_attributes (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData);
+int read_script_attributes (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData);
+int read_animate_attributes (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData);
+int read_set_attributes (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData);
+int read_animateMotion_attributes (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData);
+int read_animateColor_attributes (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData);
+int read_animateTransform_attributes (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData);
+int read_mpath_attributes (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData);
+int read_font_attributes (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData);
+int read_font_face_attributes (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData);
+int read_glyph_attributes (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData);
+int read_missing_glyph_attributes (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData);
+int read_hkern_attributes (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData);
+int read_vkern_attributes (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData);
+int read_font_face_src_attributes (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData);
+int read_font_face_uri_attributes (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData);
+int read_font_face_format_attributes (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData);
+int read_font_face_name_attributes (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData);
+int read_foreignObject_attributes (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData);
 #endif
 #ifdef PARSER_GEN_IMPLEMENTATION
-int read_svg_attributes (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_paint_type hasFill, uint32_t stroke, uint32_t fill, void* parentData) {
+int read_svg_attributes (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData) {
 	HEADING_SVG
 	HEADING_SVG_XMLNS_ATTRIB
 	HEADING_SVG_CORE_ATTRIB
@@ -5026,11 +5026,11 @@ int read_svg_attributes (svg_context* svg, FILE* f, svg_paint_type hasStroke, sv
 	ELEMENT_PRE_PROCESS_SVG
 	read_tag_end
 	if (res > 0)
-		res = read_svg_children (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+		res = read_svg_children (svg, f, attribs, parentData);
 	ELEMENT_POST_PROCESS_SVG
 	return res;
 }
-int read_g_attributes (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_paint_type hasFill, uint32_t stroke, uint32_t fill, void* parentData) {
+int read_g_attributes (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData) {
 	HEADING_G
 	HEADING_SVG_CORE_ATTRIB
 	HEADING_SVG_CONDITIONAL_ATTRIB
@@ -6536,11 +6536,11 @@ int read_g_attributes (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_
 	ELEMENT_PRE_PROCESS_G
 	read_tag_end
 	if (res > 0)
-		res = read_g_children (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+		res = read_g_children (svg, f, attribs, parentData);
 	ELEMENT_POST_PROCESS_G
 	return res;
 }
-int read_defs_attributes (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_paint_type hasFill, uint32_t stroke, uint32_t fill, void* parentData) {
+int read_defs_attributes (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData) {
 	HEADING_DEFS
 	HEADING_SVG_CORE_ATTRIB
 	HEADING_SVG_CONDITIONAL_ATTRIB
@@ -8046,11 +8046,11 @@ int read_defs_attributes (svg_context* svg, FILE* f, svg_paint_type hasStroke, s
 	ELEMENT_PRE_PROCESS_DEFS
 	read_tag_end
 	if (res > 0)
-		res = read_defs_children (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+		res = read_defs_children (svg, f, attribs, parentData);
 	ELEMENT_POST_PROCESS_DEFS
 	return res;
 }
-int read_desc_attributes (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_paint_type hasFill, uint32_t stroke, uint32_t fill, void* parentData) {
+int read_desc_attributes (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData) {
 	HEADING_DESC
 	HEADING_SVG_CORE_ATTRIB
 	HEADING_SVG_STYLE_ATTRIB
@@ -8108,11 +8108,11 @@ int read_desc_attributes (svg_context* svg, FILE* f, svg_paint_type hasStroke, s
 	ELEMENT_PRE_PROCESS_DESC
 	read_tag_end
 	if (res > 0)
-		res = skip_children (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+		res = skip_children (svg, f, attribs, parentData);
 	ELEMENT_POST_PROCESS_DESC
 	return res;
 }
-int read_title_attributes (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_paint_type hasFill, uint32_t stroke, uint32_t fill, void* parentData) {
+int read_title_attributes (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData) {
 	HEADING_TITLE
 	HEADING_SVG_CORE_ATTRIB
 	HEADING_SVG_STYLE_ATTRIB
@@ -8170,11 +8170,11 @@ int read_title_attributes (svg_context* svg, FILE* f, svg_paint_type hasStroke, 
 	ELEMENT_PRE_PROCESS_TITLE
 	read_tag_end
 	if (res > 0)
-		res = skip_children (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+		res = skip_children (svg, f, attribs, parentData);
 	ELEMENT_POST_PROCESS_TITLE
 	return res;
 }
-int read_metadata_attributes (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_paint_type hasFill, uint32_t stroke, uint32_t fill, void* parentData) {
+int read_metadata_attributes (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData) {
 	HEADING_METADATA
 	HEADING_SVG_CORE_ATTRIB
 	read_attributes_loop_start
@@ -8224,11 +8224,11 @@ int read_metadata_attributes (svg_context* svg, FILE* f, svg_paint_type hasStrok
 	ELEMENT_PRE_PROCESS_METADATA
 	read_tag_end
 	if (res > 0)
-		res = skip_children (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+		res = skip_children (svg, f, attribs, parentData);
 	ELEMENT_POST_PROCESS_METADATA
 	return res;
 }
-int read_symbol_attributes (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_paint_type hasFill, uint32_t stroke, uint32_t fill, void* parentData) {
+int read_symbol_attributes (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData) {
 	HEADING_SYMBOL
 	HEADING_SVG_CORE_ATTRIB
 	HEADING_SVG_STYLE_ATTRIB
@@ -9726,11 +9726,11 @@ int read_symbol_attributes (svg_context* svg, FILE* f, svg_paint_type hasStroke,
 	ELEMENT_PRE_PROCESS_SYMBOL
 	read_tag_end
 	if (res > 0)
-		res = read_symbol_children (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+		res = read_symbol_children (svg, f, attribs, parentData);
 	ELEMENT_POST_PROCESS_SYMBOL
 	return res;
 }
-int read_use_attributes (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_paint_type hasFill, uint32_t stroke, uint32_t fill, void* parentData) {
+int read_use_attributes (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData) {
 	HEADING_USE
 	HEADING_SVG_CORE_ATTRIB
 	HEADING_SVG_CONDITIONAL_ATTRIB
@@ -11331,11 +11331,11 @@ int read_use_attributes (svg_context* svg, FILE* f, svg_paint_type hasStroke, sv
 	ELEMENT_PRE_PROCESS_USE
 	read_tag_end
 	if (res > 0)
-		res = read_use_children (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+		res = read_use_children (svg, f, attribs, parentData);
 	ELEMENT_POST_PROCESS_USE
 	return res;
 }
-int read_switch_attributes (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_paint_type hasFill, uint32_t stroke, uint32_t fill, void* parentData) {
+int read_switch_attributes (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData) {
 	HEADING_SWITCH
 	HEADING_SVG_CORE_ATTRIB
 	HEADING_SVG_CONDITIONAL_ATTRIB
@@ -12841,11 +12841,11 @@ int read_switch_attributes (svg_context* svg, FILE* f, svg_paint_type hasStroke,
 	ELEMENT_PRE_PROCESS_SWITCH
 	read_tag_end
 	if (res > 0)
-		res = read_switch_children (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+		res = read_switch_children (svg, f, attribs, parentData);
 	ELEMENT_POST_PROCESS_SWITCH
 	return res;
 }
-int read_image_attributes (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_paint_type hasFill, uint32_t stroke, uint32_t fill, void* parentData) {
+int read_image_attributes (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData) {
 	HEADING_IMAGE
 	HEADING_SVG_CORE_ATTRIB
 	HEADING_SVG_CONDITIONAL_ATTRIB
@@ -14456,11 +14456,11 @@ int read_image_attributes (svg_context* svg, FILE* f, svg_paint_type hasStroke, 
 	ELEMENT_PRE_PROCESS_IMAGE
 	read_tag_end
 	if (res > 0)
-		res = read_image_children (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+		res = read_image_children (svg, f, attribs, parentData);
 	ELEMENT_POST_PROCESS_IMAGE
 	return res;
 }
-int read_style_attributes (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_paint_type hasFill, uint32_t stroke, uint32_t fill, void* parentData) {
+int read_style_attributes (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData) {
 	HEADING_STYLE
 	read_attributes_loop_start
 		int nameLenght = strlen (svg->att);
@@ -14517,11 +14517,11 @@ int read_style_attributes (svg_context* svg, FILE* f, svg_paint_type hasStroke, 
 	ELEMENT_PRE_PROCESS_STYLE
 	read_tag_end
 	if (res > 0)
-		res = skip_children (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+		res = skip_children (svg, f, attribs, parentData);
 	ELEMENT_POST_PROCESS_STYLE
 	return res;
 }
-int read_path_attributes (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_paint_type hasFill, uint32_t stroke, uint32_t fill, void* parentData) {
+int read_path_attributes (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData) {
 	HEADING_PATH
 	HEADING_SVG_CORE_ATTRIB
 	HEADING_SVG_CONDITIONAL_ATTRIB
@@ -16041,11 +16041,11 @@ int read_path_attributes (svg_context* svg, FILE* f, svg_paint_type hasStroke, s
 	ELEMENT_PRE_PROCESS_PATH
 	read_tag_end
 	if (res > 0)
-		res = read_path_children (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+		res = read_path_children (svg, f, attribs, parentData);
 	ELEMENT_POST_PROCESS_PATH
 	return res;
 }
-int read_rect_attributes (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_paint_type hasFill, uint32_t stroke, uint32_t fill, void* parentData) {
+int read_rect_attributes (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData) {
 	HEADING_RECT
 	HEADING_SVG_CORE_ATTRIB
 	HEADING_SVG_CONDITIONAL_ATTRIB
@@ -17577,11 +17577,11 @@ int read_rect_attributes (svg_context* svg, FILE* f, svg_paint_type hasStroke, s
 	ELEMENT_PRE_PROCESS_RECT
 	read_tag_end
 	if (res > 0)
-		res = read_rect_children (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+		res = read_rect_children (svg, f, attribs, parentData);
 	ELEMENT_POST_PROCESS_RECT
 	return res;
 }
-int read_circle_attributes (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_paint_type hasFill, uint32_t stroke, uint32_t fill, void* parentData) {
+int read_circle_attributes (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData) {
 	HEADING_CIRCLE
 	HEADING_SVG_CORE_ATTRIB
 	HEADING_SVG_CONDITIONAL_ATTRIB
@@ -19097,11 +19097,11 @@ int read_circle_attributes (svg_context* svg, FILE* f, svg_paint_type hasStroke,
 	ELEMENT_PRE_PROCESS_CIRCLE
 	read_tag_end
 	if (res > 0)
-		res = read_circle_children (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+		res = read_circle_children (svg, f, attribs, parentData);
 	ELEMENT_POST_PROCESS_CIRCLE
 	return res;
 }
-int read_line_attributes (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_paint_type hasFill, uint32_t stroke, uint32_t fill, void* parentData) {
+int read_line_attributes (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData) {
 	HEADING_LINE
 	HEADING_SVG_CORE_ATTRIB
 	HEADING_SVG_CONDITIONAL_ATTRIB
@@ -20633,11 +20633,11 @@ int read_line_attributes (svg_context* svg, FILE* f, svg_paint_type hasStroke, s
 	ELEMENT_PRE_PROCESS_LINE
 	read_tag_end
 	if (res > 0)
-		res = read_line_children (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+		res = read_line_children (svg, f, attribs, parentData);
 	ELEMENT_POST_PROCESS_LINE
 	return res;
 }
-int read_ellipse_attributes (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_paint_type hasFill, uint32_t stroke, uint32_t fill, void* parentData) {
+int read_ellipse_attributes (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData) {
 	HEADING_ELLIPSE
 	HEADING_SVG_CORE_ATTRIB
 	HEADING_SVG_CONDITIONAL_ATTRIB
@@ -22162,11 +22162,11 @@ int read_ellipse_attributes (svg_context* svg, FILE* f, svg_paint_type hasStroke
 	ELEMENT_PRE_PROCESS_ELLIPSE
 	read_tag_end
 	if (res > 0)
-		res = read_ellipse_children (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+		res = read_ellipse_children (svg, f, attribs, parentData);
 	ELEMENT_POST_PROCESS_ELLIPSE
 	return res;
 }
-int read_polyline_attributes (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_paint_type hasFill, uint32_t stroke, uint32_t fill, void* parentData) {
+int read_polyline_attributes (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData) {
 	HEADING_POLYLINE
 	HEADING_SVG_CORE_ATTRIB
 	HEADING_SVG_CONDITIONAL_ATTRIB
@@ -23685,11 +23685,11 @@ int read_polyline_attributes (svg_context* svg, FILE* f, svg_paint_type hasStrok
 	ELEMENT_PRE_PROCESS_POLYLINE
 	read_tag_end
 	if (res > 0)
-		res = read_polyline_children (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+		res = read_polyline_children (svg, f, attribs, parentData);
 	ELEMENT_POST_PROCESS_POLYLINE
 	return res;
 }
-int read_polygon_attributes (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_paint_type hasFill, uint32_t stroke, uint32_t fill, void* parentData) {
+int read_polygon_attributes (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData) {
 	HEADING_POLYGON
 	HEADING_SVG_CORE_ATTRIB
 	HEADING_SVG_CONDITIONAL_ATTRIB
@@ -25208,11 +25208,11 @@ int read_polygon_attributes (svg_context* svg, FILE* f, svg_paint_type hasStroke
 	ELEMENT_PRE_PROCESS_POLYGON
 	read_tag_end
 	if (res > 0)
-		res = read_polygon_children (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+		res = read_polygon_children (svg, f, attribs, parentData);
 	ELEMENT_POST_PROCESS_POLYGON
 	return res;
 }
-int read_text_attributes (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_paint_type hasFill, uint32_t stroke, uint32_t fill, void* parentData) {
+int read_text_attributes (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData) {
 	HEADING_TEXT
 	HEADING_SVG_CORE_ATTRIB
 	HEADING_SVG_CONDITIONAL_ATTRIB
@@ -26774,11 +26774,11 @@ int read_text_attributes (svg_context* svg, FILE* f, svg_paint_type hasStroke, s
 	ELEMENT_PRE_PROCESS_TEXT
 	read_tag_end
 	if (res > 0)
-		res = read_text_children (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+		res = read_text_children (svg, f, attribs, parentData);
 	ELEMENT_POST_PROCESS_TEXT
 	return res;
 }
-int read_tspan_attributes (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_paint_type hasFill, uint32_t stroke, uint32_t fill, void* parentData) {
+int read_tspan_attributes (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData) {
 	HEADING_TSPAN
 	HEADING_SVG_CORE_ATTRIB
 	HEADING_SVG_CONDITIONAL_ATTRIB
@@ -28330,11 +28330,11 @@ int read_tspan_attributes (svg_context* svg, FILE* f, svg_paint_type hasStroke, 
 	ELEMENT_PRE_PROCESS_TSPAN
 	read_tag_end
 	if (res > 0)
-		res = read_tspan_children (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+		res = read_tspan_children (svg, f, attribs, parentData);
 	ELEMENT_POST_PROCESS_TSPAN
 	return res;
 }
-int read_tref_attributes (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_paint_type hasFill, uint32_t stroke, uint32_t fill, void* parentData) {
+int read_tref_attributes (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData) {
 	HEADING_TREF
 	HEADING_SVG_CORE_ATTRIB
 	HEADING_SVG_CONDITIONAL_ATTRIB
@@ -29968,11 +29968,11 @@ int read_tref_attributes (svg_context* svg, FILE* f, svg_paint_type hasStroke, s
 	ELEMENT_PRE_PROCESS_TREF
 	read_tag_end
 	if (res > 0)
-		res = read_tref_children (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+		res = read_tref_children (svg, f, attribs, parentData);
 	ELEMENT_POST_PROCESS_TREF
 	return res;
 }
-int read_textPath_attributes (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_paint_type hasFill, uint32_t stroke, uint32_t fill, void* parentData) {
+int read_textPath_attributes (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData) {
 	HEADING_TEXTPATH
 	HEADING_SVG_CORE_ATTRIB
 	HEADING_SVG_CONDITIONAL_ATTRIB
@@ -31622,11 +31622,11 @@ int read_textPath_attributes (svg_context* svg, FILE* f, svg_paint_type hasStrok
 	ELEMENT_PRE_PROCESS_TEXTPATH
 	read_tag_end
 	if (res > 0)
-		res = read_textPath_children (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+		res = read_textPath_children (svg, f, attribs, parentData);
 	ELEMENT_POST_PROCESS_TEXTPATH
 	return res;
 }
-int read_altGlyph_attributes (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_paint_type hasFill, uint32_t stroke, uint32_t fill, void* parentData) {
+int read_altGlyph_attributes (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData) {
 	HEADING_ALTGLYPH
 	HEADING_SVG_CORE_ATTRIB
 	HEADING_SVG_CONDITIONAL_ATTRIB
@@ -33250,11 +33250,11 @@ int read_altGlyph_attributes (svg_context* svg, FILE* f, svg_paint_type hasStrok
 	ELEMENT_PRE_PROCESS_ALTGLYPH
 	read_tag_end
 	if (res > 0)
-		res = skip_children (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+		res = skip_children (svg, f, attribs, parentData);
 	ELEMENT_POST_PROCESS_ALTGLYPH
 	return res;
 }
-int read_altGlyphDef_attributes (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_paint_type hasFill, uint32_t stroke, uint32_t fill, void* parentData) {
+int read_altGlyphDef_attributes (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData) {
 	HEADING_ALTGLYPHDEF
 	HEADING_SVG_CORE_ATTRIB
 	read_attributes_loop_start
@@ -33304,11 +33304,11 @@ int read_altGlyphDef_attributes (svg_context* svg, FILE* f, svg_paint_type hasSt
 	ELEMENT_PRE_PROCESS_ALTGLYPHDEF
 	read_tag_end
 	if (res > 0)
-		res = read_altGlyphDef_children (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+		res = read_altGlyphDef_children (svg, f, attribs, parentData);
 	ELEMENT_POST_PROCESS_ALTGLYPHDEF
 	return res;
 }
-int read_altGlyphItem_attributes (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_paint_type hasFill, uint32_t stroke, uint32_t fill, void* parentData) {
+int read_altGlyphItem_attributes (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData) {
 	HEADING_ALTGLYPHITEM
 	HEADING_SVG_CORE_ATTRIB
 	read_attributes_loop_start
@@ -33358,11 +33358,11 @@ int read_altGlyphItem_attributes (svg_context* svg, FILE* f, svg_paint_type hasS
 	ELEMENT_PRE_PROCESS_ALTGLYPHITEM
 	read_tag_end
 	if (res > 0)
-		res = read_altGlyphItem_children (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+		res = read_altGlyphItem_children (svg, f, attribs, parentData);
 	ELEMENT_POST_PROCESS_ALTGLYPHITEM
 	return res;
 }
-int read_glyphRef_attributes (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_paint_type hasFill, uint32_t stroke, uint32_t fill, void* parentData) {
+int read_glyphRef_attributes (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData) {
 	HEADING_GLYPHREF
 	HEADING_SVG_CORE_ATTRIB
 	HEADING_SVG_STYLE_ATTRIB
@@ -34866,11 +34866,11 @@ int read_glyphRef_attributes (svg_context* svg, FILE* f, svg_paint_type hasStrok
 	ELEMENT_PRE_PROCESS_GLYPHREF
 	read_tag_end
 	if (res > 0)
-		res = skip_children (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+		res = skip_children (svg, f, attribs, parentData);
 	ELEMENT_POST_PROCESS_GLYPHREF
 	return res;
 }
-int read_marker_attributes (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_paint_type hasFill, uint32_t stroke, uint32_t fill, void* parentData) {
+int read_marker_attributes (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData) {
 	HEADING_MARKER
 	HEADING_SVG_CORE_ATTRIB
 	HEADING_SVG_STYLE_ATTRIB
@@ -36350,11 +36350,11 @@ int read_marker_attributes (svg_context* svg, FILE* f, svg_paint_type hasStroke,
 	ELEMENT_PRE_PROCESS_MARKER
 	read_tag_end
 	if (res > 0)
-		res = read_marker_children (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+		res = read_marker_children (svg, f, attribs, parentData);
 	ELEMENT_POST_PROCESS_MARKER
 	return res;
 }
-int read_color_profile_attributes (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_paint_type hasFill, uint32_t stroke, uint32_t fill, void* parentData) {
+int read_color_profile_attributes (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData) {
 	HEADING_COLOR_PROFILE
 	HEADING_SVG_CORE_ATTRIB
 	HEADING_SVG_XLINK_ATTRIB
@@ -36524,11 +36524,11 @@ int read_color_profile_attributes (svg_context* svg, FILE* f, svg_paint_type has
 	ELEMENT_PRE_PROCESS_COLOR_PROFILE
 	read_tag_end
 	if (res > 0)
-		res = read_color_profile_children (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+		res = read_color_profile_children (svg, f, attribs, parentData);
 	ELEMENT_POST_PROCESS_COLOR_PROFILE
 	return res;
 }
-int read_linearGradient_attributes (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_paint_type hasFill, uint32_t stroke, uint32_t fill, void* parentData) {
+int read_linearGradient_attributes (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData) {
 	HEADING_LINEARGRADIENT
 	HEADING_SVG_CORE_ATTRIB
 	HEADING_SVG_STYLE_ATTRIB
@@ -38103,11 +38103,11 @@ int read_linearGradient_attributes (svg_context* svg, FILE* f, svg_paint_type ha
 	ELEMENT_PRE_PROCESS_LINEARGRADIENT
 	read_tag_end
 	if (res > 0)
-		res = read_linearGradient_children (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+		res = read_linearGradient_children (svg, f, attribs, parentData);
 	ELEMENT_POST_PROCESS_LINEARGRADIENT
 	return res;
 }
-int read_radialGradient_attributes (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_paint_type hasFill, uint32_t stroke, uint32_t fill, void* parentData) {
+int read_radialGradient_attributes (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData) {
 	HEADING_RADIALGRADIENT
 	HEADING_SVG_CORE_ATTRIB
 	HEADING_SVG_STYLE_ATTRIB
@@ -39678,11 +39678,11 @@ int read_radialGradient_attributes (svg_context* svg, FILE* f, svg_paint_type ha
 	ELEMENT_PRE_PROCESS_RADIALGRADIENT
 	read_tag_end
 	if (res > 0)
-		res = read_radialGradient_children (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+		res = read_radialGradient_children (svg, f, attribs, parentData);
 	ELEMENT_POST_PROCESS_RADIALGRADIENT
 	return res;
 }
-int read_stop_attributes (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_paint_type hasFill, uint32_t stroke, uint32_t fill, void* parentData) {
+int read_stop_attributes (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData) {
 	HEADING_STOP
 	HEADING_SVG_CORE_ATTRIB
 	HEADING_SVG_STYLE_ATTRIB
@@ -41071,11 +41071,11 @@ int read_stop_attributes (svg_context* svg, FILE* f, svg_paint_type hasStroke, s
 	ELEMENT_PRE_PROCESS_STOP
 	read_tag_end
 	if (res > 0)
-		res = read_stop_children (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+		res = read_stop_children (svg, f, attribs, parentData);
 	ELEMENT_POST_PROCESS_STOP
 	return res;
 }
-int read_pattern_attributes (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_paint_type hasFill, uint32_t stroke, uint32_t fill, void* parentData) {
+int read_pattern_attributes (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData) {
 	HEADING_PATTERN
 	HEADING_SVG_CORE_ATTRIB
 	HEADING_SVG_CONDITIONAL_ATTRIB
@@ -42668,11 +42668,11 @@ int read_pattern_attributes (svg_context* svg, FILE* f, svg_paint_type hasStroke
 	ELEMENT_PRE_PROCESS_PATTERN
 	read_tag_end
 	if (res > 0)
-		res = read_pattern_children (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+		res = read_pattern_children (svg, f, attribs, parentData);
 	ELEMENT_POST_PROCESS_PATTERN
 	return res;
 }
-int read_clipPath_attributes (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_paint_type hasFill, uint32_t stroke, uint32_t fill, void* parentData) {
+int read_clipPath_attributes (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData) {
 	HEADING_CLIPPATH
 	HEADING_SVG_CORE_ATTRIB
 	HEADING_SVG_CONDITIONAL_ATTRIB
@@ -44132,11 +44132,11 @@ int read_clipPath_attributes (svg_context* svg, FILE* f, svg_paint_type hasStrok
 	ELEMENT_PRE_PROCESS_CLIPPATH
 	read_tag_end
 	if (res > 0)
-		res = read_clipPath_children (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+		res = read_clipPath_children (svg, f, attribs, parentData);
 	ELEMENT_POST_PROCESS_CLIPPATH
 	return res;
 }
-int read_mask_attributes (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_paint_type hasFill, uint32_t stroke, uint32_t fill, void* parentData) {
+int read_mask_attributes (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData) {
 	HEADING_MASK
 	HEADING_SVG_CORE_ATTRIB
 	HEADING_SVG_CONDITIONAL_ATTRIB
@@ -45622,11 +45622,11 @@ int read_mask_attributes (svg_context* svg, FILE* f, svg_paint_type hasStroke, s
 	ELEMENT_PRE_PROCESS_MASK
 	read_tag_end
 	if (res > 0)
-		res = read_mask_children (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+		res = read_mask_children (svg, f, attribs, parentData);
 	ELEMENT_POST_PROCESS_MASK
 	return res;
 }
-int read_filter_attributes (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_paint_type hasFill, uint32_t stroke, uint32_t fill, void* parentData) {
+int read_filter_attributes (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData) {
 	HEADING_FILTER
 	HEADING_SVG_CORE_ATTRIB
 	HEADING_SVG_STYLE_ATTRIB
@@ -47183,11 +47183,11 @@ int read_filter_attributes (svg_context* svg, FILE* f, svg_paint_type hasStroke,
 	ELEMENT_PRE_PROCESS_FILTER
 	read_tag_end
 	if (res > 0)
-		res = read_filter_children (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+		res = read_filter_children (svg, f, attribs, parentData);
 	ELEMENT_POST_PROCESS_FILTER
 	return res;
 }
-int read_feBlend_attributes (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_paint_type hasFill, uint32_t stroke, uint32_t fill, void* parentData) {
+int read_feBlend_attributes (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData) {
 	HEADING_FEBLEND
 	HEADING_SVG_CORE_ATTRIB
 	HEADING_SVG_STYLE_ATTRIB
@@ -48630,11 +48630,11 @@ int read_feBlend_attributes (svg_context* svg, FILE* f, svg_paint_type hasStroke
 	ELEMENT_PRE_PROCESS_FEBLEND
 	read_tag_end
 	if (res > 0)
-		res = read_feBlend_children (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+		res = read_feBlend_children (svg, f, attribs, parentData);
 	ELEMENT_POST_PROCESS_FEBLEND
 	return res;
 }
-int read_feColorMatrix_attributes (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_paint_type hasFill, uint32_t stroke, uint32_t fill, void* parentData) {
+int read_feColorMatrix_attributes (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData) {
 	HEADING_FECOLORMATRIX
 	HEADING_SVG_CORE_ATTRIB
 	HEADING_SVG_STYLE_ATTRIB
@@ -50080,11 +50080,11 @@ int read_feColorMatrix_attributes (svg_context* svg, FILE* f, svg_paint_type has
 	ELEMENT_PRE_PROCESS_FECOLORMATRIX
 	read_tag_end
 	if (res > 0)
-		res = read_feColorMatrix_children (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+		res = read_feColorMatrix_children (svg, f, attribs, parentData);
 	ELEMENT_POST_PROCESS_FECOLORMATRIX
 	return res;
 }
-int read_feComponentTransfer_attributes (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_paint_type hasFill, uint32_t stroke, uint32_t fill, void* parentData) {
+int read_feComponentTransfer_attributes (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData) {
 	HEADING_FECOMPONENTTRANSFER
 	HEADING_SVG_CORE_ATTRIB
 	HEADING_SVG_STYLE_ATTRIB
@@ -51491,11 +51491,11 @@ int read_feComponentTransfer_attributes (svg_context* svg, FILE* f, svg_paint_ty
 	ELEMENT_PRE_PROCESS_FECOMPONENTTRANSFER
 	read_tag_end
 	if (res > 0)
-		res = read_feComponentTransfer_children (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+		res = read_feComponentTransfer_children (svg, f, attribs, parentData);
 	ELEMENT_POST_PROCESS_FECOMPONENTTRANSFER
 	return res;
 }
-int read_feComposite_attributes (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_paint_type hasFill, uint32_t stroke, uint32_t fill, void* parentData) {
+int read_feComposite_attributes (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData) {
 	HEADING_FECOMPOSITE
 	HEADING_SVG_CORE_ATTRIB
 	HEADING_SVG_STYLE_ATTRIB
@@ -52977,11 +52977,11 @@ int read_feComposite_attributes (svg_context* svg, FILE* f, svg_paint_type hasSt
 	ELEMENT_PRE_PROCESS_FECOMPOSITE
 	read_tag_end
 	if (res > 0)
-		res = read_feComposite_children (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+		res = read_feComposite_children (svg, f, attribs, parentData);
 	ELEMENT_POST_PROCESS_FECOMPOSITE
 	return res;
 }
-int read_feConvolveMatrix_attributes (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_paint_type hasFill, uint32_t stroke, uint32_t fill, void* parentData) {
+int read_feConvolveMatrix_attributes (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData) {
 	HEADING_FECONVOLVEMATRIX
 	HEADING_SVG_CORE_ATTRIB
 	HEADING_SVG_STYLE_ATTRIB
@@ -54502,11 +54502,11 @@ int read_feConvolveMatrix_attributes (svg_context* svg, FILE* f, svg_paint_type 
 	ELEMENT_PRE_PROCESS_FECONVOLVEMATRIX
 	read_tag_end
 	if (res > 0)
-		res = read_feConvolveMatrix_children (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+		res = read_feConvolveMatrix_children (svg, f, attribs, parentData);
 	ELEMENT_POST_PROCESS_FECONVOLVEMATRIX
 	return res;
 }
-int read_feDiffuseLighting_attributes (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_paint_type hasFill, uint32_t stroke, uint32_t fill, void* parentData) {
+int read_feDiffuseLighting_attributes (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData) {
 	HEADING_FEDIFFUSELIGHTING
 	HEADING_SVG_CORE_ATTRIB
 	HEADING_SVG_STYLE_ATTRIB
@@ -55932,11 +55932,11 @@ int read_feDiffuseLighting_attributes (svg_context* svg, FILE* f, svg_paint_type
 	ELEMENT_PRE_PROCESS_FEDIFFUSELIGHTING
 	read_tag_end
 	if (res > 0)
-		res = read_feDiffuseLighting_children (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+		res = read_feDiffuseLighting_children (svg, f, attribs, parentData);
 	ELEMENT_POST_PROCESS_FEDIFFUSELIGHTING
 	return res;
 }
-int read_feDisplacementMap_attributes (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_paint_type hasFill, uint32_t stroke, uint32_t fill, void* parentData) {
+int read_feDisplacementMap_attributes (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData) {
 	HEADING_FEDISPLACEMENTMAP
 	HEADING_SVG_CORE_ATTRIB
 	HEADING_SVG_STYLE_ATTRIB
@@ -57408,11 +57408,11 @@ int read_feDisplacementMap_attributes (svg_context* svg, FILE* f, svg_paint_type
 	ELEMENT_PRE_PROCESS_FEDISPLACEMENTMAP
 	read_tag_end
 	if (res > 0)
-		res = read_feDisplacementMap_children (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+		res = read_feDisplacementMap_children (svg, f, attribs, parentData);
 	ELEMENT_POST_PROCESS_FEDISPLACEMENTMAP
 	return res;
 }
-int read_feFlood_attributes (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_paint_type hasFill, uint32_t stroke, uint32_t fill, void* parentData) {
+int read_feFlood_attributes (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData) {
 	HEADING_FEFLOOD
 	HEADING_SVG_CORE_ATTRIB
 	HEADING_SVG_STYLE_ATTRIB
@@ -58816,11 +58816,11 @@ int read_feFlood_attributes (svg_context* svg, FILE* f, svg_paint_type hasStroke
 	ELEMENT_PRE_PROCESS_FEFLOOD
 	read_tag_end
 	if (res > 0)
-		res = read_feFlood_children (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+		res = read_feFlood_children (svg, f, attribs, parentData);
 	ELEMENT_POST_PROCESS_FEFLOOD
 	return res;
 }
-int read_feGaussianBlur_attributes (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_paint_type hasFill, uint32_t stroke, uint32_t fill, void* parentData) {
+int read_feGaussianBlur_attributes (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData) {
 	HEADING_FEGAUSSIANBLUR
 	HEADING_SVG_CORE_ATTRIB
 	HEADING_SVG_STYLE_ATTRIB
@@ -60230,11 +60230,11 @@ int read_feGaussianBlur_attributes (svg_context* svg, FILE* f, svg_paint_type ha
 	ELEMENT_PRE_PROCESS_FEGAUSSIANBLUR
 	read_tag_end
 	if (res > 0)
-		res = read_feGaussianBlur_children (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+		res = read_feGaussianBlur_children (svg, f, attribs, parentData);
 	ELEMENT_POST_PROCESS_FEGAUSSIANBLUR
 	return res;
 }
-int read_feImage_attributes (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_paint_type hasFill, uint32_t stroke, uint32_t fill, void* parentData) {
+int read_feImage_attributes (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData) {
 	HEADING_FEIMAGE
 	HEADING_SVG_CORE_ATTRIB
 	HEADING_SVG_STYLE_ATTRIB
@@ -61753,11 +61753,11 @@ int read_feImage_attributes (svg_context* svg, FILE* f, svg_paint_type hasStroke
 	ELEMENT_PRE_PROCESS_FEIMAGE
 	read_tag_end
 	if (res > 0)
-		res = read_feImage_children (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+		res = read_feImage_children (svg, f, attribs, parentData);
 	ELEMENT_POST_PROCESS_FEIMAGE
 	return res;
 }
-int read_feMerge_attributes (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_paint_type hasFill, uint32_t stroke, uint32_t fill, void* parentData) {
+int read_feMerge_attributes (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData) {
 	HEADING_FEMERGE
 	HEADING_SVG_CORE_ATTRIB
 	HEADING_SVG_STYLE_ATTRIB
@@ -63161,11 +63161,11 @@ int read_feMerge_attributes (svg_context* svg, FILE* f, svg_paint_type hasStroke
 	ELEMENT_PRE_PROCESS_FEMERGE
 	read_tag_end
 	if (res > 0)
-		res = read_feMerge_children (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+		res = read_feMerge_children (svg, f, attribs, parentData);
 	ELEMENT_POST_PROCESS_FEMERGE
 	return res;
 }
-int read_feMergeNode_attributes (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_paint_type hasFill, uint32_t stroke, uint32_t fill, void* parentData) {
+int read_feMergeNode_attributes (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData) {
 	HEADING_FEMERGENODE
 	HEADING_SVG_CORE_ATTRIB
 	read_attributes_loop_start
@@ -63225,11 +63225,11 @@ int read_feMergeNode_attributes (svg_context* svg, FILE* f, svg_paint_type hasSt
 	ELEMENT_PRE_PROCESS_FEMERGENODE
 	read_tag_end
 	if (res > 0)
-		res = read_feMergeNode_children (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+		res = read_feMergeNode_children (svg, f, attribs, parentData);
 	ELEMENT_POST_PROCESS_FEMERGENODE
 	return res;
 }
-int read_feMorphology_attributes (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_paint_type hasFill, uint32_t stroke, uint32_t fill, void* parentData) {
+int read_feMorphology_attributes (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData) {
 	HEADING_FEMORPHOLOGY
 	HEADING_SVG_CORE_ATTRIB
 	HEADING_SVG_STYLE_ATTRIB
@@ -64669,11 +64669,11 @@ int read_feMorphology_attributes (svg_context* svg, FILE* f, svg_paint_type hasS
 	ELEMENT_PRE_PROCESS_FEMORPHOLOGY
 	read_tag_end
 	if (res > 0)
-		res = read_feMorphology_children (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+		res = read_feMorphology_children (svg, f, attribs, parentData);
 	ELEMENT_POST_PROCESS_FEMORPHOLOGY
 	return res;
 }
-int read_feOffset_attributes (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_paint_type hasFill, uint32_t stroke, uint32_t fill, void* parentData) {
+int read_feOffset_attributes (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData) {
 	HEADING_FEOFFSET
 	HEADING_SVG_CORE_ATTRIB
 	HEADING_SVG_STYLE_ATTRIB
@@ -66086,11 +66086,11 @@ int read_feOffset_attributes (svg_context* svg, FILE* f, svg_paint_type hasStrok
 	ELEMENT_PRE_PROCESS_FEOFFSET
 	read_tag_end
 	if (res > 0)
-		res = read_feOffset_children (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+		res = read_feOffset_children (svg, f, attribs, parentData);
 	ELEMENT_POST_PROCESS_FEOFFSET
 	return res;
 }
-int read_feSpecularLighting_attributes (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_paint_type hasFill, uint32_t stroke, uint32_t fill, void* parentData) {
+int read_feSpecularLighting_attributes (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData) {
 	HEADING_FESPECULARLIGHTING
 	HEADING_SVG_CORE_ATTRIB
 	HEADING_SVG_STYLE_ATTRIB
@@ -67529,11 +67529,11 @@ int read_feSpecularLighting_attributes (svg_context* svg, FILE* f, svg_paint_typ
 	ELEMENT_PRE_PROCESS_FESPECULARLIGHTING
 	read_tag_end
 	if (res > 0)
-		res = read_feSpecularLighting_children (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+		res = read_feSpecularLighting_children (svg, f, attribs, parentData);
 	ELEMENT_POST_PROCESS_FESPECULARLIGHTING
 	return res;
 }
-int read_feTile_attributes (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_paint_type hasFill, uint32_t stroke, uint32_t fill, void* parentData) {
+int read_feTile_attributes (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData) {
 	HEADING_FETILE
 	HEADING_SVG_CORE_ATTRIB
 	HEADING_SVG_STYLE_ATTRIB
@@ -68940,11 +68940,11 @@ int read_feTile_attributes (svg_context* svg, FILE* f, svg_paint_type hasStroke,
 	ELEMENT_PRE_PROCESS_FETILE
 	read_tag_end
 	if (res > 0)
-		res = read_feTile_children (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+		res = read_feTile_children (svg, f, attribs, parentData);
 	ELEMENT_POST_PROCESS_FETILE
 	return res;
 }
-int read_feTurbulence_attributes (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_paint_type hasFill, uint32_t stroke, uint32_t fill, void* parentData) {
+int read_feTurbulence_attributes (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData) {
 	HEADING_FETURBULENCE
 	HEADING_SVG_CORE_ATTRIB
 	HEADING_SVG_STYLE_ATTRIB
@@ -70406,11 +70406,11 @@ int read_feTurbulence_attributes (svg_context* svg, FILE* f, svg_paint_type hasS
 	ELEMENT_PRE_PROCESS_FETURBULENCE
 	read_tag_end
 	if (res > 0)
-		res = read_feTurbulence_children (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+		res = read_feTurbulence_children (svg, f, attribs, parentData);
 	ELEMENT_POST_PROCESS_FETURBULENCE
 	return res;
 }
-int read_feDistantLight_attributes (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_paint_type hasFill, uint32_t stroke, uint32_t fill, void* parentData) {
+int read_feDistantLight_attributes (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData) {
 	HEADING_FEDISTANTLIGHT
 	HEADING_SVG_CORE_ATTRIB
 	read_attributes_loop_start
@@ -70466,11 +70466,11 @@ int read_feDistantLight_attributes (svg_context* svg, FILE* f, svg_paint_type ha
 	ELEMENT_PRE_PROCESS_FEDISTANTLIGHT
 	read_tag_end
 	if (res > 0)
-		res = read_feDistantLight_children (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+		res = read_feDistantLight_children (svg, f, attribs, parentData);
 	ELEMENT_POST_PROCESS_FEDISTANTLIGHT
 	return res;
 }
-int read_fePointLight_attributes (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_paint_type hasFill, uint32_t stroke, uint32_t fill, void* parentData) {
+int read_fePointLight_attributes (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData) {
 	HEADING_FEPOINTLIGHT
 	HEADING_SVG_CORE_ATTRIB
 	read_attributes_loop_start
@@ -70530,11 +70530,11 @@ int read_fePointLight_attributes (svg_context* svg, FILE* f, svg_paint_type hasS
 	ELEMENT_PRE_PROCESS_FEPOINTLIGHT
 	read_tag_end
 	if (res > 0)
-		res = read_fePointLight_children (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+		res = read_fePointLight_children (svg, f, attribs, parentData);
 	ELEMENT_POST_PROCESS_FEPOINTLIGHT
 	return res;
 }
-int read_feSpotLight_attributes (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_paint_type hasFill, uint32_t stroke, uint32_t fill, void* parentData) {
+int read_feSpotLight_attributes (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData) {
 	HEADING_FESPOTLIGHT
 	HEADING_SVG_CORE_ATTRIB
 	read_attributes_loop_start
@@ -70619,11 +70619,11 @@ int read_feSpotLight_attributes (svg_context* svg, FILE* f, svg_paint_type hasSt
 	ELEMENT_PRE_PROCESS_FESPOTLIGHT
 	read_tag_end
 	if (res > 0)
-		res = read_feSpotLight_children (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+		res = read_feSpotLight_children (svg, f, attribs, parentData);
 	ELEMENT_POST_PROCESS_FESPOTLIGHT
 	return res;
 }
-int read_feFuncR_attributes (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_paint_type hasFill, uint32_t stroke, uint32_t fill, void* parentData) {
+int read_feFuncR_attributes (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData) {
 	HEADING_FEFUNCR
 	HEADING_SVG_CORE_ATTRIB
 	read_attributes_loop_start
@@ -70730,11 +70730,11 @@ int read_feFuncR_attributes (svg_context* svg, FILE* f, svg_paint_type hasStroke
 	ELEMENT_PRE_PROCESS_FEFUNCR
 	read_tag_end
 	if (res > 0)
-		res = read_feFuncR_children (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+		res = read_feFuncR_children (svg, f, attribs, parentData);
 	ELEMENT_POST_PROCESS_FEFUNCR
 	return res;
 }
-int read_feFuncG_attributes (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_paint_type hasFill, uint32_t stroke, uint32_t fill, void* parentData) {
+int read_feFuncG_attributes (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData) {
 	HEADING_FEFUNCG
 	HEADING_SVG_CORE_ATTRIB
 	read_attributes_loop_start
@@ -70841,11 +70841,11 @@ int read_feFuncG_attributes (svg_context* svg, FILE* f, svg_paint_type hasStroke
 	ELEMENT_PRE_PROCESS_FEFUNCG
 	read_tag_end
 	if (res > 0)
-		res = read_feFuncG_children (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+		res = read_feFuncG_children (svg, f, attribs, parentData);
 	ELEMENT_POST_PROCESS_FEFUNCG
 	return res;
 }
-int read_feFuncB_attributes (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_paint_type hasFill, uint32_t stroke, uint32_t fill, void* parentData) {
+int read_feFuncB_attributes (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData) {
 	HEADING_FEFUNCB
 	HEADING_SVG_CORE_ATTRIB
 	read_attributes_loop_start
@@ -70952,11 +70952,11 @@ int read_feFuncB_attributes (svg_context* svg, FILE* f, svg_paint_type hasStroke
 	ELEMENT_PRE_PROCESS_FEFUNCB
 	read_tag_end
 	if (res > 0)
-		res = read_feFuncB_children (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+		res = read_feFuncB_children (svg, f, attribs, parentData);
 	ELEMENT_POST_PROCESS_FEFUNCB
 	return res;
 }
-int read_feFuncA_attributes (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_paint_type hasFill, uint32_t stroke, uint32_t fill, void* parentData) {
+int read_feFuncA_attributes (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData) {
 	HEADING_FEFUNCA
 	HEADING_SVG_CORE_ATTRIB
 	read_attributes_loop_start
@@ -71063,11 +71063,11 @@ int read_feFuncA_attributes (svg_context* svg, FILE* f, svg_paint_type hasStroke
 	ELEMENT_PRE_PROCESS_FEFUNCA
 	read_tag_end
 	if (res > 0)
-		res = read_feFuncA_children (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+		res = read_feFuncA_children (svg, f, attribs, parentData);
 	ELEMENT_POST_PROCESS_FEFUNCA
 	return res;
 }
-int read_cursor_attributes (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_paint_type hasFill, uint32_t stroke, uint32_t fill, void* parentData) {
+int read_cursor_attributes (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData) {
 	HEADING_CURSOR
 	HEADING_SVG_CORE_ATTRIB
 	HEADING_SVG_CONDITIONAL_ATTRIB
@@ -71243,11 +71243,11 @@ int read_cursor_attributes (svg_context* svg, FILE* f, svg_paint_type hasStroke,
 	ELEMENT_PRE_PROCESS_CURSOR
 	read_tag_end
 	if (res > 0)
-		res = read_cursor_children (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+		res = read_cursor_children (svg, f, attribs, parentData);
 	ELEMENT_POST_PROCESS_CURSOR
 	return res;
 }
-int read_a_attributes (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_paint_type hasFill, uint32_t stroke, uint32_t fill, void* parentData) {
+int read_a_attributes (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData) {
 	HEADING_A
 	HEADING_SVG_CORE_ATTRIB
 	HEADING_SVG_CONDITIONAL_ATTRIB
@@ -72845,11 +72845,11 @@ int read_a_attributes (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_
 	ELEMENT_PRE_PROCESS_A
 	read_tag_end
 	if (res > 0)
-		res = read_a_children (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+		res = read_a_children (svg, f, attribs, parentData);
 	ELEMENT_POST_PROCESS_A
 	return res;
 }
-int read_view_attributes (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_paint_type hasFill, uint32_t stroke, uint32_t fill, void* parentData) {
+int read_view_attributes (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData) {
 	HEADING_VIEW
 	HEADING_SVG_CORE_ATTRIB
 	read_attributes_loop_start
@@ -72950,11 +72950,11 @@ int read_view_attributes (svg_context* svg, FILE* f, svg_paint_type hasStroke, s
 	ELEMENT_PRE_PROCESS_VIEW
 	read_tag_end
 	if (res > 0)
-		res = read_view_children (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+		res = read_view_children (svg, f, attribs, parentData);
 	ELEMENT_POST_PROCESS_VIEW
 	return res;
 }
-int read_script_attributes (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_paint_type hasFill, uint32_t stroke, uint32_t fill, void* parentData) {
+int read_script_attributes (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData) {
 	HEADING_SCRIPT
 	HEADING_SVG_CORE_ATTRIB
 	HEADING_SVG_XLINK_ATTRIB
@@ -73105,11 +73105,11 @@ int read_script_attributes (svg_context* svg, FILE* f, svg_paint_type hasStroke,
 	ELEMENT_PRE_PROCESS_SCRIPT
 	read_tag_end
 	if (res > 0)
-		res = skip_children (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+		res = skip_children (svg, f, attribs, parentData);
 	ELEMENT_POST_PROCESS_SCRIPT
 	return res;
 }
-int read_animate_attributes (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_paint_type hasFill, uint32_t stroke, uint32_t fill, void* parentData) {
+int read_animate_attributes (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData) {
 	HEADING_ANIMATE
 	HEADING_SVG_CORE_ATTRIB
 	HEADING_SVG_CONDITIONAL_ATTRIB
@@ -73519,11 +73519,11 @@ int read_animate_attributes (svg_context* svg, FILE* f, svg_paint_type hasStroke
 	ELEMENT_PRE_PROCESS_ANIMATE
 	read_tag_end
 	if (res > 0)
-		res = read_animate_children (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+		res = read_animate_children (svg, f, attribs, parentData);
 	ELEMENT_POST_PROCESS_ANIMATE
 	return res;
 }
-int read_set_attributes (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_paint_type hasFill, uint32_t stroke, uint32_t fill, void* parentData) {
+int read_set_attributes (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData) {
 	HEADING_SET
 	HEADING_SVG_CORE_ATTRIB
 	HEADING_SVG_CONDITIONAL_ATTRIB
@@ -73829,11 +73829,11 @@ int read_set_attributes (svg_context* svg, FILE* f, svg_paint_type hasStroke, sv
 	ELEMENT_PRE_PROCESS_SET
 	read_tag_end
 	if (res > 0)
-		res = read_set_children (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+		res = read_set_children (svg, f, attribs, parentData);
 	ELEMENT_POST_PROCESS_SET
 	return res;
 }
-int read_animateMotion_attributes (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_paint_type hasFill, uint32_t stroke, uint32_t fill, void* parentData) {
+int read_animateMotion_attributes (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData) {
 	HEADING_ANIMATEMOTION
 	HEADING_SVG_CORE_ATTRIB
 	HEADING_SVG_CONDITIONAL_ATTRIB
@@ -74243,11 +74243,11 @@ int read_animateMotion_attributes (svg_context* svg, FILE* f, svg_paint_type has
 	ELEMENT_PRE_PROCESS_ANIMATEMOTION
 	read_tag_end
 	if (res > 0)
-		res = read_animateMotion_children (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+		res = read_animateMotion_children (svg, f, attribs, parentData);
 	ELEMENT_POST_PROCESS_ANIMATEMOTION
 	return res;
 }
-int read_animateColor_attributes (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_paint_type hasFill, uint32_t stroke, uint32_t fill, void* parentData) {
+int read_animateColor_attributes (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData) {
 	HEADING_ANIMATECOLOR
 	HEADING_SVG_CORE_ATTRIB
 	HEADING_SVG_CONDITIONAL_ATTRIB
@@ -74657,11 +74657,11 @@ int read_animateColor_attributes (svg_context* svg, FILE* f, svg_paint_type hasS
 	ELEMENT_PRE_PROCESS_ANIMATECOLOR
 	read_tag_end
 	if (res > 0)
-		res = read_animateColor_children (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+		res = read_animateColor_children (svg, f, attribs, parentData);
 	ELEMENT_POST_PROCESS_ANIMATECOLOR
 	return res;
 }
-int read_animateTransform_attributes (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_paint_type hasFill, uint32_t stroke, uint32_t fill, void* parentData) {
+int read_animateTransform_attributes (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData) {
 	HEADING_ANIMATETRANSFORM
 	HEADING_SVG_CORE_ATTRIB
 	HEADING_SVG_CONDITIONAL_ATTRIB
@@ -75120,11 +75120,11 @@ int read_animateTransform_attributes (svg_context* svg, FILE* f, svg_paint_type 
 	ELEMENT_PRE_PROCESS_ANIMATETRANSFORM
 	read_tag_end
 	if (res > 0)
-		res = read_animateTransform_children (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+		res = read_animateTransform_children (svg, f, attribs, parentData);
 	ELEMENT_POST_PROCESS_ANIMATETRANSFORM
 	return res;
 }
-int read_mpath_attributes (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_paint_type hasFill, uint32_t stroke, uint32_t fill, void* parentData) {
+int read_mpath_attributes (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData) {
 	HEADING_MPATH
 	HEADING_SVG_CORE_ATTRIB
 	HEADING_SVG_XLINKREQUIRED_ATTRIB
@@ -75272,11 +75272,11 @@ int read_mpath_attributes (svg_context* svg, FILE* f, svg_paint_type hasStroke, 
 	ELEMENT_PRE_PROCESS_MPATH
 	read_tag_end
 	if (res > 0)
-		res = read_mpath_children (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+		res = read_mpath_children (svg, f, attribs, parentData);
 	ELEMENT_POST_PROCESS_MPATH
 	return res;
 }
-int read_font_attributes (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_paint_type hasFill, uint32_t stroke, uint32_t fill, void* parentData) {
+int read_font_attributes (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData) {
 	HEADING_FONT
 	HEADING_SVG_CORE_ATTRIB
 	HEADING_SVG_STYLE_ATTRIB
@@ -76750,11 +76750,11 @@ int read_font_attributes (svg_context* svg, FILE* f, svg_paint_type hasStroke, s
 	ELEMENT_PRE_PROCESS_FONT
 	read_tag_end
 	if (res > 0)
-		res = read_font_children (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+		res = read_font_children (svg, f, attribs, parentData);
 	ELEMENT_POST_PROCESS_FONT
 	return res;
 }
-int read_font_face_attributes (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_paint_type hasFill, uint32_t stroke, uint32_t fill, void* parentData) {
+int read_font_face_attributes (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData) {
 	HEADING_FONT_FACE
 	HEADING_SVG_CORE_ATTRIB
 	read_attributes_loop_start
@@ -77029,11 +77029,11 @@ int read_font_face_attributes (svg_context* svg, FILE* f, svg_paint_type hasStro
 	ELEMENT_PRE_PROCESS_FONT_FACE
 	read_tag_end
 	if (res > 0)
-		res = read_font_face_children (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+		res = read_font_face_children (svg, f, attribs, parentData);
 	ELEMENT_POST_PROCESS_FONT_FACE
 	return res;
 }
-int read_glyph_attributes (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_paint_type hasFill, uint32_t stroke, uint32_t fill, void* parentData) {
+int read_glyph_attributes (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData) {
 	HEADING_GLYPH
 	HEADING_SVG_CORE_ATTRIB
 	HEADING_SVG_STYLE_ATTRIB
@@ -78501,11 +78501,11 @@ int read_glyph_attributes (svg_context* svg, FILE* f, svg_paint_type hasStroke, 
 	ELEMENT_PRE_PROCESS_GLYPH
 	read_tag_end
 	if (res > 0)
-		res = read_glyph_children (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+		res = read_glyph_children (svg, f, attribs, parentData);
 	ELEMENT_POST_PROCESS_GLYPH
 	return res;
 }
-int read_missing_glyph_attributes (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_paint_type hasFill, uint32_t stroke, uint32_t fill, void* parentData) {
+int read_missing_glyph_attributes (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData) {
 	HEADING_MISSING_GLYPH
 	HEADING_SVG_CORE_ATTRIB
 	HEADING_SVG_STYLE_ATTRIB
@@ -79934,11 +79934,11 @@ int read_missing_glyph_attributes (svg_context* svg, FILE* f, svg_paint_type has
 	ELEMENT_PRE_PROCESS_MISSING_GLYPH
 	read_tag_end
 	if (res > 0)
-		res = read_missing_glyph_children (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+		res = read_missing_glyph_children (svg, f, attribs, parentData);
 	ELEMENT_POST_PROCESS_MISSING_GLYPH
 	return res;
 }
-int read_hkern_attributes (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_paint_type hasFill, uint32_t stroke, uint32_t fill, void* parentData) {
+int read_hkern_attributes (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData) {
 	HEADING_HKERN
 	HEADING_SVG_CORE_ATTRIB
 	read_attributes_loop_start
@@ -80017,11 +80017,11 @@ int read_hkern_attributes (svg_context* svg, FILE* f, svg_paint_type hasStroke, 
 	ELEMENT_PRE_PROCESS_HKERN
 	read_tag_end
 	if (res > 0)
-		res = skip_children (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+		res = skip_children (svg, f, attribs, parentData);
 	ELEMENT_POST_PROCESS_HKERN
 	return res;
 }
-int read_vkern_attributes (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_paint_type hasFill, uint32_t stroke, uint32_t fill, void* parentData) {
+int read_vkern_attributes (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData) {
 	HEADING_VKERN
 	HEADING_SVG_CORE_ATTRIB
 	read_attributes_loop_start
@@ -80100,11 +80100,11 @@ int read_vkern_attributes (svg_context* svg, FILE* f, svg_paint_type hasStroke, 
 	ELEMENT_PRE_PROCESS_VKERN
 	read_tag_end
 	if (res > 0)
-		res = skip_children (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+		res = skip_children (svg, f, attribs, parentData);
 	ELEMENT_POST_PROCESS_VKERN
 	return res;
 }
-int read_font_face_src_attributes (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_paint_type hasFill, uint32_t stroke, uint32_t fill, void* parentData) {
+int read_font_face_src_attributes (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData) {
 	HEADING_FONT_FACE_SRC
 	HEADING_SVG_CORE_ATTRIB
 	read_attributes_loop_start
@@ -80154,11 +80154,11 @@ int read_font_face_src_attributes (svg_context* svg, FILE* f, svg_paint_type has
 	ELEMENT_PRE_PROCESS_FONT_FACE_SRC
 	read_tag_end
 	if (res > 0)
-		res = read_font_face_src_children (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+		res = read_font_face_src_children (svg, f, attribs, parentData);
 	ELEMENT_POST_PROCESS_FONT_FACE_SRC
 	return res;
 }
-int read_font_face_uri_attributes (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_paint_type hasFill, uint32_t stroke, uint32_t fill, void* parentData) {
+int read_font_face_uri_attributes (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData) {
 	HEADING_FONT_FACE_URI
 	HEADING_SVG_CORE_ATTRIB
 	HEADING_SVG_XLINKREQUIRED_ATTRIB
@@ -80290,11 +80290,11 @@ int read_font_face_uri_attributes (svg_context* svg, FILE* f, svg_paint_type has
 	ELEMENT_PRE_PROCESS_FONT_FACE_URI
 	read_tag_end
 	if (res > 0)
-		res = read_font_face_uri_children (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+		res = read_font_face_uri_children (svg, f, attribs, parentData);
 	ELEMENT_POST_PROCESS_FONT_FACE_URI
 	return res;
 }
-int read_font_face_format_attributes (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_paint_type hasFill, uint32_t stroke, uint32_t fill, void* parentData) {
+int read_font_face_format_attributes (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData) {
 	HEADING_FONT_FACE_FORMAT
 	HEADING_SVG_CORE_ATTRIB
 	read_attributes_loop_start
@@ -80347,11 +80347,11 @@ int read_font_face_format_attributes (svg_context* svg, FILE* f, svg_paint_type 
 	ELEMENT_PRE_PROCESS_FONT_FACE_FORMAT
 	read_tag_end
 	if (res > 0)
-		res = skip_children (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+		res = skip_children (svg, f, attribs, parentData);
 	ELEMENT_POST_PROCESS_FONT_FACE_FORMAT
 	return res;
 }
-int read_font_face_name_attributes (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_paint_type hasFill, uint32_t stroke, uint32_t fill, void* parentData) {
+int read_font_face_name_attributes (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData) {
 	HEADING_FONT_FACE_NAME
 	HEADING_SVG_CORE_ATTRIB
 	read_attributes_loop_start
@@ -80404,11 +80404,11 @@ int read_font_face_name_attributes (svg_context* svg, FILE* f, svg_paint_type ha
 	ELEMENT_PRE_PROCESS_FONT_FACE_NAME
 	read_tag_end
 	if (res > 0)
-		res = skip_children (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+		res = skip_children (svg, f, attribs, parentData);
 	ELEMENT_POST_PROCESS_FONT_FACE_NAME
 	return res;
 }
-int read_foreignObject_attributes (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_paint_type hasFill, uint32_t stroke, uint32_t fill, void* parentData) {
+int read_foreignObject_attributes (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData) {
 	HEADING_FOREIGNOBJECT
 	HEADING_SVG_CORE_ATTRIB
 	HEADING_SVG_CONDITIONAL_ATTRIB
@@ -81927,13 +81927,13 @@ int read_foreignObject_attributes (svg_context* svg, FILE* f, svg_paint_type has
 	ELEMENT_PRE_PROCESS_FOREIGNOBJECT
 	read_tag_end
 	if (res > 0)
-		res = skip_children (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+		res = skip_children (svg, f, attribs, parentData);
 	ELEMENT_POST_PROCESS_FOREIGNOBJECT
 	return res;
 }
 
 
-int read_svg_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_paint_type hasFill, uint32_t stroke, uint32_t fill, void* parentData) {
+int read_svg_children (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData) {
 	int res = 0;
 	while (!feof (f)) {
 		read_element_start
@@ -81941,26 +81941,26 @@ int read_svg_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_
 		switch(tolower(svg->elt[0])) {
 		case 'a':
 			if (nameLenght == 1)
-				res = read_a_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+				res = read_a_attributes (svg, f, attribs, parentData);
 			else {
 				switch(tolower(svg->elt[1])) {
 				case 'l':
-					res = read_altGlyphDef_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+					res = read_altGlyphDef_attributes (svg, f, attribs, parentData);
 					break;
 				case 'n':
 					if (!strncasecmp (&svg->elt[2],"imate",5)) {//down
 						if (nameLenght == 7)
-							res = read_animate_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+							res = read_animate_attributes (svg, f, attribs, parentData);
 						else {
 							switch(tolower(svg->elt[7])) {
 							case 'c':
-								res = read_animateColor_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+								res = read_animateColor_attributes (svg, f, attribs, parentData);
 								break;
 							case 'm':
-								res = read_animateMotion_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+								res = read_animateMotion_attributes (svg, f, attribs, parentData);
 								break;
 							case 't':
-								res = read_animateTransform_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+								res = read_animateTransform_attributes (svg, f, attribs, parentData);
 								break;
 							default:
 								skip_element
@@ -81979,16 +81979,16 @@ int read_svg_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_
 		case 'c':
 			switch(tolower(svg->elt[1])) {
 			case 'i':
-				res = read_circle_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+				res = read_circle_attributes (svg, f, attribs, parentData);
 				break;
 			case 'l':
-				res = read_clipPath_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+				res = read_clipPath_attributes (svg, f, attribs, parentData);
 				break;
 			case 'o':
-				res = read_color_profile_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+				res = read_color_profile_attributes (svg, f, attribs, parentData);
 				break;
 			case 'u':
-				res = read_cursor_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+				res = read_cursor_attributes (svg, f, attribs, parentData);
 				break;
 			default:
 				skip_element
@@ -81999,10 +81999,10 @@ int read_svg_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_
 			if (tolower(svg->elt[1]) == 'e') {//up
 				switch(tolower(svg->elt[2])) {
 				case 'f':
-					res = read_defs_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+					res = read_defs_attributes (svg, f, attribs, parentData);
 					break;
 				case 's':
-					res = read_desc_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+					res = read_desc_attributes (svg, f, attribs, parentData);
 					break;
 				default:
 					skip_element
@@ -82012,22 +82012,22 @@ int read_svg_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_
 				skip_element
 			break;
 		case 'e':
-			res = read_ellipse_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+			res = read_ellipse_attributes (svg, f, attribs, parentData);
 			break;
 		case 'f':
 			switch(tolower(svg->elt[1])) {
 			case 'i':
-				res = read_filter_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+				res = read_filter_attributes (svg, f, attribs, parentData);
 				break;
 			case 'o':
 				switch(tolower(svg->elt[2])) {
 				case 'n':
 					if (tolower(svg->elt[3]) == 't') {//down
 						if (nameLenght == 4)
-							res = read_font_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+							res = read_font_attributes (svg, f, attribs, parentData);
 						else {
 							if (!strcasecmp (&svg->elt[4],"_face"))
-								res = read_font_face_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+								res = read_font_face_attributes (svg, f, attribs, parentData);
 							else
 								skip_element
 						}
@@ -82035,7 +82035,7 @@ int read_svg_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_
 						skip_element
 					break;
 				case 'r':
-					res = read_foreignObject_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+					res = read_foreignObject_attributes (svg, f, attribs, parentData);
 					break;
 				default:
 					skip_element
@@ -82048,18 +82048,18 @@ int read_svg_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_
 			}
 			break;
 		case 'g':
-			res = read_g_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+			res = read_g_attributes (svg, f, attribs, parentData);
 			break;
 		case 'i':
-			res = read_image_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+			res = read_image_attributes (svg, f, attribs, parentData);
 			break;
 		case 'l':
 			if (!strncasecmp (&svg->elt[1],"ine",3)) {//down
 				if (nameLenght == 4)
-					res = read_line_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+					res = read_line_attributes (svg, f, attribs, parentData);
 				else {
 					if (!strcasecmp (&svg->elt[4],"argradient"))
-						res = read_linearGradient_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+						res = read_linearGradient_attributes (svg, f, attribs, parentData);
 					else
 						skip_element
 				}
@@ -82071,10 +82071,10 @@ int read_svg_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_
 			case 'a':
 				switch(tolower(svg->elt[2])) {
 				case 'r':
-					res = read_marker_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+					res = read_marker_attributes (svg, f, attribs, parentData);
 					break;
 				case 's':
-					res = read_mask_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+					res = read_mask_attributes (svg, f, attribs, parentData);
 					break;
 				default:
 					skip_element
@@ -82082,7 +82082,7 @@ int read_svg_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_
 				}
 				break;
 			case 'e':
-				res = read_metadata_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+				res = read_metadata_attributes (svg, f, attribs, parentData);
 				break;
 			default:
 				skip_element
@@ -82095,10 +82095,10 @@ int read_svg_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_
 				if (tolower(svg->elt[2]) == 't') {//up
 					switch(tolower(svg->elt[3])) {
 					case 'h':
-						res = read_path_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+						res = read_path_attributes (svg, f, attribs, parentData);
 						break;
 					case 't':
-						res = read_pattern_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+						res = read_pattern_attributes (svg, f, attribs, parentData);
 						break;
 					default:
 						skip_element
@@ -82111,10 +82111,10 @@ int read_svg_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_
 				if (!strncasecmp (&svg->elt[2],"ly",2)) {//up
 					switch(tolower(svg->elt[4])) {
 					case 'g':
-						res = read_polygon_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+						res = read_polygon_attributes (svg, f, attribs, parentData);
 						break;
 					case 'l':
-						res = read_polyline_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+						res = read_polyline_attributes (svg, f, attribs, parentData);
 						break;
 					default:
 						skip_element
@@ -82131,10 +82131,10 @@ int read_svg_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_
 		case 'r':
 			switch(tolower(svg->elt[1])) {
 			case 'a':
-				res = read_radialGradient_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+				res = read_radialGradient_attributes (svg, f, attribs, parentData);
 				break;
 			case 'e':
-				res = read_rect_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+				res = read_rect_attributes (svg, f, attribs, parentData);
 				break;
 			default:
 				skip_element
@@ -82144,22 +82144,22 @@ int read_svg_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_
 		case 's':
 			switch(tolower(svg->elt[1])) {
 			case 'c':
-				res = read_script_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+				res = read_script_attributes (svg, f, attribs, parentData);
 				break;
 			case 'e':
-				res = read_set_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+				res = read_set_attributes (svg, f, attribs, parentData);
 				break;
 			case 't':
-				res = read_style_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+				res = read_style_attributes (svg, f, attribs, parentData);
 				break;
 			case 'v':
-				res = read_svg_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+				res = read_svg_attributes (svg, f, attribs, parentData);
 				break;
 			case 'w':
-				res = read_switch_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+				res = read_switch_attributes (svg, f, attribs, parentData);
 				break;
 			case 'y':
-				res = read_symbol_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+				res = read_symbol_attributes (svg, f, attribs, parentData);
 				break;
 			default:
 				skip_element
@@ -82169,10 +82169,10 @@ int read_svg_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_
 		case 't':
 			switch(tolower(svg->elt[1])) {
 			case 'e':
-				res = read_text_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+				res = read_text_attributes (svg, f, attribs, parentData);
 				break;
 			case 'i':
-				res = read_title_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+				res = read_title_attributes (svg, f, attribs, parentData);
 				break;
 			default:
 				skip_element
@@ -82180,10 +82180,10 @@ int read_svg_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_
 			}
 			break;
 		case 'u':
-			res = read_use_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+			res = read_use_attributes (svg, f, attribs, parentData);
 			break;
 		case 'v':
-			res = read_view_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+			res = read_view_attributes (svg, f, attribs, parentData);
 			break;
 		default:
 			skip_element
@@ -82192,7 +82192,7 @@ int read_svg_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_
 	}
 	return res;
 }
-int read_g_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_paint_type hasFill, uint32_t stroke, uint32_t fill, void* parentData) {
+int read_g_children (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData) {
 	int res = 0;
 	while (!feof (f)) {
 		read_element_start
@@ -82200,26 +82200,26 @@ int read_g_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_pa
 		switch(tolower(svg->elt[0])) {
 		case 'a':
 			if (nameLenght == 1)
-				res = read_a_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+				res = read_a_attributes (svg, f, attribs, parentData);
 			else {
 				switch(tolower(svg->elt[1])) {
 				case 'l':
-					res = read_altGlyphDef_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+					res = read_altGlyphDef_attributes (svg, f, attribs, parentData);
 					break;
 				case 'n':
 					if (!strncasecmp (&svg->elt[2],"imate",5)) {//down
 						if (nameLenght == 7)
-							res = read_animate_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+							res = read_animate_attributes (svg, f, attribs, parentData);
 						else {
 							switch(tolower(svg->elt[7])) {
 							case 'c':
-								res = read_animateColor_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+								res = read_animateColor_attributes (svg, f, attribs, parentData);
 								break;
 							case 'm':
-								res = read_animateMotion_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+								res = read_animateMotion_attributes (svg, f, attribs, parentData);
 								break;
 							case 't':
-								res = read_animateTransform_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+								res = read_animateTransform_attributes (svg, f, attribs, parentData);
 								break;
 							default:
 								skip_element
@@ -82238,16 +82238,16 @@ int read_g_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_pa
 		case 'c':
 			switch(tolower(svg->elt[1])) {
 			case 'i':
-				res = read_circle_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+				res = read_circle_attributes (svg, f, attribs, parentData);
 				break;
 			case 'l':
-				res = read_clipPath_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+				res = read_clipPath_attributes (svg, f, attribs, parentData);
 				break;
 			case 'o':
-				res = read_color_profile_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+				res = read_color_profile_attributes (svg, f, attribs, parentData);
 				break;
 			case 'u':
-				res = read_cursor_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+				res = read_cursor_attributes (svg, f, attribs, parentData);
 				break;
 			default:
 				skip_element
@@ -82258,10 +82258,10 @@ int read_g_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_pa
 			if (tolower(svg->elt[1]) == 'e') {//up
 				switch(tolower(svg->elt[2])) {
 				case 'f':
-					res = read_defs_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+					res = read_defs_attributes (svg, f, attribs, parentData);
 					break;
 				case 's':
-					res = read_desc_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+					res = read_desc_attributes (svg, f, attribs, parentData);
 					break;
 				default:
 					skip_element
@@ -82271,22 +82271,22 @@ int read_g_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_pa
 				skip_element
 			break;
 		case 'e':
-			res = read_ellipse_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+			res = read_ellipse_attributes (svg, f, attribs, parentData);
 			break;
 		case 'f':
 			switch(tolower(svg->elt[1])) {
 			case 'i':
-				res = read_filter_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+				res = read_filter_attributes (svg, f, attribs, parentData);
 				break;
 			case 'o':
 				switch(tolower(svg->elt[2])) {
 				case 'n':
 					if (tolower(svg->elt[3]) == 't') {//down
 						if (nameLenght == 4)
-							res = read_font_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+							res = read_font_attributes (svg, f, attribs, parentData);
 						else {
 							if (!strcasecmp (&svg->elt[4],"_face"))
-								res = read_font_face_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+								res = read_font_face_attributes (svg, f, attribs, parentData);
 							else
 								skip_element
 						}
@@ -82294,7 +82294,7 @@ int read_g_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_pa
 						skip_element
 					break;
 				case 'r':
-					res = read_foreignObject_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+					res = read_foreignObject_attributes (svg, f, attribs, parentData);
 					break;
 				default:
 					skip_element
@@ -82307,18 +82307,18 @@ int read_g_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_pa
 			}
 			break;
 		case 'g':
-			res = read_g_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+			res = read_g_attributes (svg, f, attribs, parentData);
 			break;
 		case 'i':
-			res = read_image_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+			res = read_image_attributes (svg, f, attribs, parentData);
 			break;
 		case 'l':
 			if (!strncasecmp (&svg->elt[1],"ine",3)) {//down
 				if (nameLenght == 4)
-					res = read_line_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+					res = read_line_attributes (svg, f, attribs, parentData);
 				else {
 					if (!strcasecmp (&svg->elt[4],"argradient"))
-						res = read_linearGradient_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+						res = read_linearGradient_attributes (svg, f, attribs, parentData);
 					else
 						skip_element
 				}
@@ -82330,10 +82330,10 @@ int read_g_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_pa
 			case 'a':
 				switch(tolower(svg->elt[2])) {
 				case 'r':
-					res = read_marker_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+					res = read_marker_attributes (svg, f, attribs, parentData);
 					break;
 				case 's':
-					res = read_mask_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+					res = read_mask_attributes (svg, f, attribs, parentData);
 					break;
 				default:
 					skip_element
@@ -82341,7 +82341,7 @@ int read_g_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_pa
 				}
 				break;
 			case 'e':
-				res = read_metadata_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+				res = read_metadata_attributes (svg, f, attribs, parentData);
 				break;
 			default:
 				skip_element
@@ -82354,10 +82354,10 @@ int read_g_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_pa
 				if (tolower(svg->elt[2]) == 't') {//up
 					switch(tolower(svg->elt[3])) {
 					case 'h':
-						res = read_path_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+						res = read_path_attributes (svg, f, attribs, parentData);
 						break;
 					case 't':
-						res = read_pattern_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+						res = read_pattern_attributes (svg, f, attribs, parentData);
 						break;
 					default:
 						skip_element
@@ -82370,10 +82370,10 @@ int read_g_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_pa
 				if (!strncasecmp (&svg->elt[2],"ly",2)) {//up
 					switch(tolower(svg->elt[4])) {
 					case 'g':
-						res = read_polygon_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+						res = read_polygon_attributes (svg, f, attribs, parentData);
 						break;
 					case 'l':
-						res = read_polyline_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+						res = read_polyline_attributes (svg, f, attribs, parentData);
 						break;
 					default:
 						skip_element
@@ -82390,10 +82390,10 @@ int read_g_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_pa
 		case 'r':
 			switch(tolower(svg->elt[1])) {
 			case 'a':
-				res = read_radialGradient_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+				res = read_radialGradient_attributes (svg, f, attribs, parentData);
 				break;
 			case 'e':
-				res = read_rect_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+				res = read_rect_attributes (svg, f, attribs, parentData);
 				break;
 			default:
 				skip_element
@@ -82403,22 +82403,22 @@ int read_g_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_pa
 		case 's':
 			switch(tolower(svg->elt[1])) {
 			case 'c':
-				res = read_script_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+				res = read_script_attributes (svg, f, attribs, parentData);
 				break;
 			case 'e':
-				res = read_set_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+				res = read_set_attributes (svg, f, attribs, parentData);
 				break;
 			case 't':
-				res = read_style_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+				res = read_style_attributes (svg, f, attribs, parentData);
 				break;
 			case 'v':
-				res = read_svg_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+				res = read_svg_attributes (svg, f, attribs, parentData);
 				break;
 			case 'w':
-				res = read_switch_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+				res = read_switch_attributes (svg, f, attribs, parentData);
 				break;
 			case 'y':
-				res = read_symbol_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+				res = read_symbol_attributes (svg, f, attribs, parentData);
 				break;
 			default:
 				skip_element
@@ -82428,10 +82428,10 @@ int read_g_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_pa
 		case 't':
 			switch(tolower(svg->elt[1])) {
 			case 'e':
-				res = read_text_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+				res = read_text_attributes (svg, f, attribs, parentData);
 				break;
 			case 'i':
-				res = read_title_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+				res = read_title_attributes (svg, f, attribs, parentData);
 				break;
 			default:
 				skip_element
@@ -82439,10 +82439,10 @@ int read_g_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_pa
 			}
 			break;
 		case 'u':
-			res = read_use_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+			res = read_use_attributes (svg, f, attribs, parentData);
 			break;
 		case 'v':
-			res = read_view_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+			res = read_view_attributes (svg, f, attribs, parentData);
 			break;
 		default:
 			skip_element
@@ -82451,7 +82451,7 @@ int read_g_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_pa
 	}
 	return res;
 }
-int read_defs_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_paint_type hasFill, uint32_t stroke, uint32_t fill, void* parentData) {
+int read_defs_children (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData) {
 	int res = 0;
 	while (!feof (f)) {
 		read_element_start
@@ -82459,26 +82459,26 @@ int read_defs_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg
 		switch(tolower(svg->elt[0])) {
 		case 'a':
 			if (nameLenght == 1)
-				res = read_a_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+				res = read_a_attributes (svg, f, attribs, parentData);
 			else {
 				switch(tolower(svg->elt[1])) {
 				case 'l':
-					res = read_altGlyphDef_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+					res = read_altGlyphDef_attributes (svg, f, attribs, parentData);
 					break;
 				case 'n':
 					if (!strncasecmp (&svg->elt[2],"imate",5)) {//down
 						if (nameLenght == 7)
-							res = read_animate_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+							res = read_animate_attributes (svg, f, attribs, parentData);
 						else {
 							switch(tolower(svg->elt[7])) {
 							case 'c':
-								res = read_animateColor_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+								res = read_animateColor_attributes (svg, f, attribs, parentData);
 								break;
 							case 'm':
-								res = read_animateMotion_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+								res = read_animateMotion_attributes (svg, f, attribs, parentData);
 								break;
 							case 't':
-								res = read_animateTransform_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+								res = read_animateTransform_attributes (svg, f, attribs, parentData);
 								break;
 							default:
 								skip_element
@@ -82497,16 +82497,16 @@ int read_defs_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg
 		case 'c':
 			switch(tolower(svg->elt[1])) {
 			case 'i':
-				res = read_circle_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+				res = read_circle_attributes (svg, f, attribs, parentData);
 				break;
 			case 'l':
-				res = read_clipPath_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+				res = read_clipPath_attributes (svg, f, attribs, parentData);
 				break;
 			case 'o':
-				res = read_color_profile_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+				res = read_color_profile_attributes (svg, f, attribs, parentData);
 				break;
 			case 'u':
-				res = read_cursor_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+				res = read_cursor_attributes (svg, f, attribs, parentData);
 				break;
 			default:
 				skip_element
@@ -82517,10 +82517,10 @@ int read_defs_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg
 			if (tolower(svg->elt[1]) == 'e') {//up
 				switch(tolower(svg->elt[2])) {
 				case 'f':
-					res = read_defs_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+					res = read_defs_attributes (svg, f, attribs, parentData);
 					break;
 				case 's':
-					res = read_desc_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+					res = read_desc_attributes (svg, f, attribs, parentData);
 					break;
 				default:
 					skip_element
@@ -82530,22 +82530,22 @@ int read_defs_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg
 				skip_element
 			break;
 		case 'e':
-			res = read_ellipse_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+			res = read_ellipse_attributes (svg, f, attribs, parentData);
 			break;
 		case 'f':
 			switch(tolower(svg->elt[1])) {
 			case 'i':
-				res = read_filter_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+				res = read_filter_attributes (svg, f, attribs, parentData);
 				break;
 			case 'o':
 				switch(tolower(svg->elt[2])) {
 				case 'n':
 					if (tolower(svg->elt[3]) == 't') {//down
 						if (nameLenght == 4)
-							res = read_font_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+							res = read_font_attributes (svg, f, attribs, parentData);
 						else {
 							if (!strcasecmp (&svg->elt[4],"_face"))
-								res = read_font_face_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+								res = read_font_face_attributes (svg, f, attribs, parentData);
 							else
 								skip_element
 						}
@@ -82553,7 +82553,7 @@ int read_defs_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg
 						skip_element
 					break;
 				case 'r':
-					res = read_foreignObject_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+					res = read_foreignObject_attributes (svg, f, attribs, parentData);
 					break;
 				default:
 					skip_element
@@ -82566,18 +82566,18 @@ int read_defs_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg
 			}
 			break;
 		case 'g':
-			res = read_g_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+			res = read_g_attributes (svg, f, attribs, parentData);
 			break;
 		case 'i':
-			res = read_image_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+			res = read_image_attributes (svg, f, attribs, parentData);
 			break;
 		case 'l':
 			if (!strncasecmp (&svg->elt[1],"ine",3)) {//down
 				if (nameLenght == 4)
-					res = read_line_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+					res = read_line_attributes (svg, f, attribs, parentData);
 				else {
 					if (!strcasecmp (&svg->elt[4],"argradient"))
-						res = read_linearGradient_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+						res = read_linearGradient_attributes (svg, f, attribs, parentData);
 					else
 						skip_element
 				}
@@ -82589,10 +82589,10 @@ int read_defs_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg
 			case 'a':
 				switch(tolower(svg->elt[2])) {
 				case 'r':
-					res = read_marker_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+					res = read_marker_attributes (svg, f, attribs, parentData);
 					break;
 				case 's':
-					res = read_mask_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+					res = read_mask_attributes (svg, f, attribs, parentData);
 					break;
 				default:
 					skip_element
@@ -82600,7 +82600,7 @@ int read_defs_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg
 				}
 				break;
 			case 'e':
-				res = read_metadata_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+				res = read_metadata_attributes (svg, f, attribs, parentData);
 				break;
 			default:
 				skip_element
@@ -82613,10 +82613,10 @@ int read_defs_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg
 				if (tolower(svg->elt[2]) == 't') {//up
 					switch(tolower(svg->elt[3])) {
 					case 'h':
-						res = read_path_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+						res = read_path_attributes (svg, f, attribs, parentData);
 						break;
 					case 't':
-						res = read_pattern_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+						res = read_pattern_attributes (svg, f, attribs, parentData);
 						break;
 					default:
 						skip_element
@@ -82629,10 +82629,10 @@ int read_defs_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg
 				if (!strncasecmp (&svg->elt[2],"ly",2)) {//up
 					switch(tolower(svg->elt[4])) {
 					case 'g':
-						res = read_polygon_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+						res = read_polygon_attributes (svg, f, attribs, parentData);
 						break;
 					case 'l':
-						res = read_polyline_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+						res = read_polyline_attributes (svg, f, attribs, parentData);
 						break;
 					default:
 						skip_element
@@ -82649,10 +82649,10 @@ int read_defs_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg
 		case 'r':
 			switch(tolower(svg->elt[1])) {
 			case 'a':
-				res = read_radialGradient_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+				res = read_radialGradient_attributes (svg, f, attribs, parentData);
 				break;
 			case 'e':
-				res = read_rect_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+				res = read_rect_attributes (svg, f, attribs, parentData);
 				break;
 			default:
 				skip_element
@@ -82662,22 +82662,22 @@ int read_defs_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg
 		case 's':
 			switch(tolower(svg->elt[1])) {
 			case 'c':
-				res = read_script_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+				res = read_script_attributes (svg, f, attribs, parentData);
 				break;
 			case 'e':
-				res = read_set_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+				res = read_set_attributes (svg, f, attribs, parentData);
 				break;
 			case 't':
-				res = read_style_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+				res = read_style_attributes (svg, f, attribs, parentData);
 				break;
 			case 'v':
-				res = read_svg_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+				res = read_svg_attributes (svg, f, attribs, parentData);
 				break;
 			case 'w':
-				res = read_switch_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+				res = read_switch_attributes (svg, f, attribs, parentData);
 				break;
 			case 'y':
-				res = read_symbol_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+				res = read_symbol_attributes (svg, f, attribs, parentData);
 				break;
 			default:
 				skip_element
@@ -82687,10 +82687,10 @@ int read_defs_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg
 		case 't':
 			switch(tolower(svg->elt[1])) {
 			case 'e':
-				res = read_text_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+				res = read_text_attributes (svg, f, attribs, parentData);
 				break;
 			case 'i':
-				res = read_title_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+				res = read_title_attributes (svg, f, attribs, parentData);
 				break;
 			default:
 				skip_element
@@ -82698,10 +82698,10 @@ int read_defs_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg
 			}
 			break;
 		case 'u':
-			res = read_use_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+			res = read_use_attributes (svg, f, attribs, parentData);
 			break;
 		case 'v':
-			res = read_view_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+			res = read_view_attributes (svg, f, attribs, parentData);
 			break;
 		default:
 			skip_element
@@ -82710,7 +82710,7 @@ int read_defs_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg
 	}
 	return res;
 }
-int read_symbol_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_paint_type hasFill, uint32_t stroke, uint32_t fill, void* parentData) {
+int read_symbol_children (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData) {
 	int res = 0;
 	while (!feof (f)) {
 		read_element_start
@@ -82718,26 +82718,26 @@ int read_symbol_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, s
 		switch(tolower(svg->elt[0])) {
 		case 'a':
 			if (nameLenght == 1)
-				res = read_a_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+				res = read_a_attributes (svg, f, attribs, parentData);
 			else {
 				switch(tolower(svg->elt[1])) {
 				case 'l':
-					res = read_altGlyphDef_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+					res = read_altGlyphDef_attributes (svg, f, attribs, parentData);
 					break;
 				case 'n':
 					if (!strncasecmp (&svg->elt[2],"imate",5)) {//down
 						if (nameLenght == 7)
-							res = read_animate_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+							res = read_animate_attributes (svg, f, attribs, parentData);
 						else {
 							switch(tolower(svg->elt[7])) {
 							case 'c':
-								res = read_animateColor_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+								res = read_animateColor_attributes (svg, f, attribs, parentData);
 								break;
 							case 'm':
-								res = read_animateMotion_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+								res = read_animateMotion_attributes (svg, f, attribs, parentData);
 								break;
 							case 't':
-								res = read_animateTransform_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+								res = read_animateTransform_attributes (svg, f, attribs, parentData);
 								break;
 							default:
 								skip_element
@@ -82756,16 +82756,16 @@ int read_symbol_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, s
 		case 'c':
 			switch(tolower(svg->elt[1])) {
 			case 'i':
-				res = read_circle_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+				res = read_circle_attributes (svg, f, attribs, parentData);
 				break;
 			case 'l':
-				res = read_clipPath_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+				res = read_clipPath_attributes (svg, f, attribs, parentData);
 				break;
 			case 'o':
-				res = read_color_profile_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+				res = read_color_profile_attributes (svg, f, attribs, parentData);
 				break;
 			case 'u':
-				res = read_cursor_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+				res = read_cursor_attributes (svg, f, attribs, parentData);
 				break;
 			default:
 				skip_element
@@ -82776,10 +82776,10 @@ int read_symbol_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, s
 			if (tolower(svg->elt[1]) == 'e') {//up
 				switch(tolower(svg->elt[2])) {
 				case 'f':
-					res = read_defs_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+					res = read_defs_attributes (svg, f, attribs, parentData);
 					break;
 				case 's':
-					res = read_desc_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+					res = read_desc_attributes (svg, f, attribs, parentData);
 					break;
 				default:
 					skip_element
@@ -82789,22 +82789,22 @@ int read_symbol_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, s
 				skip_element
 			break;
 		case 'e':
-			res = read_ellipse_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+			res = read_ellipse_attributes (svg, f, attribs, parentData);
 			break;
 		case 'f':
 			switch(tolower(svg->elt[1])) {
 			case 'i':
-				res = read_filter_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+				res = read_filter_attributes (svg, f, attribs, parentData);
 				break;
 			case 'o':
 				switch(tolower(svg->elt[2])) {
 				case 'n':
 					if (tolower(svg->elt[3]) == 't') {//down
 						if (nameLenght == 4)
-							res = read_font_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+							res = read_font_attributes (svg, f, attribs, parentData);
 						else {
 							if (!strcasecmp (&svg->elt[4],"_face"))
-								res = read_font_face_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+								res = read_font_face_attributes (svg, f, attribs, parentData);
 							else
 								skip_element
 						}
@@ -82812,7 +82812,7 @@ int read_symbol_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, s
 						skip_element
 					break;
 				case 'r':
-					res = read_foreignObject_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+					res = read_foreignObject_attributes (svg, f, attribs, parentData);
 					break;
 				default:
 					skip_element
@@ -82825,18 +82825,18 @@ int read_symbol_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, s
 			}
 			break;
 		case 'g':
-			res = read_g_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+			res = read_g_attributes (svg, f, attribs, parentData);
 			break;
 		case 'i':
-			res = read_image_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+			res = read_image_attributes (svg, f, attribs, parentData);
 			break;
 		case 'l':
 			if (!strncasecmp (&svg->elt[1],"ine",3)) {//down
 				if (nameLenght == 4)
-					res = read_line_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+					res = read_line_attributes (svg, f, attribs, parentData);
 				else {
 					if (!strcasecmp (&svg->elt[4],"argradient"))
-						res = read_linearGradient_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+						res = read_linearGradient_attributes (svg, f, attribs, parentData);
 					else
 						skip_element
 				}
@@ -82848,10 +82848,10 @@ int read_symbol_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, s
 			case 'a':
 				switch(tolower(svg->elt[2])) {
 				case 'r':
-					res = read_marker_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+					res = read_marker_attributes (svg, f, attribs, parentData);
 					break;
 				case 's':
-					res = read_mask_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+					res = read_mask_attributes (svg, f, attribs, parentData);
 					break;
 				default:
 					skip_element
@@ -82859,7 +82859,7 @@ int read_symbol_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, s
 				}
 				break;
 			case 'e':
-				res = read_metadata_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+				res = read_metadata_attributes (svg, f, attribs, parentData);
 				break;
 			default:
 				skip_element
@@ -82872,10 +82872,10 @@ int read_symbol_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, s
 				if (tolower(svg->elt[2]) == 't') {//up
 					switch(tolower(svg->elt[3])) {
 					case 'h':
-						res = read_path_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+						res = read_path_attributes (svg, f, attribs, parentData);
 						break;
 					case 't':
-						res = read_pattern_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+						res = read_pattern_attributes (svg, f, attribs, parentData);
 						break;
 					default:
 						skip_element
@@ -82888,10 +82888,10 @@ int read_symbol_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, s
 				if (!strncasecmp (&svg->elt[2],"ly",2)) {//up
 					switch(tolower(svg->elt[4])) {
 					case 'g':
-						res = read_polygon_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+						res = read_polygon_attributes (svg, f, attribs, parentData);
 						break;
 					case 'l':
-						res = read_polyline_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+						res = read_polyline_attributes (svg, f, attribs, parentData);
 						break;
 					default:
 						skip_element
@@ -82908,10 +82908,10 @@ int read_symbol_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, s
 		case 'r':
 			switch(tolower(svg->elt[1])) {
 			case 'a':
-				res = read_radialGradient_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+				res = read_radialGradient_attributes (svg, f, attribs, parentData);
 				break;
 			case 'e':
-				res = read_rect_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+				res = read_rect_attributes (svg, f, attribs, parentData);
 				break;
 			default:
 				skip_element
@@ -82921,22 +82921,22 @@ int read_symbol_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, s
 		case 's':
 			switch(tolower(svg->elt[1])) {
 			case 'c':
-				res = read_script_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+				res = read_script_attributes (svg, f, attribs, parentData);
 				break;
 			case 'e':
-				res = read_set_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+				res = read_set_attributes (svg, f, attribs, parentData);
 				break;
 			case 't':
-				res = read_style_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+				res = read_style_attributes (svg, f, attribs, parentData);
 				break;
 			case 'v':
-				res = read_svg_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+				res = read_svg_attributes (svg, f, attribs, parentData);
 				break;
 			case 'w':
-				res = read_switch_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+				res = read_switch_attributes (svg, f, attribs, parentData);
 				break;
 			case 'y':
-				res = read_symbol_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+				res = read_symbol_attributes (svg, f, attribs, parentData);
 				break;
 			default:
 				skip_element
@@ -82946,10 +82946,10 @@ int read_symbol_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, s
 		case 't':
 			switch(tolower(svg->elt[1])) {
 			case 'e':
-				res = read_text_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+				res = read_text_attributes (svg, f, attribs, parentData);
 				break;
 			case 'i':
-				res = read_title_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+				res = read_title_attributes (svg, f, attribs, parentData);
 				break;
 			default:
 				skip_element
@@ -82957,10 +82957,10 @@ int read_symbol_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, s
 			}
 			break;
 		case 'u':
-			res = read_use_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+			res = read_use_attributes (svg, f, attribs, parentData);
 			break;
 		case 'v':
-			res = read_view_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+			res = read_view_attributes (svg, f, attribs, parentData);
 			break;
 		default:
 			skip_element
@@ -82969,7 +82969,7 @@ int read_symbol_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, s
 	}
 	return res;
 }
-int read_use_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_paint_type hasFill, uint32_t stroke, uint32_t fill, void* parentData) {
+int read_use_children (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData) {
 	int res = 0;
 	while (!feof (f)) {
 		read_element_start
@@ -82978,17 +82978,17 @@ int read_use_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_
 		case 'a':
 			if (!strncasecmp (&svg->elt[1],"nimate",6)) {//down
 				if (nameLenght == 7)
-					res = read_animate_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+					res = read_animate_attributes (svg, f, attribs, parentData);
 				else {
 					switch(tolower(svg->elt[7])) {
 					case 'c':
-						res = read_animateColor_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+						res = read_animateColor_attributes (svg, f, attribs, parentData);
 						break;
 					case 'm':
-						res = read_animateMotion_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+						res = read_animateMotion_attributes (svg, f, attribs, parentData);
 						break;
 					case 't':
-						res = read_animateTransform_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+						res = read_animateTransform_attributes (svg, f, attribs, parentData);
 						break;
 					default:
 						skip_element
@@ -82999,16 +82999,16 @@ int read_use_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_
 				skip_element
 			break;
 		case 'd':
-			res = read_desc_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+			res = read_desc_attributes (svg, f, attribs, parentData);
 			break;
 		case 'm':
-			res = read_metadata_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+			res = read_metadata_attributes (svg, f, attribs, parentData);
 			break;
 		case 's':
-			res = read_set_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+			res = read_set_attributes (svg, f, attribs, parentData);
 			break;
 		case 't':
-			res = read_title_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+			res = read_title_attributes (svg, f, attribs, parentData);
 			break;
 		default:
 			skip_element
@@ -83017,7 +83017,7 @@ int read_use_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_
 	}
 	return res;
 }
-int read_switch_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_paint_type hasFill, uint32_t stroke, uint32_t fill, void* parentData) {
+int read_switch_children (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData) {
 	int res = 0;
 	while (!feof (f)) {
 		read_element_start
@@ -83025,21 +83025,21 @@ int read_switch_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, s
 		switch(tolower(svg->elt[0])) {
 		case 'a':
 			if (nameLenght == 1)
-				res = read_a_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+				res = read_a_attributes (svg, f, attribs, parentData);
 			else {
 				if (!strncasecmp (&svg->elt[1],"nimate",6)) {//down
 					if (nameLenght == 7)
-						res = read_animate_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+						res = read_animate_attributes (svg, f, attribs, parentData);
 					else {
 						switch(tolower(svg->elt[7])) {
 						case 'c':
-							res = read_animateColor_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+							res = read_animateColor_attributes (svg, f, attribs, parentData);
 							break;
 						case 'm':
-							res = read_animateMotion_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+							res = read_animateMotion_attributes (svg, f, attribs, parentData);
 							break;
 						case 't':
-							res = read_animateTransform_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+							res = read_animateTransform_attributes (svg, f, attribs, parentData);
 							break;
 						default:
 							skip_element
@@ -83051,42 +83051,42 @@ int read_switch_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, s
 			}
 			break;
 		case 'c':
-			res = read_circle_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+			res = read_circle_attributes (svg, f, attribs, parentData);
 			break;
 		case 'd':
-			res = read_desc_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+			res = read_desc_attributes (svg, f, attribs, parentData);
 			break;
 		case 'e':
-			res = read_ellipse_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+			res = read_ellipse_attributes (svg, f, attribs, parentData);
 			break;
 		case 'f':
-			res = read_foreignObject_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+			res = read_foreignObject_attributes (svg, f, attribs, parentData);
 			break;
 		case 'g':
-			res = read_g_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+			res = read_g_attributes (svg, f, attribs, parentData);
 			break;
 		case 'i':
-			res = read_image_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+			res = read_image_attributes (svg, f, attribs, parentData);
 			break;
 		case 'l':
-			res = read_line_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+			res = read_line_attributes (svg, f, attribs, parentData);
 			break;
 		case 'm':
-			res = read_metadata_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+			res = read_metadata_attributes (svg, f, attribs, parentData);
 			break;
 		case 'p':
 			switch(tolower(svg->elt[1])) {
 			case 'a':
-				res = read_path_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+				res = read_path_attributes (svg, f, attribs, parentData);
 				break;
 			case 'o':
 				if (!strncasecmp (&svg->elt[2],"ly",2)) {//up
 					switch(tolower(svg->elt[4])) {
 					case 'g':
-						res = read_polygon_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+						res = read_polygon_attributes (svg, f, attribs, parentData);
 						break;
 					case 'l':
-						res = read_polyline_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+						res = read_polyline_attributes (svg, f, attribs, parentData);
 						break;
 					default:
 						skip_element
@@ -83101,18 +83101,18 @@ int read_switch_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, s
 			}
 			break;
 		case 'r':
-			res = read_rect_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+			res = read_rect_attributes (svg, f, attribs, parentData);
 			break;
 		case 's':
 			switch(tolower(svg->elt[1])) {
 			case 'e':
-				res = read_set_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+				res = read_set_attributes (svg, f, attribs, parentData);
 				break;
 			case 'v':
-				res = read_svg_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+				res = read_svg_attributes (svg, f, attribs, parentData);
 				break;
 			case 'w':
-				res = read_switch_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+				res = read_switch_attributes (svg, f, attribs, parentData);
 				break;
 			default:
 				skip_element
@@ -83122,10 +83122,10 @@ int read_switch_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, s
 		case 't':
 			switch(tolower(svg->elt[1])) {
 			case 'e':
-				res = read_text_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+				res = read_text_attributes (svg, f, attribs, parentData);
 				break;
 			case 'i':
-				res = read_title_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+				res = read_title_attributes (svg, f, attribs, parentData);
 				break;
 			default:
 				skip_element
@@ -83133,7 +83133,7 @@ int read_switch_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, s
 			}
 			break;
 		case 'u':
-			res = read_use_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+			res = read_use_attributes (svg, f, attribs, parentData);
 			break;
 		default:
 			skip_element
@@ -83142,7 +83142,7 @@ int read_switch_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, s
 	}
 	return res;
 }
-int read_image_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_paint_type hasFill, uint32_t stroke, uint32_t fill, void* parentData) {
+int read_image_children (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData) {
 	int res = 0;
 	while (!feof (f)) {
 		read_element_start
@@ -83151,17 +83151,17 @@ int read_image_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, sv
 		case 'a':
 			if (!strncasecmp (&svg->elt[1],"nimate",6)) {//down
 				if (nameLenght == 7)
-					res = read_animate_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+					res = read_animate_attributes (svg, f, attribs, parentData);
 				else {
 					switch(tolower(svg->elt[7])) {
 					case 'c':
-						res = read_animateColor_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+						res = read_animateColor_attributes (svg, f, attribs, parentData);
 						break;
 					case 'm':
-						res = read_animateMotion_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+						res = read_animateMotion_attributes (svg, f, attribs, parentData);
 						break;
 					case 't':
-						res = read_animateTransform_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+						res = read_animateTransform_attributes (svg, f, attribs, parentData);
 						break;
 					default:
 						skip_element
@@ -83172,16 +83172,16 @@ int read_image_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, sv
 				skip_element
 			break;
 		case 'd':
-			res = read_desc_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+			res = read_desc_attributes (svg, f, attribs, parentData);
 			break;
 		case 'm':
-			res = read_metadata_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+			res = read_metadata_attributes (svg, f, attribs, parentData);
 			break;
 		case 's':
-			res = read_set_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+			res = read_set_attributes (svg, f, attribs, parentData);
 			break;
 		case 't':
-			res = read_title_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+			res = read_title_attributes (svg, f, attribs, parentData);
 			break;
 		default:
 			skip_element
@@ -83190,7 +83190,7 @@ int read_image_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, sv
 	}
 	return res;
 }
-int read_path_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_paint_type hasFill, uint32_t stroke, uint32_t fill, void* parentData) {
+int read_path_children (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData) {
 	int res = 0;
 	while (!feof (f)) {
 		read_element_start
@@ -83199,17 +83199,17 @@ int read_path_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg
 		case 'a':
 			if (!strncasecmp (&svg->elt[1],"nimate",6)) {//down
 				if (nameLenght == 7)
-					res = read_animate_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+					res = read_animate_attributes (svg, f, attribs, parentData);
 				else {
 					switch(tolower(svg->elt[7])) {
 					case 'c':
-						res = read_animateColor_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+						res = read_animateColor_attributes (svg, f, attribs, parentData);
 						break;
 					case 'm':
-						res = read_animateMotion_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+						res = read_animateMotion_attributes (svg, f, attribs, parentData);
 						break;
 					case 't':
-						res = read_animateTransform_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+						res = read_animateTransform_attributes (svg, f, attribs, parentData);
 						break;
 					default:
 						skip_element
@@ -83220,16 +83220,16 @@ int read_path_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg
 				skip_element
 			break;
 		case 'd':
-			res = read_desc_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+			res = read_desc_attributes (svg, f, attribs, parentData);
 			break;
 		case 'm':
-			res = read_metadata_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+			res = read_metadata_attributes (svg, f, attribs, parentData);
 			break;
 		case 's':
-			res = read_set_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+			res = read_set_attributes (svg, f, attribs, parentData);
 			break;
 		case 't':
-			res = read_title_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+			res = read_title_attributes (svg, f, attribs, parentData);
 			break;
 		default:
 			skip_element
@@ -83238,7 +83238,7 @@ int read_path_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg
 	}
 	return res;
 }
-int read_rect_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_paint_type hasFill, uint32_t stroke, uint32_t fill, void* parentData) {
+int read_rect_children (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData) {
 	int res = 0;
 	while (!feof (f)) {
 		read_element_start
@@ -83247,17 +83247,17 @@ int read_rect_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg
 		case 'a':
 			if (!strncasecmp (&svg->elt[1],"nimate",6)) {//down
 				if (nameLenght == 7)
-					res = read_animate_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+					res = read_animate_attributes (svg, f, attribs, parentData);
 				else {
 					switch(tolower(svg->elt[7])) {
 					case 'c':
-						res = read_animateColor_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+						res = read_animateColor_attributes (svg, f, attribs, parentData);
 						break;
 					case 'm':
-						res = read_animateMotion_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+						res = read_animateMotion_attributes (svg, f, attribs, parentData);
 						break;
 					case 't':
-						res = read_animateTransform_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+						res = read_animateTransform_attributes (svg, f, attribs, parentData);
 						break;
 					default:
 						skip_element
@@ -83268,16 +83268,16 @@ int read_rect_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg
 				skip_element
 			break;
 		case 'd':
-			res = read_desc_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+			res = read_desc_attributes (svg, f, attribs, parentData);
 			break;
 		case 'm':
-			res = read_metadata_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+			res = read_metadata_attributes (svg, f, attribs, parentData);
 			break;
 		case 's':
-			res = read_set_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+			res = read_set_attributes (svg, f, attribs, parentData);
 			break;
 		case 't':
-			res = read_title_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+			res = read_title_attributes (svg, f, attribs, parentData);
 			break;
 		default:
 			skip_element
@@ -83286,7 +83286,7 @@ int read_rect_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg
 	}
 	return res;
 }
-int read_circle_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_paint_type hasFill, uint32_t stroke, uint32_t fill, void* parentData) {
+int read_circle_children (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData) {
 	int res = 0;
 	while (!feof (f)) {
 		read_element_start
@@ -83295,17 +83295,17 @@ int read_circle_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, s
 		case 'a':
 			if (!strncasecmp (&svg->elt[1],"nimate",6)) {//down
 				if (nameLenght == 7)
-					res = read_animate_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+					res = read_animate_attributes (svg, f, attribs, parentData);
 				else {
 					switch(tolower(svg->elt[7])) {
 					case 'c':
-						res = read_animateColor_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+						res = read_animateColor_attributes (svg, f, attribs, parentData);
 						break;
 					case 'm':
-						res = read_animateMotion_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+						res = read_animateMotion_attributes (svg, f, attribs, parentData);
 						break;
 					case 't':
-						res = read_animateTransform_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+						res = read_animateTransform_attributes (svg, f, attribs, parentData);
 						break;
 					default:
 						skip_element
@@ -83316,16 +83316,16 @@ int read_circle_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, s
 				skip_element
 			break;
 		case 'd':
-			res = read_desc_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+			res = read_desc_attributes (svg, f, attribs, parentData);
 			break;
 		case 'm':
-			res = read_metadata_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+			res = read_metadata_attributes (svg, f, attribs, parentData);
 			break;
 		case 's':
-			res = read_set_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+			res = read_set_attributes (svg, f, attribs, parentData);
 			break;
 		case 't':
-			res = read_title_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+			res = read_title_attributes (svg, f, attribs, parentData);
 			break;
 		default:
 			skip_element
@@ -83334,7 +83334,7 @@ int read_circle_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, s
 	}
 	return res;
 }
-int read_line_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_paint_type hasFill, uint32_t stroke, uint32_t fill, void* parentData) {
+int read_line_children (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData) {
 	int res = 0;
 	while (!feof (f)) {
 		read_element_start
@@ -83343,17 +83343,17 @@ int read_line_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg
 		case 'a':
 			if (!strncasecmp (&svg->elt[1],"nimate",6)) {//down
 				if (nameLenght == 7)
-					res = read_animate_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+					res = read_animate_attributes (svg, f, attribs, parentData);
 				else {
 					switch(tolower(svg->elt[7])) {
 					case 'c':
-						res = read_animateColor_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+						res = read_animateColor_attributes (svg, f, attribs, parentData);
 						break;
 					case 'm':
-						res = read_animateMotion_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+						res = read_animateMotion_attributes (svg, f, attribs, parentData);
 						break;
 					case 't':
-						res = read_animateTransform_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+						res = read_animateTransform_attributes (svg, f, attribs, parentData);
 						break;
 					default:
 						skip_element
@@ -83364,16 +83364,16 @@ int read_line_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg
 				skip_element
 			break;
 		case 'd':
-			res = read_desc_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+			res = read_desc_attributes (svg, f, attribs, parentData);
 			break;
 		case 'm':
-			res = read_metadata_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+			res = read_metadata_attributes (svg, f, attribs, parentData);
 			break;
 		case 's':
-			res = read_set_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+			res = read_set_attributes (svg, f, attribs, parentData);
 			break;
 		case 't':
-			res = read_title_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+			res = read_title_attributes (svg, f, attribs, parentData);
 			break;
 		default:
 			skip_element
@@ -83382,7 +83382,7 @@ int read_line_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg
 	}
 	return res;
 }
-int read_ellipse_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_paint_type hasFill, uint32_t stroke, uint32_t fill, void* parentData) {
+int read_ellipse_children (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData) {
 	int res = 0;
 	while (!feof (f)) {
 		read_element_start
@@ -83391,17 +83391,17 @@ int read_ellipse_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, 
 		case 'a':
 			if (!strncasecmp (&svg->elt[1],"nimate",6)) {//down
 				if (nameLenght == 7)
-					res = read_animate_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+					res = read_animate_attributes (svg, f, attribs, parentData);
 				else {
 					switch(tolower(svg->elt[7])) {
 					case 'c':
-						res = read_animateColor_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+						res = read_animateColor_attributes (svg, f, attribs, parentData);
 						break;
 					case 'm':
-						res = read_animateMotion_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+						res = read_animateMotion_attributes (svg, f, attribs, parentData);
 						break;
 					case 't':
-						res = read_animateTransform_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+						res = read_animateTransform_attributes (svg, f, attribs, parentData);
 						break;
 					default:
 						skip_element
@@ -83412,16 +83412,16 @@ int read_ellipse_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, 
 				skip_element
 			break;
 		case 'd':
-			res = read_desc_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+			res = read_desc_attributes (svg, f, attribs, parentData);
 			break;
 		case 'm':
-			res = read_metadata_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+			res = read_metadata_attributes (svg, f, attribs, parentData);
 			break;
 		case 's':
-			res = read_set_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+			res = read_set_attributes (svg, f, attribs, parentData);
 			break;
 		case 't':
-			res = read_title_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+			res = read_title_attributes (svg, f, attribs, parentData);
 			break;
 		default:
 			skip_element
@@ -83430,7 +83430,7 @@ int read_ellipse_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, 
 	}
 	return res;
 }
-int read_polyline_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_paint_type hasFill, uint32_t stroke, uint32_t fill, void* parentData) {
+int read_polyline_children (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData) {
 	int res = 0;
 	while (!feof (f)) {
 		read_element_start
@@ -83439,17 +83439,17 @@ int read_polyline_children (svg_context* svg, FILE* f, svg_paint_type hasStroke,
 		case 'a':
 			if (!strncasecmp (&svg->elt[1],"nimate",6)) {//down
 				if (nameLenght == 7)
-					res = read_animate_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+					res = read_animate_attributes (svg, f, attribs, parentData);
 				else {
 					switch(tolower(svg->elt[7])) {
 					case 'c':
-						res = read_animateColor_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+						res = read_animateColor_attributes (svg, f, attribs, parentData);
 						break;
 					case 'm':
-						res = read_animateMotion_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+						res = read_animateMotion_attributes (svg, f, attribs, parentData);
 						break;
 					case 't':
-						res = read_animateTransform_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+						res = read_animateTransform_attributes (svg, f, attribs, parentData);
 						break;
 					default:
 						skip_element
@@ -83460,16 +83460,16 @@ int read_polyline_children (svg_context* svg, FILE* f, svg_paint_type hasStroke,
 				skip_element
 			break;
 		case 'd':
-			res = read_desc_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+			res = read_desc_attributes (svg, f, attribs, parentData);
 			break;
 		case 'm':
-			res = read_metadata_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+			res = read_metadata_attributes (svg, f, attribs, parentData);
 			break;
 		case 's':
-			res = read_set_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+			res = read_set_attributes (svg, f, attribs, parentData);
 			break;
 		case 't':
-			res = read_title_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+			res = read_title_attributes (svg, f, attribs, parentData);
 			break;
 		default:
 			skip_element
@@ -83478,7 +83478,7 @@ int read_polyline_children (svg_context* svg, FILE* f, svg_paint_type hasStroke,
 	}
 	return res;
 }
-int read_polygon_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_paint_type hasFill, uint32_t stroke, uint32_t fill, void* parentData) {
+int read_polygon_children (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData) {
 	int res = 0;
 	while (!feof (f)) {
 		read_element_start
@@ -83487,17 +83487,17 @@ int read_polygon_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, 
 		case 'a':
 			if (!strncasecmp (&svg->elt[1],"nimate",6)) {//down
 				if (nameLenght == 7)
-					res = read_animate_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+					res = read_animate_attributes (svg, f, attribs, parentData);
 				else {
 					switch(tolower(svg->elt[7])) {
 					case 'c':
-						res = read_animateColor_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+						res = read_animateColor_attributes (svg, f, attribs, parentData);
 						break;
 					case 'm':
-						res = read_animateMotion_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+						res = read_animateMotion_attributes (svg, f, attribs, parentData);
 						break;
 					case 't':
-						res = read_animateTransform_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+						res = read_animateTransform_attributes (svg, f, attribs, parentData);
 						break;
 					default:
 						skip_element
@@ -83508,16 +83508,16 @@ int read_polygon_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, 
 				skip_element
 			break;
 		case 'd':
-			res = read_desc_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+			res = read_desc_attributes (svg, f, attribs, parentData);
 			break;
 		case 'm':
-			res = read_metadata_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+			res = read_metadata_attributes (svg, f, attribs, parentData);
 			break;
 		case 's':
-			res = read_set_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+			res = read_set_attributes (svg, f, attribs, parentData);
 			break;
 		case 't':
-			res = read_title_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+			res = read_title_attributes (svg, f, attribs, parentData);
 			break;
 		default:
 			skip_element
@@ -83526,7 +83526,7 @@ int read_polygon_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, 
 	}
 	return res;
 }
-int read_text_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_paint_type hasFill, uint32_t stroke, uint32_t fill, void* parentData) {
+int read_text_children (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData) {
 	int res = 0;
 	while (!feof (f)) {
 		read_element_start
@@ -83534,26 +83534,26 @@ int read_text_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg
 		switch(tolower(svg->elt[0])) {
 		case 'a':
 			if (nameLenght == 1)
-				res = read_a_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+				res = read_a_attributes (svg, f, attribs, parentData);
 			else {
 				switch(tolower(svg->elt[1])) {
 				case 'l':
-					res = read_altGlyph_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+					res = read_altGlyph_attributes (svg, f, attribs, parentData);
 					break;
 				case 'n':
 					if (!strncasecmp (&svg->elt[2],"imate",5)) {//down
 						if (nameLenght == 7)
-							res = read_animate_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+							res = read_animate_attributes (svg, f, attribs, parentData);
 						else {
 							switch(tolower(svg->elt[7])) {
 							case 'c':
-								res = read_animateColor_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+								res = read_animateColor_attributes (svg, f, attribs, parentData);
 								break;
 							case 'm':
-								res = read_animateMotion_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+								res = read_animateMotion_attributes (svg, f, attribs, parentData);
 								break;
 							case 't':
-								res = read_animateTransform_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+								res = read_animateTransform_attributes (svg, f, attribs, parentData);
 								break;
 							default:
 								skip_element
@@ -83570,27 +83570,27 @@ int read_text_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg
 			}
 			break;
 		case 'd':
-			res = read_desc_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+			res = read_desc_attributes (svg, f, attribs, parentData);
 			break;
 		case 'm':
-			res = read_metadata_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+			res = read_metadata_attributes (svg, f, attribs, parentData);
 			break;
 		case 's':
-			res = read_set_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+			res = read_set_attributes (svg, f, attribs, parentData);
 			break;
 		case 't':
 			switch(tolower(svg->elt[1])) {
 			case 'e':
-				res = read_textPath_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+				res = read_textPath_attributes (svg, f, attribs, parentData);
 				break;
 			case 'i':
-				res = read_title_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+				res = read_title_attributes (svg, f, attribs, parentData);
 				break;
 			case 'r':
-				res = read_tref_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+				res = read_tref_attributes (svg, f, attribs, parentData);
 				break;
 			case 's':
-				res = read_tspan_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+				res = read_tspan_attributes (svg, f, attribs, parentData);
 				break;
 			default:
 				skip_element
@@ -83604,7 +83604,7 @@ int read_text_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg
 	}
 	return res;
 }
-int read_tspan_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_paint_type hasFill, uint32_t stroke, uint32_t fill, void* parentData) {
+int read_tspan_children (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData) {
 	int res = 0;
 	while (!feof (f)) {
 		read_element_start
@@ -83612,19 +83612,19 @@ int read_tspan_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, sv
 		switch(tolower(svg->elt[0])) {
 		case 'a':
 			if (nameLenght == 1)
-				res = read_a_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+				res = read_a_attributes (svg, f, attribs, parentData);
 			else {
 				switch(tolower(svg->elt[1])) {
 				case 'l':
-					res = read_altGlyph_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+					res = read_altGlyph_attributes (svg, f, attribs, parentData);
 					break;
 				case 'n':
 					if (!strncasecmp (&svg->elt[2],"imate",5)) {//down
 						if (nameLenght == 7)
-							res = read_animate_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+							res = read_animate_attributes (svg, f, attribs, parentData);
 						else {
 							if (!strcasecmp (&svg->elt[7],"color"))
-								res = read_animateColor_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+								res = read_animateColor_attributes (svg, f, attribs, parentData);
 							else
 								skip_element
 						}
@@ -83638,24 +83638,24 @@ int read_tspan_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, sv
 			}
 			break;
 		case 'd':
-			res = read_desc_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+			res = read_desc_attributes (svg, f, attribs, parentData);
 			break;
 		case 'm':
-			res = read_metadata_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+			res = read_metadata_attributes (svg, f, attribs, parentData);
 			break;
 		case 's':
-			res = read_set_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+			res = read_set_attributes (svg, f, attribs, parentData);
 			break;
 		case 't':
 			switch(tolower(svg->elt[1])) {
 			case 'i':
-				res = read_title_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+				res = read_title_attributes (svg, f, attribs, parentData);
 				break;
 			case 'r':
-				res = read_tref_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+				res = read_tref_attributes (svg, f, attribs, parentData);
 				break;
 			case 's':
-				res = read_tspan_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+				res = read_tspan_attributes (svg, f, attribs, parentData);
 				break;
 			default:
 				skip_element
@@ -83669,7 +83669,7 @@ int read_tspan_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, sv
 	}
 	return res;
 }
-int read_tref_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_paint_type hasFill, uint32_t stroke, uint32_t fill, void* parentData) {
+int read_tref_children (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData) {
 	int res = 0;
 	while (!feof (f)) {
 		read_element_start
@@ -83678,10 +83678,10 @@ int read_tref_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg
 		case 'a':
 			if (!strncasecmp (&svg->elt[1],"nimate",6)) {//down
 				if (nameLenght == 7)
-					res = read_animate_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+					res = read_animate_attributes (svg, f, attribs, parentData);
 				else {
 					if (!strcasecmp (&svg->elt[7],"color"))
-						res = read_animateColor_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+						res = read_animateColor_attributes (svg, f, attribs, parentData);
 					else
 						skip_element
 				}
@@ -83689,16 +83689,16 @@ int read_tref_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg
 				skip_element
 			break;
 		case 'd':
-			res = read_desc_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+			res = read_desc_attributes (svg, f, attribs, parentData);
 			break;
 		case 'm':
-			res = read_metadata_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+			res = read_metadata_attributes (svg, f, attribs, parentData);
 			break;
 		case 's':
-			res = read_set_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+			res = read_set_attributes (svg, f, attribs, parentData);
 			break;
 		case 't':
-			res = read_title_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+			res = read_title_attributes (svg, f, attribs, parentData);
 			break;
 		default:
 			skip_element
@@ -83707,7 +83707,7 @@ int read_tref_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg
 	}
 	return res;
 }
-int read_textPath_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_paint_type hasFill, uint32_t stroke, uint32_t fill, void* parentData) {
+int read_textPath_children (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData) {
 	int res = 0;
 	while (!feof (f)) {
 		read_element_start
@@ -83715,19 +83715,19 @@ int read_textPath_children (svg_context* svg, FILE* f, svg_paint_type hasStroke,
 		switch(tolower(svg->elt[0])) {
 		case 'a':
 			if (nameLenght == 1)
-				res = read_a_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+				res = read_a_attributes (svg, f, attribs, parentData);
 			else {
 				switch(tolower(svg->elt[1])) {
 				case 'l':
-					res = read_altGlyph_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+					res = read_altGlyph_attributes (svg, f, attribs, parentData);
 					break;
 				case 'n':
 					if (!strncasecmp (&svg->elt[2],"imate",5)) {//down
 						if (nameLenght == 7)
-							res = read_animate_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+							res = read_animate_attributes (svg, f, attribs, parentData);
 						else {
 							if (!strcasecmp (&svg->elt[7],"color"))
-								res = read_animateColor_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+								res = read_animateColor_attributes (svg, f, attribs, parentData);
 							else
 								skip_element
 						}
@@ -83741,24 +83741,24 @@ int read_textPath_children (svg_context* svg, FILE* f, svg_paint_type hasStroke,
 			}
 			break;
 		case 'd':
-			res = read_desc_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+			res = read_desc_attributes (svg, f, attribs, parentData);
 			break;
 		case 'm':
-			res = read_metadata_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+			res = read_metadata_attributes (svg, f, attribs, parentData);
 			break;
 		case 's':
-			res = read_set_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+			res = read_set_attributes (svg, f, attribs, parentData);
 			break;
 		case 't':
 			switch(tolower(svg->elt[1])) {
 			case 'i':
-				res = read_title_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+				res = read_title_attributes (svg, f, attribs, parentData);
 				break;
 			case 'r':
-				res = read_tref_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+				res = read_tref_attributes (svg, f, attribs, parentData);
 				break;
 			case 's':
-				res = read_tspan_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+				res = read_tspan_attributes (svg, f, attribs, parentData);
 				break;
 			default:
 				skip_element
@@ -83772,17 +83772,17 @@ int read_textPath_children (svg_context* svg, FILE* f, svg_paint_type hasStroke,
 	}
 	return res;
 }
-int read_altGlyphDef_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_paint_type hasFill, uint32_t stroke, uint32_t fill, void* parentData) {
+int read_altGlyphDef_children (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData) {
 	int res = 0;
 	while (!feof (f)) {
 		read_element_start
 		int nameLenght = strlen (svg->elt);
 		switch(tolower(svg->elt[0])) {
 		case 'a':
-			res = read_altGlyphItem_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+			res = read_altGlyphItem_attributes (svg, f, attribs, parentData);
 			break;
 		case 'g':
-			res = read_glyphRef_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+			res = read_glyphRef_attributes (svg, f, attribs, parentData);
 			break;
 		default:
 			skip_element
@@ -83791,19 +83791,19 @@ int read_altGlyphDef_children (svg_context* svg, FILE* f, svg_paint_type hasStro
 	}
 	return res;
 }
-int read_altGlyphItem_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_paint_type hasFill, uint32_t stroke, uint32_t fill, void* parentData) {
+int read_altGlyphItem_children (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData) {
 	int res = 0;
 	while (!feof (f)) {
 		read_element_start
 		int nameLenght = strlen (svg->elt);
 		if (!strcasecmp (&svg->elt[0],"glyphref"))
-			res = read_glyphRef_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+			res = read_glyphRef_attributes (svg, f, attribs, parentData);
 		else
 			skip_element
 	}
 	return res;
 }
-int read_marker_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_paint_type hasFill, uint32_t stroke, uint32_t fill, void* parentData) {
+int read_marker_children (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData) {
 	int res = 0;
 	while (!feof (f)) {
 		read_element_start
@@ -83811,26 +83811,26 @@ int read_marker_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, s
 		switch(tolower(svg->elt[0])) {
 		case 'a':
 			if (nameLenght == 1)
-				res = read_a_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+				res = read_a_attributes (svg, f, attribs, parentData);
 			else {
 				switch(tolower(svg->elt[1])) {
 				case 'l':
-					res = read_altGlyphDef_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+					res = read_altGlyphDef_attributes (svg, f, attribs, parentData);
 					break;
 				case 'n':
 					if (!strncasecmp (&svg->elt[2],"imate",5)) {//down
 						if (nameLenght == 7)
-							res = read_animate_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+							res = read_animate_attributes (svg, f, attribs, parentData);
 						else {
 							switch(tolower(svg->elt[7])) {
 							case 'c':
-								res = read_animateColor_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+								res = read_animateColor_attributes (svg, f, attribs, parentData);
 								break;
 							case 'm':
-								res = read_animateMotion_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+								res = read_animateMotion_attributes (svg, f, attribs, parentData);
 								break;
 							case 't':
-								res = read_animateTransform_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+								res = read_animateTransform_attributes (svg, f, attribs, parentData);
 								break;
 							default:
 								skip_element
@@ -83849,16 +83849,16 @@ int read_marker_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, s
 		case 'c':
 			switch(tolower(svg->elt[1])) {
 			case 'i':
-				res = read_circle_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+				res = read_circle_attributes (svg, f, attribs, parentData);
 				break;
 			case 'l':
-				res = read_clipPath_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+				res = read_clipPath_attributes (svg, f, attribs, parentData);
 				break;
 			case 'o':
-				res = read_color_profile_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+				res = read_color_profile_attributes (svg, f, attribs, parentData);
 				break;
 			case 'u':
-				res = read_cursor_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+				res = read_cursor_attributes (svg, f, attribs, parentData);
 				break;
 			default:
 				skip_element
@@ -83869,10 +83869,10 @@ int read_marker_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, s
 			if (tolower(svg->elt[1]) == 'e') {//up
 				switch(tolower(svg->elt[2])) {
 				case 'f':
-					res = read_defs_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+					res = read_defs_attributes (svg, f, attribs, parentData);
 					break;
 				case 's':
-					res = read_desc_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+					res = read_desc_attributes (svg, f, attribs, parentData);
 					break;
 				default:
 					skip_element
@@ -83882,22 +83882,22 @@ int read_marker_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, s
 				skip_element
 			break;
 		case 'e':
-			res = read_ellipse_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+			res = read_ellipse_attributes (svg, f, attribs, parentData);
 			break;
 		case 'f':
 			switch(tolower(svg->elt[1])) {
 			case 'i':
-				res = read_filter_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+				res = read_filter_attributes (svg, f, attribs, parentData);
 				break;
 			case 'o':
 				switch(tolower(svg->elt[2])) {
 				case 'n':
 					if (tolower(svg->elt[3]) == 't') {//down
 						if (nameLenght == 4)
-							res = read_font_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+							res = read_font_attributes (svg, f, attribs, parentData);
 						else {
 							if (!strcasecmp (&svg->elt[4],"_face"))
-								res = read_font_face_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+								res = read_font_face_attributes (svg, f, attribs, parentData);
 							else
 								skip_element
 						}
@@ -83905,7 +83905,7 @@ int read_marker_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, s
 						skip_element
 					break;
 				case 'r':
-					res = read_foreignObject_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+					res = read_foreignObject_attributes (svg, f, attribs, parentData);
 					break;
 				default:
 					skip_element
@@ -83918,18 +83918,18 @@ int read_marker_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, s
 			}
 			break;
 		case 'g':
-			res = read_g_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+			res = read_g_attributes (svg, f, attribs, parentData);
 			break;
 		case 'i':
-			res = read_image_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+			res = read_image_attributes (svg, f, attribs, parentData);
 			break;
 		case 'l':
 			if (!strncasecmp (&svg->elt[1],"ine",3)) {//down
 				if (nameLenght == 4)
-					res = read_line_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+					res = read_line_attributes (svg, f, attribs, parentData);
 				else {
 					if (!strcasecmp (&svg->elt[4],"argradient"))
-						res = read_linearGradient_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+						res = read_linearGradient_attributes (svg, f, attribs, parentData);
 					else
 						skip_element
 				}
@@ -83941,10 +83941,10 @@ int read_marker_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, s
 			case 'a':
 				switch(tolower(svg->elt[2])) {
 				case 'r':
-					res = read_marker_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+					res = read_marker_attributes (svg, f, attribs, parentData);
 					break;
 				case 's':
-					res = read_mask_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+					res = read_mask_attributes (svg, f, attribs, parentData);
 					break;
 				default:
 					skip_element
@@ -83952,7 +83952,7 @@ int read_marker_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, s
 				}
 				break;
 			case 'e':
-				res = read_metadata_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+				res = read_metadata_attributes (svg, f, attribs, parentData);
 				break;
 			default:
 				skip_element
@@ -83965,10 +83965,10 @@ int read_marker_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, s
 				if (tolower(svg->elt[2]) == 't') {//up
 					switch(tolower(svg->elt[3])) {
 					case 'h':
-						res = read_path_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+						res = read_path_attributes (svg, f, attribs, parentData);
 						break;
 					case 't':
-						res = read_pattern_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+						res = read_pattern_attributes (svg, f, attribs, parentData);
 						break;
 					default:
 						skip_element
@@ -83981,10 +83981,10 @@ int read_marker_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, s
 				if (!strncasecmp (&svg->elt[2],"ly",2)) {//up
 					switch(tolower(svg->elt[4])) {
 					case 'g':
-						res = read_polygon_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+						res = read_polygon_attributes (svg, f, attribs, parentData);
 						break;
 					case 'l':
-						res = read_polyline_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+						res = read_polyline_attributes (svg, f, attribs, parentData);
 						break;
 					default:
 						skip_element
@@ -84001,10 +84001,10 @@ int read_marker_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, s
 		case 'r':
 			switch(tolower(svg->elt[1])) {
 			case 'a':
-				res = read_radialGradient_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+				res = read_radialGradient_attributes (svg, f, attribs, parentData);
 				break;
 			case 'e':
-				res = read_rect_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+				res = read_rect_attributes (svg, f, attribs, parentData);
 				break;
 			default:
 				skip_element
@@ -84014,22 +84014,22 @@ int read_marker_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, s
 		case 's':
 			switch(tolower(svg->elt[1])) {
 			case 'c':
-				res = read_script_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+				res = read_script_attributes (svg, f, attribs, parentData);
 				break;
 			case 'e':
-				res = read_set_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+				res = read_set_attributes (svg, f, attribs, parentData);
 				break;
 			case 't':
-				res = read_style_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+				res = read_style_attributes (svg, f, attribs, parentData);
 				break;
 			case 'v':
-				res = read_svg_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+				res = read_svg_attributes (svg, f, attribs, parentData);
 				break;
 			case 'w':
-				res = read_switch_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+				res = read_switch_attributes (svg, f, attribs, parentData);
 				break;
 			case 'y':
-				res = read_symbol_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+				res = read_symbol_attributes (svg, f, attribs, parentData);
 				break;
 			default:
 				skip_element
@@ -84039,10 +84039,10 @@ int read_marker_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, s
 		case 't':
 			switch(tolower(svg->elt[1])) {
 			case 'e':
-				res = read_text_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+				res = read_text_attributes (svg, f, attribs, parentData);
 				break;
 			case 'i':
-				res = read_title_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+				res = read_title_attributes (svg, f, attribs, parentData);
 				break;
 			default:
 				skip_element
@@ -84050,10 +84050,10 @@ int read_marker_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, s
 			}
 			break;
 		case 'u':
-			res = read_use_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+			res = read_use_attributes (svg, f, attribs, parentData);
 			break;
 		case 'v':
-			res = read_view_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+			res = read_view_attributes (svg, f, attribs, parentData);
 			break;
 		default:
 			skip_element
@@ -84062,20 +84062,20 @@ int read_marker_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, s
 	}
 	return res;
 }
-int read_color_profile_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_paint_type hasFill, uint32_t stroke, uint32_t fill, void* parentData) {
+int read_color_profile_children (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData) {
 	int res = 0;
 	while (!feof (f)) {
 		read_element_start
 		int nameLenght = strlen (svg->elt);
 		switch(tolower(svg->elt[0])) {
 		case 'd':
-			res = read_desc_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+			res = read_desc_attributes (svg, f, attribs, parentData);
 			break;
 		case 'm':
-			res = read_metadata_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+			res = read_metadata_attributes (svg, f, attribs, parentData);
 			break;
 		case 't':
-			res = read_title_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+			res = read_title_attributes (svg, f, attribs, parentData);
 			break;
 		default:
 			skip_element
@@ -84084,7 +84084,7 @@ int read_color_profile_children (svg_context* svg, FILE* f, svg_paint_type hasSt
 	}
 	return res;
 }
-int read_linearGradient_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_paint_type hasFill, uint32_t stroke, uint32_t fill, void* parentData) {
+int read_linearGradient_children (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData) {
 	int res = 0;
 	while (!feof (f)) {
 		read_element_start
@@ -84093,10 +84093,10 @@ int read_linearGradient_children (svg_context* svg, FILE* f, svg_paint_type hasS
 		case 'a':
 			if (!strncasecmp (&svg->elt[1],"nimate",6)) {//down
 				if (nameLenght == 7)
-					res = read_animate_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+					res = read_animate_attributes (svg, f, attribs, parentData);
 				else {
 					if (!strcasecmp (&svg->elt[7],"transform"))
-						res = read_animateTransform_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+						res = read_animateTransform_attributes (svg, f, attribs, parentData);
 					else
 						skip_element
 				}
@@ -84104,18 +84104,18 @@ int read_linearGradient_children (svg_context* svg, FILE* f, svg_paint_type hasS
 				skip_element
 			break;
 		case 'd':
-			res = read_desc_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+			res = read_desc_attributes (svg, f, attribs, parentData);
 			break;
 		case 'm':
-			res = read_metadata_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+			res = read_metadata_attributes (svg, f, attribs, parentData);
 			break;
 		case 's':
 			switch(tolower(svg->elt[1])) {
 			case 'e':
-				res = read_set_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+				res = read_set_attributes (svg, f, attribs, parentData);
 				break;
 			case 't':
-				res = read_stop_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+				res = read_stop_attributes (svg, f, attribs, parentData);
 				break;
 			default:
 				skip_element
@@ -84123,7 +84123,7 @@ int read_linearGradient_children (svg_context* svg, FILE* f, svg_paint_type hasS
 			}
 			break;
 		case 't':
-			res = read_title_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+			res = read_title_attributes (svg, f, attribs, parentData);
 			break;
 		default:
 			skip_element
@@ -84132,7 +84132,7 @@ int read_linearGradient_children (svg_context* svg, FILE* f, svg_paint_type hasS
 	}
 	return res;
 }
-int read_radialGradient_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_paint_type hasFill, uint32_t stroke, uint32_t fill, void* parentData) {
+int read_radialGradient_children (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData) {
 	int res = 0;
 	while (!feof (f)) {
 		read_element_start
@@ -84141,10 +84141,10 @@ int read_radialGradient_children (svg_context* svg, FILE* f, svg_paint_type hasS
 		case 'a':
 			if (!strncasecmp (&svg->elt[1],"nimate",6)) {//down
 				if (nameLenght == 7)
-					res = read_animate_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+					res = read_animate_attributes (svg, f, attribs, parentData);
 				else {
 					if (!strcasecmp (&svg->elt[7],"transform"))
-						res = read_animateTransform_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+						res = read_animateTransform_attributes (svg, f, attribs, parentData);
 					else
 						skip_element
 				}
@@ -84152,18 +84152,18 @@ int read_radialGradient_children (svg_context* svg, FILE* f, svg_paint_type hasS
 				skip_element
 			break;
 		case 'd':
-			res = read_desc_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+			res = read_desc_attributes (svg, f, attribs, parentData);
 			break;
 		case 'm':
-			res = read_metadata_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+			res = read_metadata_attributes (svg, f, attribs, parentData);
 			break;
 		case 's':
 			switch(tolower(svg->elt[1])) {
 			case 'e':
-				res = read_set_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+				res = read_set_attributes (svg, f, attribs, parentData);
 				break;
 			case 't':
-				res = read_stop_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+				res = read_stop_attributes (svg, f, attribs, parentData);
 				break;
 			default:
 				skip_element
@@ -84171,7 +84171,7 @@ int read_radialGradient_children (svg_context* svg, FILE* f, svg_paint_type hasS
 			}
 			break;
 		case 't':
-			res = read_title_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+			res = read_title_attributes (svg, f, attribs, parentData);
 			break;
 		default:
 			skip_element
@@ -84180,7 +84180,7 @@ int read_radialGradient_children (svg_context* svg, FILE* f, svg_paint_type hasS
 	}
 	return res;
 }
-int read_stop_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_paint_type hasFill, uint32_t stroke, uint32_t fill, void* parentData) {
+int read_stop_children (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData) {
 	int res = 0;
 	while (!feof (f)) {
 		read_element_start
@@ -84189,10 +84189,10 @@ int read_stop_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg
 		case 'a':
 			if (!strncasecmp (&svg->elt[1],"nimate",6)) {//down
 				if (nameLenght == 7)
-					res = read_animate_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+					res = read_animate_attributes (svg, f, attribs, parentData);
 				else {
 					if (!strcasecmp (&svg->elt[7],"color"))
-						res = read_animateColor_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+						res = read_animateColor_attributes (svg, f, attribs, parentData);
 					else
 						skip_element
 				}
@@ -84200,7 +84200,7 @@ int read_stop_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg
 				skip_element
 			break;
 		case 's':
-			res = read_set_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+			res = read_set_attributes (svg, f, attribs, parentData);
 			break;
 		default:
 			skip_element
@@ -84209,7 +84209,7 @@ int read_stop_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg
 	}
 	return res;
 }
-int read_pattern_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_paint_type hasFill, uint32_t stroke, uint32_t fill, void* parentData) {
+int read_pattern_children (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData) {
 	int res = 0;
 	while (!feof (f)) {
 		read_element_start
@@ -84217,26 +84217,26 @@ int read_pattern_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, 
 		switch(tolower(svg->elt[0])) {
 		case 'a':
 			if (nameLenght == 1)
-				res = read_a_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+				res = read_a_attributes (svg, f, attribs, parentData);
 			else {
 				switch(tolower(svg->elt[1])) {
 				case 'l':
-					res = read_altGlyphDef_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+					res = read_altGlyphDef_attributes (svg, f, attribs, parentData);
 					break;
 				case 'n':
 					if (!strncasecmp (&svg->elt[2],"imate",5)) {//down
 						if (nameLenght == 7)
-							res = read_animate_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+							res = read_animate_attributes (svg, f, attribs, parentData);
 						else {
 							switch(tolower(svg->elt[7])) {
 							case 'c':
-								res = read_animateColor_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+								res = read_animateColor_attributes (svg, f, attribs, parentData);
 								break;
 							case 'm':
-								res = read_animateMotion_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+								res = read_animateMotion_attributes (svg, f, attribs, parentData);
 								break;
 							case 't':
-								res = read_animateTransform_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+								res = read_animateTransform_attributes (svg, f, attribs, parentData);
 								break;
 							default:
 								skip_element
@@ -84255,16 +84255,16 @@ int read_pattern_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, 
 		case 'c':
 			switch(tolower(svg->elt[1])) {
 			case 'i':
-				res = read_circle_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+				res = read_circle_attributes (svg, f, attribs, parentData);
 				break;
 			case 'l':
-				res = read_clipPath_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+				res = read_clipPath_attributes (svg, f, attribs, parentData);
 				break;
 			case 'o':
-				res = read_color_profile_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+				res = read_color_profile_attributes (svg, f, attribs, parentData);
 				break;
 			case 'u':
-				res = read_cursor_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+				res = read_cursor_attributes (svg, f, attribs, parentData);
 				break;
 			default:
 				skip_element
@@ -84275,10 +84275,10 @@ int read_pattern_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, 
 			if (tolower(svg->elt[1]) == 'e') {//up
 				switch(tolower(svg->elt[2])) {
 				case 'f':
-					res = read_defs_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+					res = read_defs_attributes (svg, f, attribs, parentData);
 					break;
 				case 's':
-					res = read_desc_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+					res = read_desc_attributes (svg, f, attribs, parentData);
 					break;
 				default:
 					skip_element
@@ -84288,22 +84288,22 @@ int read_pattern_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, 
 				skip_element
 			break;
 		case 'e':
-			res = read_ellipse_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+			res = read_ellipse_attributes (svg, f, attribs, parentData);
 			break;
 		case 'f':
 			switch(tolower(svg->elt[1])) {
 			case 'i':
-				res = read_filter_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+				res = read_filter_attributes (svg, f, attribs, parentData);
 				break;
 			case 'o':
 				switch(tolower(svg->elt[2])) {
 				case 'n':
 					if (tolower(svg->elt[3]) == 't') {//down
 						if (nameLenght == 4)
-							res = read_font_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+							res = read_font_attributes (svg, f, attribs, parentData);
 						else {
 							if (!strcasecmp (&svg->elt[4],"_face"))
-								res = read_font_face_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+								res = read_font_face_attributes (svg, f, attribs, parentData);
 							else
 								skip_element
 						}
@@ -84311,7 +84311,7 @@ int read_pattern_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, 
 						skip_element
 					break;
 				case 'r':
-					res = read_foreignObject_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+					res = read_foreignObject_attributes (svg, f, attribs, parentData);
 					break;
 				default:
 					skip_element
@@ -84324,18 +84324,18 @@ int read_pattern_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, 
 			}
 			break;
 		case 'g':
-			res = read_g_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+			res = read_g_attributes (svg, f, attribs, parentData);
 			break;
 		case 'i':
-			res = read_image_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+			res = read_image_attributes (svg, f, attribs, parentData);
 			break;
 		case 'l':
 			if (!strncasecmp (&svg->elt[1],"ine",3)) {//down
 				if (nameLenght == 4)
-					res = read_line_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+					res = read_line_attributes (svg, f, attribs, parentData);
 				else {
 					if (!strcasecmp (&svg->elt[4],"argradient"))
-						res = read_linearGradient_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+						res = read_linearGradient_attributes (svg, f, attribs, parentData);
 					else
 						skip_element
 				}
@@ -84347,10 +84347,10 @@ int read_pattern_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, 
 			case 'a':
 				switch(tolower(svg->elt[2])) {
 				case 'r':
-					res = read_marker_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+					res = read_marker_attributes (svg, f, attribs, parentData);
 					break;
 				case 's':
-					res = read_mask_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+					res = read_mask_attributes (svg, f, attribs, parentData);
 					break;
 				default:
 					skip_element
@@ -84358,7 +84358,7 @@ int read_pattern_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, 
 				}
 				break;
 			case 'e':
-				res = read_metadata_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+				res = read_metadata_attributes (svg, f, attribs, parentData);
 				break;
 			default:
 				skip_element
@@ -84371,10 +84371,10 @@ int read_pattern_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, 
 				if (tolower(svg->elt[2]) == 't') {//up
 					switch(tolower(svg->elt[3])) {
 					case 'h':
-						res = read_path_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+						res = read_path_attributes (svg, f, attribs, parentData);
 						break;
 					case 't':
-						res = read_pattern_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+						res = read_pattern_attributes (svg, f, attribs, parentData);
 						break;
 					default:
 						skip_element
@@ -84387,10 +84387,10 @@ int read_pattern_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, 
 				if (!strncasecmp (&svg->elt[2],"ly",2)) {//up
 					switch(tolower(svg->elt[4])) {
 					case 'g':
-						res = read_polygon_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+						res = read_polygon_attributes (svg, f, attribs, parentData);
 						break;
 					case 'l':
-						res = read_polyline_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+						res = read_polyline_attributes (svg, f, attribs, parentData);
 						break;
 					default:
 						skip_element
@@ -84407,10 +84407,10 @@ int read_pattern_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, 
 		case 'r':
 			switch(tolower(svg->elt[1])) {
 			case 'a':
-				res = read_radialGradient_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+				res = read_radialGradient_attributes (svg, f, attribs, parentData);
 				break;
 			case 'e':
-				res = read_rect_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+				res = read_rect_attributes (svg, f, attribs, parentData);
 				break;
 			default:
 				skip_element
@@ -84420,22 +84420,22 @@ int read_pattern_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, 
 		case 's':
 			switch(tolower(svg->elt[1])) {
 			case 'c':
-				res = read_script_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+				res = read_script_attributes (svg, f, attribs, parentData);
 				break;
 			case 'e':
-				res = read_set_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+				res = read_set_attributes (svg, f, attribs, parentData);
 				break;
 			case 't':
-				res = read_style_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+				res = read_style_attributes (svg, f, attribs, parentData);
 				break;
 			case 'v':
-				res = read_svg_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+				res = read_svg_attributes (svg, f, attribs, parentData);
 				break;
 			case 'w':
-				res = read_switch_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+				res = read_switch_attributes (svg, f, attribs, parentData);
 				break;
 			case 'y':
-				res = read_symbol_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+				res = read_symbol_attributes (svg, f, attribs, parentData);
 				break;
 			default:
 				skip_element
@@ -84445,10 +84445,10 @@ int read_pattern_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, 
 		case 't':
 			switch(tolower(svg->elt[1])) {
 			case 'e':
-				res = read_text_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+				res = read_text_attributes (svg, f, attribs, parentData);
 				break;
 			case 'i':
-				res = read_title_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+				res = read_title_attributes (svg, f, attribs, parentData);
 				break;
 			default:
 				skip_element
@@ -84456,10 +84456,10 @@ int read_pattern_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, 
 			}
 			break;
 		case 'u':
-			res = read_use_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+			res = read_use_attributes (svg, f, attribs, parentData);
 			break;
 		case 'v':
-			res = read_view_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+			res = read_view_attributes (svg, f, attribs, parentData);
 			break;
 		default:
 			skip_element
@@ -84468,7 +84468,7 @@ int read_pattern_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, 
 	}
 	return res;
 }
-int read_clipPath_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_paint_type hasFill, uint32_t stroke, uint32_t fill, void* parentData) {
+int read_clipPath_children (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData) {
 	int res = 0;
 	while (!feof (f)) {
 		read_element_start
@@ -84477,17 +84477,17 @@ int read_clipPath_children (svg_context* svg, FILE* f, svg_paint_type hasStroke,
 		case 'a':
 			if (!strncasecmp (&svg->elt[1],"nimate",6)) {//down
 				if (nameLenght == 7)
-					res = read_animate_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+					res = read_animate_attributes (svg, f, attribs, parentData);
 				else {
 					switch(tolower(svg->elt[7])) {
 					case 'c':
-						res = read_animateColor_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+						res = read_animateColor_attributes (svg, f, attribs, parentData);
 						break;
 					case 'm':
-						res = read_animateMotion_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+						res = read_animateMotion_attributes (svg, f, attribs, parentData);
 						break;
 					case 't':
-						res = read_animateTransform_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+						res = read_animateTransform_attributes (svg, f, attribs, parentData);
 						break;
 					default:
 						skip_element
@@ -84498,33 +84498,33 @@ int read_clipPath_children (svg_context* svg, FILE* f, svg_paint_type hasStroke,
 				skip_element
 			break;
 		case 'c':
-			res = read_circle_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+			res = read_circle_attributes (svg, f, attribs, parentData);
 			break;
 		case 'd':
-			res = read_desc_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+			res = read_desc_attributes (svg, f, attribs, parentData);
 			break;
 		case 'e':
-			res = read_ellipse_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+			res = read_ellipse_attributes (svg, f, attribs, parentData);
 			break;
 		case 'l':
-			res = read_line_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+			res = read_line_attributes (svg, f, attribs, parentData);
 			break;
 		case 'm':
-			res = read_metadata_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+			res = read_metadata_attributes (svg, f, attribs, parentData);
 			break;
 		case 'p':
 			switch(tolower(svg->elt[1])) {
 			case 'a':
-				res = read_path_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+				res = read_path_attributes (svg, f, attribs, parentData);
 				break;
 			case 'o':
 				if (!strncasecmp (&svg->elt[2],"ly",2)) {//up
 					switch(tolower(svg->elt[4])) {
 					case 'g':
-						res = read_polygon_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+						res = read_polygon_attributes (svg, f, attribs, parentData);
 						break;
 					case 'l':
-						res = read_polyline_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+						res = read_polyline_attributes (svg, f, attribs, parentData);
 						break;
 					default:
 						skip_element
@@ -84539,18 +84539,18 @@ int read_clipPath_children (svg_context* svg, FILE* f, svg_paint_type hasStroke,
 			}
 			break;
 		case 'r':
-			res = read_rect_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+			res = read_rect_attributes (svg, f, attribs, parentData);
 			break;
 		case 's':
-			res = read_set_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+			res = read_set_attributes (svg, f, attribs, parentData);
 			break;
 		case 't':
 			switch(tolower(svg->elt[1])) {
 			case 'e':
-				res = read_text_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+				res = read_text_attributes (svg, f, attribs, parentData);
 				break;
 			case 'i':
-				res = read_title_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+				res = read_title_attributes (svg, f, attribs, parentData);
 				break;
 			default:
 				skip_element
@@ -84558,7 +84558,7 @@ int read_clipPath_children (svg_context* svg, FILE* f, svg_paint_type hasStroke,
 			}
 			break;
 		case 'u':
-			res = read_use_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+			res = read_use_attributes (svg, f, attribs, parentData);
 			break;
 		default:
 			skip_element
@@ -84567,7 +84567,7 @@ int read_clipPath_children (svg_context* svg, FILE* f, svg_paint_type hasStroke,
 	}
 	return res;
 }
-int read_mask_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_paint_type hasFill, uint32_t stroke, uint32_t fill, void* parentData) {
+int read_mask_children (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData) {
 	int res = 0;
 	while (!feof (f)) {
 		read_element_start
@@ -84575,26 +84575,26 @@ int read_mask_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg
 		switch(tolower(svg->elt[0])) {
 		case 'a':
 			if (nameLenght == 1)
-				res = read_a_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+				res = read_a_attributes (svg, f, attribs, parentData);
 			else {
 				switch(tolower(svg->elt[1])) {
 				case 'l':
-					res = read_altGlyphDef_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+					res = read_altGlyphDef_attributes (svg, f, attribs, parentData);
 					break;
 				case 'n':
 					if (!strncasecmp (&svg->elt[2],"imate",5)) {//down
 						if (nameLenght == 7)
-							res = read_animate_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+							res = read_animate_attributes (svg, f, attribs, parentData);
 						else {
 							switch(tolower(svg->elt[7])) {
 							case 'c':
-								res = read_animateColor_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+								res = read_animateColor_attributes (svg, f, attribs, parentData);
 								break;
 							case 'm':
-								res = read_animateMotion_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+								res = read_animateMotion_attributes (svg, f, attribs, parentData);
 								break;
 							case 't':
-								res = read_animateTransform_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+								res = read_animateTransform_attributes (svg, f, attribs, parentData);
 								break;
 							default:
 								skip_element
@@ -84613,16 +84613,16 @@ int read_mask_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg
 		case 'c':
 			switch(tolower(svg->elt[1])) {
 			case 'i':
-				res = read_circle_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+				res = read_circle_attributes (svg, f, attribs, parentData);
 				break;
 			case 'l':
-				res = read_clipPath_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+				res = read_clipPath_attributes (svg, f, attribs, parentData);
 				break;
 			case 'o':
-				res = read_color_profile_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+				res = read_color_profile_attributes (svg, f, attribs, parentData);
 				break;
 			case 'u':
-				res = read_cursor_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+				res = read_cursor_attributes (svg, f, attribs, parentData);
 				break;
 			default:
 				skip_element
@@ -84633,10 +84633,10 @@ int read_mask_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg
 			if (tolower(svg->elt[1]) == 'e') {//up
 				switch(tolower(svg->elt[2])) {
 				case 'f':
-					res = read_defs_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+					res = read_defs_attributes (svg, f, attribs, parentData);
 					break;
 				case 's':
-					res = read_desc_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+					res = read_desc_attributes (svg, f, attribs, parentData);
 					break;
 				default:
 					skip_element
@@ -84646,22 +84646,22 @@ int read_mask_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg
 				skip_element
 			break;
 		case 'e':
-			res = read_ellipse_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+			res = read_ellipse_attributes (svg, f, attribs, parentData);
 			break;
 		case 'f':
 			switch(tolower(svg->elt[1])) {
 			case 'i':
-				res = read_filter_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+				res = read_filter_attributes (svg, f, attribs, parentData);
 				break;
 			case 'o':
 				switch(tolower(svg->elt[2])) {
 				case 'n':
 					if (tolower(svg->elt[3]) == 't') {//down
 						if (nameLenght == 4)
-							res = read_font_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+							res = read_font_attributes (svg, f, attribs, parentData);
 						else {
 							if (!strcasecmp (&svg->elt[4],"_face"))
-								res = read_font_face_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+								res = read_font_face_attributes (svg, f, attribs, parentData);
 							else
 								skip_element
 						}
@@ -84669,7 +84669,7 @@ int read_mask_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg
 						skip_element
 					break;
 				case 'r':
-					res = read_foreignObject_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+					res = read_foreignObject_attributes (svg, f, attribs, parentData);
 					break;
 				default:
 					skip_element
@@ -84682,18 +84682,18 @@ int read_mask_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg
 			}
 			break;
 		case 'g':
-			res = read_g_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+			res = read_g_attributes (svg, f, attribs, parentData);
 			break;
 		case 'i':
-			res = read_image_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+			res = read_image_attributes (svg, f, attribs, parentData);
 			break;
 		case 'l':
 			if (!strncasecmp (&svg->elt[1],"ine",3)) {//down
 				if (nameLenght == 4)
-					res = read_line_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+					res = read_line_attributes (svg, f, attribs, parentData);
 				else {
 					if (!strcasecmp (&svg->elt[4],"argradient"))
-						res = read_linearGradient_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+						res = read_linearGradient_attributes (svg, f, attribs, parentData);
 					else
 						skip_element
 				}
@@ -84705,10 +84705,10 @@ int read_mask_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg
 			case 'a':
 				switch(tolower(svg->elt[2])) {
 				case 'r':
-					res = read_marker_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+					res = read_marker_attributes (svg, f, attribs, parentData);
 					break;
 				case 's':
-					res = read_mask_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+					res = read_mask_attributes (svg, f, attribs, parentData);
 					break;
 				default:
 					skip_element
@@ -84716,7 +84716,7 @@ int read_mask_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg
 				}
 				break;
 			case 'e':
-				res = read_metadata_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+				res = read_metadata_attributes (svg, f, attribs, parentData);
 				break;
 			default:
 				skip_element
@@ -84729,10 +84729,10 @@ int read_mask_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg
 				if (tolower(svg->elt[2]) == 't') {//up
 					switch(tolower(svg->elt[3])) {
 					case 'h':
-						res = read_path_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+						res = read_path_attributes (svg, f, attribs, parentData);
 						break;
 					case 't':
-						res = read_pattern_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+						res = read_pattern_attributes (svg, f, attribs, parentData);
 						break;
 					default:
 						skip_element
@@ -84745,10 +84745,10 @@ int read_mask_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg
 				if (!strncasecmp (&svg->elt[2],"ly",2)) {//up
 					switch(tolower(svg->elt[4])) {
 					case 'g':
-						res = read_polygon_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+						res = read_polygon_attributes (svg, f, attribs, parentData);
 						break;
 					case 'l':
-						res = read_polyline_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+						res = read_polyline_attributes (svg, f, attribs, parentData);
 						break;
 					default:
 						skip_element
@@ -84765,10 +84765,10 @@ int read_mask_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg
 		case 'r':
 			switch(tolower(svg->elt[1])) {
 			case 'a':
-				res = read_radialGradient_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+				res = read_radialGradient_attributes (svg, f, attribs, parentData);
 				break;
 			case 'e':
-				res = read_rect_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+				res = read_rect_attributes (svg, f, attribs, parentData);
 				break;
 			default:
 				skip_element
@@ -84778,22 +84778,22 @@ int read_mask_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg
 		case 's':
 			switch(tolower(svg->elt[1])) {
 			case 'c':
-				res = read_script_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+				res = read_script_attributes (svg, f, attribs, parentData);
 				break;
 			case 'e':
-				res = read_set_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+				res = read_set_attributes (svg, f, attribs, parentData);
 				break;
 			case 't':
-				res = read_style_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+				res = read_style_attributes (svg, f, attribs, parentData);
 				break;
 			case 'v':
-				res = read_svg_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+				res = read_svg_attributes (svg, f, attribs, parentData);
 				break;
 			case 'w':
-				res = read_switch_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+				res = read_switch_attributes (svg, f, attribs, parentData);
 				break;
 			case 'y':
-				res = read_symbol_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+				res = read_symbol_attributes (svg, f, attribs, parentData);
 				break;
 			default:
 				skip_element
@@ -84803,10 +84803,10 @@ int read_mask_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg
 		case 't':
 			switch(tolower(svg->elt[1])) {
 			case 'e':
-				res = read_text_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+				res = read_text_attributes (svg, f, attribs, parentData);
 				break;
 			case 'i':
-				res = read_title_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+				res = read_title_attributes (svg, f, attribs, parentData);
 				break;
 			default:
 				skip_element
@@ -84814,10 +84814,10 @@ int read_mask_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg
 			}
 			break;
 		case 'u':
-			res = read_use_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+			res = read_use_attributes (svg, f, attribs, parentData);
 			break;
 		case 'v':
-			res = read_view_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+			res = read_view_attributes (svg, f, attribs, parentData);
 			break;
 		default:
 			skip_element
@@ -84826,38 +84826,38 @@ int read_mask_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg
 	}
 	return res;
 }
-int read_filter_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_paint_type hasFill, uint32_t stroke, uint32_t fill, void* parentData) {
+int read_filter_children (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData) {
 	int res = 0;
 	while (!feof (f)) {
 		read_element_start
 		int nameLenght = strlen (svg->elt);
 		switch(tolower(svg->elt[0])) {
 		case 'a':
-			res = read_animate_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+			res = read_animate_attributes (svg, f, attribs, parentData);
 			break;
 		case 'd':
-			res = read_desc_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+			res = read_desc_attributes (svg, f, attribs, parentData);
 			break;
 		case 'f':
 			if (tolower(svg->elt[1]) == 'e') {//up
 				switch(tolower(svg->elt[2])) {
 				case 'b':
-					res = read_feBlend_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+					res = read_feBlend_attributes (svg, f, attribs, parentData);
 					break;
 				case 'c':
 					if (tolower(svg->elt[3]) == 'o') {//up
 						switch(tolower(svg->elt[4])) {
 						case 'l':
-							res = read_feColorMatrix_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+							res = read_feColorMatrix_attributes (svg, f, attribs, parentData);
 							break;
 						case 'm':
 							if (!strncasecmp (&svg->elt[5],"po",2)) {//up
 								switch(tolower(svg->elt[7])) {
 								case 'n':
-									res = read_feComponentTransfer_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+									res = read_feComponentTransfer_attributes (svg, f, attribs, parentData);
 									break;
 								case 's':
-									res = read_feComposite_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+									res = read_feComposite_attributes (svg, f, attribs, parentData);
 									break;
 								default:
 									skip_element
@@ -84867,7 +84867,7 @@ int read_filter_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, s
 								skip_element
 							break;
 						case 'n':
-							res = read_feConvolveMatrix_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+							res = read_feConvolveMatrix_attributes (svg, f, attribs, parentData);
 							break;
 						default:
 							skip_element
@@ -84880,10 +84880,10 @@ int read_filter_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, s
 					if (tolower(svg->elt[3]) == 'i') {//up
 						switch(tolower(svg->elt[4])) {
 						case 'f':
-							res = read_feDiffuseLighting_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+							res = read_feDiffuseLighting_attributes (svg, f, attribs, parentData);
 							break;
 						case 's':
-							res = read_feDisplacementMap_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+							res = read_feDisplacementMap_attributes (svg, f, attribs, parentData);
 							break;
 						default:
 							skip_element
@@ -84893,21 +84893,21 @@ int read_filter_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, s
 						skip_element
 					break;
 				case 'f':
-					res = read_feFlood_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+					res = read_feFlood_attributes (svg, f, attribs, parentData);
 					break;
 				case 'g':
-					res = read_feGaussianBlur_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+					res = read_feGaussianBlur_attributes (svg, f, attribs, parentData);
 					break;
 				case 'i':
-					res = read_feImage_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+					res = read_feImage_attributes (svg, f, attribs, parentData);
 					break;
 				case 'm':
 					switch(tolower(svg->elt[3])) {
 					case 'e':
-						res = read_feMerge_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+						res = read_feMerge_attributes (svg, f, attribs, parentData);
 						break;
 					case 'o':
-						res = read_feMorphology_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+						res = read_feMorphology_attributes (svg, f, attribs, parentData);
 						break;
 					default:
 						skip_element
@@ -84915,18 +84915,18 @@ int read_filter_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, s
 					}
 					break;
 				case 'o':
-					res = read_feOffset_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+					res = read_feOffset_attributes (svg, f, attribs, parentData);
 					break;
 				case 's':
-					res = read_feSpecularLighting_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+					res = read_feSpecularLighting_attributes (svg, f, attribs, parentData);
 					break;
 				case 't':
 					switch(tolower(svg->elt[3])) {
 					case 'i':
-						res = read_feTile_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+						res = read_feTile_attributes (svg, f, attribs, parentData);
 						break;
 					case 'u':
-						res = read_feTurbulence_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+						res = read_feTurbulence_attributes (svg, f, attribs, parentData);
 						break;
 					default:
 						skip_element
@@ -84941,13 +84941,13 @@ int read_filter_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, s
 				skip_element
 			break;
 		case 'm':
-			res = read_metadata_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+			res = read_metadata_attributes (svg, f, attribs, parentData);
 			break;
 		case 's':
-			res = read_set_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+			res = read_set_attributes (svg, f, attribs, parentData);
 			break;
 		case 't':
-			res = read_title_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+			res = read_title_attributes (svg, f, attribs, parentData);
 			break;
 		default:
 			skip_element
@@ -84956,17 +84956,17 @@ int read_filter_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, s
 	}
 	return res;
 }
-int read_feBlend_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_paint_type hasFill, uint32_t stroke, uint32_t fill, void* parentData) {
+int read_feBlend_children (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData) {
 	int res = 0;
 	while (!feof (f)) {
 		read_element_start
 		int nameLenght = strlen (svg->elt);
 		switch(tolower(svg->elt[0])) {
 		case 'a':
-			res = read_animate_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+			res = read_animate_attributes (svg, f, attribs, parentData);
 			break;
 		case 's':
-			res = read_set_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+			res = read_set_attributes (svg, f, attribs, parentData);
 			break;
 		default:
 			skip_element
@@ -84975,17 +84975,17 @@ int read_feBlend_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, 
 	}
 	return res;
 }
-int read_feColorMatrix_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_paint_type hasFill, uint32_t stroke, uint32_t fill, void* parentData) {
+int read_feColorMatrix_children (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData) {
 	int res = 0;
 	while (!feof (f)) {
 		read_element_start
 		int nameLenght = strlen (svg->elt);
 		switch(tolower(svg->elt[0])) {
 		case 'a':
-			res = read_animate_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+			res = read_animate_attributes (svg, f, attribs, parentData);
 			break;
 		case 's':
-			res = read_set_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+			res = read_set_attributes (svg, f, attribs, parentData);
 			break;
 		default:
 			skip_element
@@ -84994,7 +84994,7 @@ int read_feColorMatrix_children (svg_context* svg, FILE* f, svg_paint_type hasSt
 	}
 	return res;
 }
-int read_feComponentTransfer_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_paint_type hasFill, uint32_t stroke, uint32_t fill, void* parentData) {
+int read_feComponentTransfer_children (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData) {
 	int res = 0;
 	while (!feof (f)) {
 		read_element_start
@@ -85002,16 +85002,16 @@ int read_feComponentTransfer_children (svg_context* svg, FILE* f, svg_paint_type
 		if (!strncasecmp (&svg->elt[0],"fefunc",6)) {//up
 			switch(tolower(svg->elt[6])) {
 			case 'a':
-				res = read_feFuncA_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+				res = read_feFuncA_attributes (svg, f, attribs, parentData);
 				break;
 			case 'b':
-				res = read_feFuncB_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+				res = read_feFuncB_attributes (svg, f, attribs, parentData);
 				break;
 			case 'g':
-				res = read_feFuncG_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+				res = read_feFuncG_attributes (svg, f, attribs, parentData);
 				break;
 			case 'r':
-				res = read_feFuncR_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+				res = read_feFuncR_attributes (svg, f, attribs, parentData);
 				break;
 			default:
 				skip_element
@@ -85022,17 +85022,17 @@ int read_feComponentTransfer_children (svg_context* svg, FILE* f, svg_paint_type
 	}
 	return res;
 }
-int read_feComposite_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_paint_type hasFill, uint32_t stroke, uint32_t fill, void* parentData) {
+int read_feComposite_children (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData) {
 	int res = 0;
 	while (!feof (f)) {
 		read_element_start
 		int nameLenght = strlen (svg->elt);
 		switch(tolower(svg->elt[0])) {
 		case 'a':
-			res = read_animate_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+			res = read_animate_attributes (svg, f, attribs, parentData);
 			break;
 		case 's':
-			res = read_set_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+			res = read_set_attributes (svg, f, attribs, parentData);
 			break;
 		default:
 			skip_element
@@ -85041,17 +85041,17 @@ int read_feComposite_children (svg_context* svg, FILE* f, svg_paint_type hasStro
 	}
 	return res;
 }
-int read_feConvolveMatrix_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_paint_type hasFill, uint32_t stroke, uint32_t fill, void* parentData) {
+int read_feConvolveMatrix_children (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData) {
 	int res = 0;
 	while (!feof (f)) {
 		read_element_start
 		int nameLenght = strlen (svg->elt);
 		switch(tolower(svg->elt[0])) {
 		case 'a':
-			res = read_animate_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+			res = read_animate_attributes (svg, f, attribs, parentData);
 			break;
 		case 's':
-			res = read_set_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+			res = read_set_attributes (svg, f, attribs, parentData);
 			break;
 		default:
 			skip_element
@@ -85060,7 +85060,7 @@ int read_feConvolveMatrix_children (svg_context* svg, FILE* f, svg_paint_type ha
 	}
 	return res;
 }
-int read_feDiffuseLighting_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_paint_type hasFill, uint32_t stroke, uint32_t fill, void* parentData) {
+int read_feDiffuseLighting_children (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData) {
 	int res = 0;
 	while (!feof (f)) {
 		read_element_start
@@ -85069,10 +85069,10 @@ int read_feDiffuseLighting_children (svg_context* svg, FILE* f, svg_paint_type h
 		case 'a':
 			if (!strncasecmp (&svg->elt[1],"nimate",6)) {//down
 				if (nameLenght == 7)
-					res = read_animate_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+					res = read_animate_attributes (svg, f, attribs, parentData);
 				else {
 					if (!strcasecmp (&svg->elt[7],"color"))
-						res = read_animateColor_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+						res = read_animateColor_attributes (svg, f, attribs, parentData);
 					else
 						skip_element
 				}
@@ -85083,13 +85083,13 @@ int read_feDiffuseLighting_children (svg_context* svg, FILE* f, svg_paint_type h
 			if (tolower(svg->elt[1]) == 'e') {//up
 				switch(tolower(svg->elt[2])) {
 				case 'd':
-					res = read_feDistantLight_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+					res = read_feDistantLight_attributes (svg, f, attribs, parentData);
 					break;
 				case 'p':
-					res = read_fePointLight_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+					res = read_fePointLight_attributes (svg, f, attribs, parentData);
 					break;
 				case 's':
-					res = read_feSpotLight_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+					res = read_feSpotLight_attributes (svg, f, attribs, parentData);
 					break;
 				default:
 					skip_element
@@ -85099,7 +85099,7 @@ int read_feDiffuseLighting_children (svg_context* svg, FILE* f, svg_paint_type h
 				skip_element
 			break;
 		case 's':
-			res = read_set_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+			res = read_set_attributes (svg, f, attribs, parentData);
 			break;
 		default:
 			skip_element
@@ -85108,17 +85108,17 @@ int read_feDiffuseLighting_children (svg_context* svg, FILE* f, svg_paint_type h
 	}
 	return res;
 }
-int read_feDisplacementMap_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_paint_type hasFill, uint32_t stroke, uint32_t fill, void* parentData) {
+int read_feDisplacementMap_children (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData) {
 	int res = 0;
 	while (!feof (f)) {
 		read_element_start
 		int nameLenght = strlen (svg->elt);
 		switch(tolower(svg->elt[0])) {
 		case 'a':
-			res = read_animate_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+			res = read_animate_attributes (svg, f, attribs, parentData);
 			break;
 		case 's':
-			res = read_set_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+			res = read_set_attributes (svg, f, attribs, parentData);
 			break;
 		default:
 			skip_element
@@ -85127,7 +85127,7 @@ int read_feDisplacementMap_children (svg_context* svg, FILE* f, svg_paint_type h
 	}
 	return res;
 }
-int read_feFlood_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_paint_type hasFill, uint32_t stroke, uint32_t fill, void* parentData) {
+int read_feFlood_children (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData) {
 	int res = 0;
 	while (!feof (f)) {
 		read_element_start
@@ -85136,10 +85136,10 @@ int read_feFlood_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, 
 		case 'a':
 			if (!strncasecmp (&svg->elt[1],"nimate",6)) {//down
 				if (nameLenght == 7)
-					res = read_animate_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+					res = read_animate_attributes (svg, f, attribs, parentData);
 				else {
 					if (!strcasecmp (&svg->elt[7],"color"))
-						res = read_animateColor_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+						res = read_animateColor_attributes (svg, f, attribs, parentData);
 					else
 						skip_element
 				}
@@ -85147,7 +85147,7 @@ int read_feFlood_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, 
 				skip_element
 			break;
 		case 's':
-			res = read_set_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+			res = read_set_attributes (svg, f, attribs, parentData);
 			break;
 		default:
 			skip_element
@@ -85156,17 +85156,17 @@ int read_feFlood_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, 
 	}
 	return res;
 }
-int read_feGaussianBlur_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_paint_type hasFill, uint32_t stroke, uint32_t fill, void* parentData) {
+int read_feGaussianBlur_children (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData) {
 	int res = 0;
 	while (!feof (f)) {
 		read_element_start
 		int nameLenght = strlen (svg->elt);
 		switch(tolower(svg->elt[0])) {
 		case 'a':
-			res = read_animate_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+			res = read_animate_attributes (svg, f, attribs, parentData);
 			break;
 		case 's':
-			res = read_set_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+			res = read_set_attributes (svg, f, attribs, parentData);
 			break;
 		default:
 			skip_element
@@ -85175,7 +85175,7 @@ int read_feGaussianBlur_children (svg_context* svg, FILE* f, svg_paint_type hasS
 	}
 	return res;
 }
-int read_feImage_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_paint_type hasFill, uint32_t stroke, uint32_t fill, void* parentData) {
+int read_feImage_children (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData) {
 	int res = 0;
 	while (!feof (f)) {
 		read_element_start
@@ -85184,10 +85184,10 @@ int read_feImage_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, 
 		case 'a':
 			if (!strncasecmp (&svg->elt[1],"nimate",6)) {//down
 				if (nameLenght == 7)
-					res = read_animate_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+					res = read_animate_attributes (svg, f, attribs, parentData);
 				else {
 					if (!strcasecmp (&svg->elt[7],"transform"))
-						res = read_animateTransform_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+						res = read_animateTransform_attributes (svg, f, attribs, parentData);
 					else
 						skip_element
 				}
@@ -85195,7 +85195,7 @@ int read_feImage_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, 
 				skip_element
 			break;
 		case 's':
-			res = read_set_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+			res = read_set_attributes (svg, f, attribs, parentData);
 			break;
 		default:
 			skip_element
@@ -85204,29 +85204,29 @@ int read_feImage_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, 
 	}
 	return res;
 }
-int read_feMerge_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_paint_type hasFill, uint32_t stroke, uint32_t fill, void* parentData) {
+int read_feMerge_children (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData) {
 	int res = 0;
 	while (!feof (f)) {
 		read_element_start
 		int nameLenght = strlen (svg->elt);
 		if (!strcasecmp (&svg->elt[0],"femergenode"))
-			res = read_feMergeNode_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+			res = read_feMergeNode_attributes (svg, f, attribs, parentData);
 		else
 			skip_element
 	}
 	return res;
 }
-int read_feMergeNode_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_paint_type hasFill, uint32_t stroke, uint32_t fill, void* parentData) {
+int read_feMergeNode_children (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData) {
 	int res = 0;
 	while (!feof (f)) {
 		read_element_start
 		int nameLenght = strlen (svg->elt);
 		switch(tolower(svg->elt[0])) {
 		case 'a':
-			res = read_animate_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+			res = read_animate_attributes (svg, f, attribs, parentData);
 			break;
 		case 's':
-			res = read_set_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+			res = read_set_attributes (svg, f, attribs, parentData);
 			break;
 		default:
 			skip_element
@@ -85235,17 +85235,17 @@ int read_feMergeNode_children (svg_context* svg, FILE* f, svg_paint_type hasStro
 	}
 	return res;
 }
-int read_feMorphology_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_paint_type hasFill, uint32_t stroke, uint32_t fill, void* parentData) {
+int read_feMorphology_children (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData) {
 	int res = 0;
 	while (!feof (f)) {
 		read_element_start
 		int nameLenght = strlen (svg->elt);
 		switch(tolower(svg->elt[0])) {
 		case 'a':
-			res = read_animate_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+			res = read_animate_attributes (svg, f, attribs, parentData);
 			break;
 		case 's':
-			res = read_set_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+			res = read_set_attributes (svg, f, attribs, parentData);
 			break;
 		default:
 			skip_element
@@ -85254,17 +85254,17 @@ int read_feMorphology_children (svg_context* svg, FILE* f, svg_paint_type hasStr
 	}
 	return res;
 }
-int read_feOffset_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_paint_type hasFill, uint32_t stroke, uint32_t fill, void* parentData) {
+int read_feOffset_children (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData) {
 	int res = 0;
 	while (!feof (f)) {
 		read_element_start
 		int nameLenght = strlen (svg->elt);
 		switch(tolower(svg->elt[0])) {
 		case 'a':
-			res = read_animate_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+			res = read_animate_attributes (svg, f, attribs, parentData);
 			break;
 		case 's':
-			res = read_set_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+			res = read_set_attributes (svg, f, attribs, parentData);
 			break;
 		default:
 			skip_element
@@ -85273,7 +85273,7 @@ int read_feOffset_children (svg_context* svg, FILE* f, svg_paint_type hasStroke,
 	}
 	return res;
 }
-int read_feSpecularLighting_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_paint_type hasFill, uint32_t stroke, uint32_t fill, void* parentData) {
+int read_feSpecularLighting_children (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData) {
 	int res = 0;
 	while (!feof (f)) {
 		read_element_start
@@ -85282,10 +85282,10 @@ int read_feSpecularLighting_children (svg_context* svg, FILE* f, svg_paint_type 
 		case 'a':
 			if (!strncasecmp (&svg->elt[1],"nimate",6)) {//down
 				if (nameLenght == 7)
-					res = read_animate_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+					res = read_animate_attributes (svg, f, attribs, parentData);
 				else {
 					if (!strcasecmp (&svg->elt[7],"color"))
-						res = read_animateColor_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+						res = read_animateColor_attributes (svg, f, attribs, parentData);
 					else
 						skip_element
 				}
@@ -85296,13 +85296,13 @@ int read_feSpecularLighting_children (svg_context* svg, FILE* f, svg_paint_type 
 			if (tolower(svg->elt[1]) == 'e') {//up
 				switch(tolower(svg->elt[2])) {
 				case 'd':
-					res = read_feDistantLight_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+					res = read_feDistantLight_attributes (svg, f, attribs, parentData);
 					break;
 				case 'p':
-					res = read_fePointLight_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+					res = read_fePointLight_attributes (svg, f, attribs, parentData);
 					break;
 				case 's':
-					res = read_feSpotLight_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+					res = read_feSpotLight_attributes (svg, f, attribs, parentData);
 					break;
 				default:
 					skip_element
@@ -85312,7 +85312,7 @@ int read_feSpecularLighting_children (svg_context* svg, FILE* f, svg_paint_type 
 				skip_element
 			break;
 		case 's':
-			res = read_set_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+			res = read_set_attributes (svg, f, attribs, parentData);
 			break;
 		default:
 			skip_element
@@ -85321,17 +85321,17 @@ int read_feSpecularLighting_children (svg_context* svg, FILE* f, svg_paint_type 
 	}
 	return res;
 }
-int read_feTile_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_paint_type hasFill, uint32_t stroke, uint32_t fill, void* parentData) {
+int read_feTile_children (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData) {
 	int res = 0;
 	while (!feof (f)) {
 		read_element_start
 		int nameLenght = strlen (svg->elt);
 		switch(tolower(svg->elt[0])) {
 		case 'a':
-			res = read_animate_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+			res = read_animate_attributes (svg, f, attribs, parentData);
 			break;
 		case 's':
-			res = read_set_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+			res = read_set_attributes (svg, f, attribs, parentData);
 			break;
 		default:
 			skip_element
@@ -85340,17 +85340,17 @@ int read_feTile_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, s
 	}
 	return res;
 }
-int read_feTurbulence_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_paint_type hasFill, uint32_t stroke, uint32_t fill, void* parentData) {
+int read_feTurbulence_children (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData) {
 	int res = 0;
 	while (!feof (f)) {
 		read_element_start
 		int nameLenght = strlen (svg->elt);
 		switch(tolower(svg->elt[0])) {
 		case 'a':
-			res = read_animate_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+			res = read_animate_attributes (svg, f, attribs, parentData);
 			break;
 		case 's':
-			res = read_set_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+			res = read_set_attributes (svg, f, attribs, parentData);
 			break;
 		default:
 			skip_element
@@ -85359,17 +85359,17 @@ int read_feTurbulence_children (svg_context* svg, FILE* f, svg_paint_type hasStr
 	}
 	return res;
 }
-int read_feDistantLight_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_paint_type hasFill, uint32_t stroke, uint32_t fill, void* parentData) {
+int read_feDistantLight_children (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData) {
 	int res = 0;
 	while (!feof (f)) {
 		read_element_start
 		int nameLenght = strlen (svg->elt);
 		switch(tolower(svg->elt[0])) {
 		case 'a':
-			res = read_animate_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+			res = read_animate_attributes (svg, f, attribs, parentData);
 			break;
 		case 's':
-			res = read_set_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+			res = read_set_attributes (svg, f, attribs, parentData);
 			break;
 		default:
 			skip_element
@@ -85378,17 +85378,17 @@ int read_feDistantLight_children (svg_context* svg, FILE* f, svg_paint_type hasS
 	}
 	return res;
 }
-int read_fePointLight_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_paint_type hasFill, uint32_t stroke, uint32_t fill, void* parentData) {
+int read_fePointLight_children (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData) {
 	int res = 0;
 	while (!feof (f)) {
 		read_element_start
 		int nameLenght = strlen (svg->elt);
 		switch(tolower(svg->elt[0])) {
 		case 'a':
-			res = read_animate_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+			res = read_animate_attributes (svg, f, attribs, parentData);
 			break;
 		case 's':
-			res = read_set_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+			res = read_set_attributes (svg, f, attribs, parentData);
 			break;
 		default:
 			skip_element
@@ -85397,17 +85397,17 @@ int read_fePointLight_children (svg_context* svg, FILE* f, svg_paint_type hasStr
 	}
 	return res;
 }
-int read_feSpotLight_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_paint_type hasFill, uint32_t stroke, uint32_t fill, void* parentData) {
+int read_feSpotLight_children (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData) {
 	int res = 0;
 	while (!feof (f)) {
 		read_element_start
 		int nameLenght = strlen (svg->elt);
 		switch(tolower(svg->elt[0])) {
 		case 'a':
-			res = read_animate_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+			res = read_animate_attributes (svg, f, attribs, parentData);
 			break;
 		case 's':
-			res = read_set_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+			res = read_set_attributes (svg, f, attribs, parentData);
 			break;
 		default:
 			skip_element
@@ -85416,17 +85416,17 @@ int read_feSpotLight_children (svg_context* svg, FILE* f, svg_paint_type hasStro
 	}
 	return res;
 }
-int read_feFuncR_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_paint_type hasFill, uint32_t stroke, uint32_t fill, void* parentData) {
+int read_feFuncR_children (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData) {
 	int res = 0;
 	while (!feof (f)) {
 		read_element_start
 		int nameLenght = strlen (svg->elt);
 		switch(tolower(svg->elt[0])) {
 		case 'a':
-			res = read_animate_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+			res = read_animate_attributes (svg, f, attribs, parentData);
 			break;
 		case 's':
-			res = read_set_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+			res = read_set_attributes (svg, f, attribs, parentData);
 			break;
 		default:
 			skip_element
@@ -85435,17 +85435,17 @@ int read_feFuncR_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, 
 	}
 	return res;
 }
-int read_feFuncG_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_paint_type hasFill, uint32_t stroke, uint32_t fill, void* parentData) {
+int read_feFuncG_children (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData) {
 	int res = 0;
 	while (!feof (f)) {
 		read_element_start
 		int nameLenght = strlen (svg->elt);
 		switch(tolower(svg->elt[0])) {
 		case 'a':
-			res = read_animate_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+			res = read_animate_attributes (svg, f, attribs, parentData);
 			break;
 		case 's':
-			res = read_set_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+			res = read_set_attributes (svg, f, attribs, parentData);
 			break;
 		default:
 			skip_element
@@ -85454,17 +85454,17 @@ int read_feFuncG_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, 
 	}
 	return res;
 }
-int read_feFuncB_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_paint_type hasFill, uint32_t stroke, uint32_t fill, void* parentData) {
+int read_feFuncB_children (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData) {
 	int res = 0;
 	while (!feof (f)) {
 		read_element_start
 		int nameLenght = strlen (svg->elt);
 		switch(tolower(svg->elt[0])) {
 		case 'a':
-			res = read_animate_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+			res = read_animate_attributes (svg, f, attribs, parentData);
 			break;
 		case 's':
-			res = read_set_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+			res = read_set_attributes (svg, f, attribs, parentData);
 			break;
 		default:
 			skip_element
@@ -85473,17 +85473,17 @@ int read_feFuncB_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, 
 	}
 	return res;
 }
-int read_feFuncA_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_paint_type hasFill, uint32_t stroke, uint32_t fill, void* parentData) {
+int read_feFuncA_children (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData) {
 	int res = 0;
 	while (!feof (f)) {
 		read_element_start
 		int nameLenght = strlen (svg->elt);
 		switch(tolower(svg->elt[0])) {
 		case 'a':
-			res = read_animate_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+			res = read_animate_attributes (svg, f, attribs, parentData);
 			break;
 		case 's':
-			res = read_set_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+			res = read_set_attributes (svg, f, attribs, parentData);
 			break;
 		default:
 			skip_element
@@ -85492,20 +85492,20 @@ int read_feFuncA_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, 
 	}
 	return res;
 }
-int read_cursor_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_paint_type hasFill, uint32_t stroke, uint32_t fill, void* parentData) {
+int read_cursor_children (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData) {
 	int res = 0;
 	while (!feof (f)) {
 		read_element_start
 		int nameLenght = strlen (svg->elt);
 		switch(tolower(svg->elt[0])) {
 		case 'd':
-			res = read_desc_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+			res = read_desc_attributes (svg, f, attribs, parentData);
 			break;
 		case 'm':
-			res = read_metadata_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+			res = read_metadata_attributes (svg, f, attribs, parentData);
 			break;
 		case 't':
-			res = read_title_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+			res = read_title_attributes (svg, f, attribs, parentData);
 			break;
 		default:
 			skip_element
@@ -85514,7 +85514,7 @@ int read_cursor_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, s
 	}
 	return res;
 }
-int read_a_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_paint_type hasFill, uint32_t stroke, uint32_t fill, void* parentData) {
+int read_a_children (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData) {
 	int res = 0;
 	while (!feof (f)) {
 		read_element_start
@@ -85522,26 +85522,26 @@ int read_a_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_pa
 		switch(tolower(svg->elt[0])) {
 		case 'a':
 			if (nameLenght == 1)
-				res = read_a_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+				res = read_a_attributes (svg, f, attribs, parentData);
 			else {
 				switch(tolower(svg->elt[1])) {
 				case 'l':
-					res = read_altGlyphDef_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+					res = read_altGlyphDef_attributes (svg, f, attribs, parentData);
 					break;
 				case 'n':
 					if (!strncasecmp (&svg->elt[2],"imate",5)) {//down
 						if (nameLenght == 7)
-							res = read_animate_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+							res = read_animate_attributes (svg, f, attribs, parentData);
 						else {
 							switch(tolower(svg->elt[7])) {
 							case 'c':
-								res = read_animateColor_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+								res = read_animateColor_attributes (svg, f, attribs, parentData);
 								break;
 							case 'm':
-								res = read_animateMotion_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+								res = read_animateMotion_attributes (svg, f, attribs, parentData);
 								break;
 							case 't':
-								res = read_animateTransform_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+								res = read_animateTransform_attributes (svg, f, attribs, parentData);
 								break;
 							default:
 								skip_element
@@ -85560,16 +85560,16 @@ int read_a_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_pa
 		case 'c':
 			switch(tolower(svg->elt[1])) {
 			case 'i':
-				res = read_circle_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+				res = read_circle_attributes (svg, f, attribs, parentData);
 				break;
 			case 'l':
-				res = read_clipPath_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+				res = read_clipPath_attributes (svg, f, attribs, parentData);
 				break;
 			case 'o':
-				res = read_color_profile_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+				res = read_color_profile_attributes (svg, f, attribs, parentData);
 				break;
 			case 'u':
-				res = read_cursor_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+				res = read_cursor_attributes (svg, f, attribs, parentData);
 				break;
 			default:
 				skip_element
@@ -85580,10 +85580,10 @@ int read_a_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_pa
 			if (tolower(svg->elt[1]) == 'e') {//up
 				switch(tolower(svg->elt[2])) {
 				case 'f':
-					res = read_defs_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+					res = read_defs_attributes (svg, f, attribs, parentData);
 					break;
 				case 's':
-					res = read_desc_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+					res = read_desc_attributes (svg, f, attribs, parentData);
 					break;
 				default:
 					skip_element
@@ -85593,22 +85593,22 @@ int read_a_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_pa
 				skip_element
 			break;
 		case 'e':
-			res = read_ellipse_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+			res = read_ellipse_attributes (svg, f, attribs, parentData);
 			break;
 		case 'f':
 			switch(tolower(svg->elt[1])) {
 			case 'i':
-				res = read_filter_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+				res = read_filter_attributes (svg, f, attribs, parentData);
 				break;
 			case 'o':
 				switch(tolower(svg->elt[2])) {
 				case 'n':
 					if (tolower(svg->elt[3]) == 't') {//down
 						if (nameLenght == 4)
-							res = read_font_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+							res = read_font_attributes (svg, f, attribs, parentData);
 						else {
 							if (!strcasecmp (&svg->elt[4],"_face"))
-								res = read_font_face_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+								res = read_font_face_attributes (svg, f, attribs, parentData);
 							else
 								skip_element
 						}
@@ -85616,7 +85616,7 @@ int read_a_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_pa
 						skip_element
 					break;
 				case 'r':
-					res = read_foreignObject_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+					res = read_foreignObject_attributes (svg, f, attribs, parentData);
 					break;
 				default:
 					skip_element
@@ -85629,18 +85629,18 @@ int read_a_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_pa
 			}
 			break;
 		case 'g':
-			res = read_g_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+			res = read_g_attributes (svg, f, attribs, parentData);
 			break;
 		case 'i':
-			res = read_image_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+			res = read_image_attributes (svg, f, attribs, parentData);
 			break;
 		case 'l':
 			if (!strncasecmp (&svg->elt[1],"ine",3)) {//down
 				if (nameLenght == 4)
-					res = read_line_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+					res = read_line_attributes (svg, f, attribs, parentData);
 				else {
 					if (!strcasecmp (&svg->elt[4],"argradient"))
-						res = read_linearGradient_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+						res = read_linearGradient_attributes (svg, f, attribs, parentData);
 					else
 						skip_element
 				}
@@ -85652,10 +85652,10 @@ int read_a_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_pa
 			case 'a':
 				switch(tolower(svg->elt[2])) {
 				case 'r':
-					res = read_marker_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+					res = read_marker_attributes (svg, f, attribs, parentData);
 					break;
 				case 's':
-					res = read_mask_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+					res = read_mask_attributes (svg, f, attribs, parentData);
 					break;
 				default:
 					skip_element
@@ -85663,7 +85663,7 @@ int read_a_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_pa
 				}
 				break;
 			case 'e':
-				res = read_metadata_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+				res = read_metadata_attributes (svg, f, attribs, parentData);
 				break;
 			default:
 				skip_element
@@ -85676,10 +85676,10 @@ int read_a_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_pa
 				if (tolower(svg->elt[2]) == 't') {//up
 					switch(tolower(svg->elt[3])) {
 					case 'h':
-						res = read_path_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+						res = read_path_attributes (svg, f, attribs, parentData);
 						break;
 					case 't':
-						res = read_pattern_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+						res = read_pattern_attributes (svg, f, attribs, parentData);
 						break;
 					default:
 						skip_element
@@ -85692,10 +85692,10 @@ int read_a_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_pa
 				if (!strncasecmp (&svg->elt[2],"ly",2)) {//up
 					switch(tolower(svg->elt[4])) {
 					case 'g':
-						res = read_polygon_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+						res = read_polygon_attributes (svg, f, attribs, parentData);
 						break;
 					case 'l':
-						res = read_polyline_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+						res = read_polyline_attributes (svg, f, attribs, parentData);
 						break;
 					default:
 						skip_element
@@ -85712,10 +85712,10 @@ int read_a_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_pa
 		case 'r':
 			switch(tolower(svg->elt[1])) {
 			case 'a':
-				res = read_radialGradient_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+				res = read_radialGradient_attributes (svg, f, attribs, parentData);
 				break;
 			case 'e':
-				res = read_rect_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+				res = read_rect_attributes (svg, f, attribs, parentData);
 				break;
 			default:
 				skip_element
@@ -85725,22 +85725,22 @@ int read_a_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_pa
 		case 's':
 			switch(tolower(svg->elt[1])) {
 			case 'c':
-				res = read_script_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+				res = read_script_attributes (svg, f, attribs, parentData);
 				break;
 			case 'e':
-				res = read_set_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+				res = read_set_attributes (svg, f, attribs, parentData);
 				break;
 			case 't':
-				res = read_style_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+				res = read_style_attributes (svg, f, attribs, parentData);
 				break;
 			case 'v':
-				res = read_svg_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+				res = read_svg_attributes (svg, f, attribs, parentData);
 				break;
 			case 'w':
-				res = read_switch_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+				res = read_switch_attributes (svg, f, attribs, parentData);
 				break;
 			case 'y':
-				res = read_symbol_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+				res = read_symbol_attributes (svg, f, attribs, parentData);
 				break;
 			default:
 				skip_element
@@ -85750,10 +85750,10 @@ int read_a_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_pa
 		case 't':
 			switch(tolower(svg->elt[1])) {
 			case 'e':
-				res = read_text_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+				res = read_text_attributes (svg, f, attribs, parentData);
 				break;
 			case 'i':
-				res = read_title_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+				res = read_title_attributes (svg, f, attribs, parentData);
 				break;
 			default:
 				skip_element
@@ -85761,10 +85761,10 @@ int read_a_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_pa
 			}
 			break;
 		case 'u':
-			res = read_use_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+			res = read_use_attributes (svg, f, attribs, parentData);
 			break;
 		case 'v':
-			res = read_view_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+			res = read_view_attributes (svg, f, attribs, parentData);
 			break;
 		default:
 			skip_element
@@ -85773,20 +85773,20 @@ int read_a_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_pa
 	}
 	return res;
 }
-int read_view_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_paint_type hasFill, uint32_t stroke, uint32_t fill, void* parentData) {
+int read_view_children (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData) {
 	int res = 0;
 	while (!feof (f)) {
 		read_element_start
 		int nameLenght = strlen (svg->elt);
 		switch(tolower(svg->elt[0])) {
 		case 'd':
-			res = read_desc_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+			res = read_desc_attributes (svg, f, attribs, parentData);
 			break;
 		case 'm':
-			res = read_metadata_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+			res = read_metadata_attributes (svg, f, attribs, parentData);
 			break;
 		case 't':
-			res = read_title_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+			res = read_title_attributes (svg, f, attribs, parentData);
 			break;
 		default:
 			skip_element
@@ -85795,20 +85795,20 @@ int read_view_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg
 	}
 	return res;
 }
-int read_animate_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_paint_type hasFill, uint32_t stroke, uint32_t fill, void* parentData) {
+int read_animate_children (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData) {
 	int res = 0;
 	while (!feof (f)) {
 		read_element_start
 		int nameLenght = strlen (svg->elt);
 		switch(tolower(svg->elt[0])) {
 		case 'd':
-			res = read_desc_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+			res = read_desc_attributes (svg, f, attribs, parentData);
 			break;
 		case 'm':
-			res = read_metadata_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+			res = read_metadata_attributes (svg, f, attribs, parentData);
 			break;
 		case 't':
-			res = read_title_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+			res = read_title_attributes (svg, f, attribs, parentData);
 			break;
 		default:
 			skip_element
@@ -85817,20 +85817,20 @@ int read_animate_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, 
 	}
 	return res;
 }
-int read_set_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_paint_type hasFill, uint32_t stroke, uint32_t fill, void* parentData) {
+int read_set_children (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData) {
 	int res = 0;
 	while (!feof (f)) {
 		read_element_start
 		int nameLenght = strlen (svg->elt);
 		switch(tolower(svg->elt[0])) {
 		case 'd':
-			res = read_desc_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+			res = read_desc_attributes (svg, f, attribs, parentData);
 			break;
 		case 'm':
-			res = read_metadata_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+			res = read_metadata_attributes (svg, f, attribs, parentData);
 			break;
 		case 't':
-			res = read_title_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+			res = read_title_attributes (svg, f, attribs, parentData);
 			break;
 		default:
 			skip_element
@@ -85839,22 +85839,22 @@ int read_set_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_
 	}
 	return res;
 }
-int read_animateMotion_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_paint_type hasFill, uint32_t stroke, uint32_t fill, void* parentData) {
+int read_animateMotion_children (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData) {
 	int res = 0;
 	while (!feof (f)) {
 		read_element_start
 		int nameLenght = strlen (svg->elt);
 		switch(tolower(svg->elt[0])) {
 		case 'd':
-			res = read_desc_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+			res = read_desc_attributes (svg, f, attribs, parentData);
 			break;
 		case 'm':
 			switch(tolower(svg->elt[1])) {
 			case 'e':
-				res = read_metadata_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+				res = read_metadata_attributes (svg, f, attribs, parentData);
 				break;
 			case 'p':
-				res = read_mpath_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+				res = read_mpath_attributes (svg, f, attribs, parentData);
 				break;
 			default:
 				skip_element
@@ -85862,7 +85862,7 @@ int read_animateMotion_children (svg_context* svg, FILE* f, svg_paint_type hasSt
 			}
 			break;
 		case 't':
-			res = read_title_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+			res = read_title_attributes (svg, f, attribs, parentData);
 			break;
 		default:
 			skip_element
@@ -85871,20 +85871,20 @@ int read_animateMotion_children (svg_context* svg, FILE* f, svg_paint_type hasSt
 	}
 	return res;
 }
-int read_animateColor_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_paint_type hasFill, uint32_t stroke, uint32_t fill, void* parentData) {
+int read_animateColor_children (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData) {
 	int res = 0;
 	while (!feof (f)) {
 		read_element_start
 		int nameLenght = strlen (svg->elt);
 		switch(tolower(svg->elt[0])) {
 		case 'd':
-			res = read_desc_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+			res = read_desc_attributes (svg, f, attribs, parentData);
 			break;
 		case 'm':
-			res = read_metadata_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+			res = read_metadata_attributes (svg, f, attribs, parentData);
 			break;
 		case 't':
-			res = read_title_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+			res = read_title_attributes (svg, f, attribs, parentData);
 			break;
 		default:
 			skip_element
@@ -85893,20 +85893,20 @@ int read_animateColor_children (svg_context* svg, FILE* f, svg_paint_type hasStr
 	}
 	return res;
 }
-int read_animateTransform_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_paint_type hasFill, uint32_t stroke, uint32_t fill, void* parentData) {
+int read_animateTransform_children (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData) {
 	int res = 0;
 	while (!feof (f)) {
 		read_element_start
 		int nameLenght = strlen (svg->elt);
 		switch(tolower(svg->elt[0])) {
 		case 'd':
-			res = read_desc_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+			res = read_desc_attributes (svg, f, attribs, parentData);
 			break;
 		case 'm':
-			res = read_metadata_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+			res = read_metadata_attributes (svg, f, attribs, parentData);
 			break;
 		case 't':
-			res = read_title_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+			res = read_title_attributes (svg, f, attribs, parentData);
 			break;
 		default:
 			skip_element
@@ -85915,20 +85915,20 @@ int read_animateTransform_children (svg_context* svg, FILE* f, svg_paint_type ha
 	}
 	return res;
 }
-int read_mpath_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_paint_type hasFill, uint32_t stroke, uint32_t fill, void* parentData) {
+int read_mpath_children (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData) {
 	int res = 0;
 	while (!feof (f)) {
 		read_element_start
 		int nameLenght = strlen (svg->elt);
 		switch(tolower(svg->elt[0])) {
 		case 'd':
-			res = read_desc_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+			res = read_desc_attributes (svg, f, attribs, parentData);
 			break;
 		case 'm':
-			res = read_metadata_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+			res = read_metadata_attributes (svg, f, attribs, parentData);
 			break;
 		case 't':
-			res = read_title_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+			res = read_title_attributes (svg, f, attribs, parentData);
 			break;
 		default:
 			skip_element
@@ -85937,31 +85937,31 @@ int read_mpath_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, sv
 	}
 	return res;
 }
-int read_font_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_paint_type hasFill, uint32_t stroke, uint32_t fill, void* parentData) {
+int read_font_children (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData) {
 	int res = 0;
 	while (!feof (f)) {
 		read_element_start
 		int nameLenght = strlen (svg->elt);
 		switch(tolower(svg->elt[0])) {
 		case 'd':
-			res = read_desc_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+			res = read_desc_attributes (svg, f, attribs, parentData);
 			break;
 		case 'f':
-			res = read_font_face_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+			res = read_font_face_attributes (svg, f, attribs, parentData);
 			break;
 		case 'g':
-			res = read_glyph_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+			res = read_glyph_attributes (svg, f, attribs, parentData);
 			break;
 		case 'h':
-			res = read_hkern_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+			res = read_hkern_attributes (svg, f, attribs, parentData);
 			break;
 		case 'm':
 			switch(tolower(svg->elt[1])) {
 			case 'e':
-				res = read_metadata_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+				res = read_metadata_attributes (svg, f, attribs, parentData);
 				break;
 			case 'i':
-				res = read_missing_glyph_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+				res = read_missing_glyph_attributes (svg, f, attribs, parentData);
 				break;
 			default:
 				skip_element
@@ -85969,10 +85969,10 @@ int read_font_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg
 			}
 			break;
 		case 't':
-			res = read_title_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+			res = read_title_attributes (svg, f, attribs, parentData);
 			break;
 		case 'v':
-			res = read_vkern_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+			res = read_vkern_attributes (svg, f, attribs, parentData);
 			break;
 		default:
 			skip_element
@@ -85981,23 +85981,23 @@ int read_font_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg
 	}
 	return res;
 }
-int read_font_face_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_paint_type hasFill, uint32_t stroke, uint32_t fill, void* parentData) {
+int read_font_face_children (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData) {
 	int res = 0;
 	while (!feof (f)) {
 		read_element_start
 		int nameLenght = strlen (svg->elt);
 		switch(tolower(svg->elt[0])) {
 		case 'd':
-			res = read_desc_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+			res = read_desc_attributes (svg, f, attribs, parentData);
 			break;
 		case 'f':
-			res = read_font_face_src_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+			res = read_font_face_src_attributes (svg, f, attribs, parentData);
 			break;
 		case 'm':
-			res = read_metadata_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+			res = read_metadata_attributes (svg, f, attribs, parentData);
 			break;
 		case 't':
-			res = read_title_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+			res = read_title_attributes (svg, f, attribs, parentData);
 			break;
 		default:
 			skip_element
@@ -86006,7 +86006,7 @@ int read_font_face_children (svg_context* svg, FILE* f, svg_paint_type hasStroke
 	}
 	return res;
 }
-int read_glyph_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_paint_type hasFill, uint32_t stroke, uint32_t fill, void* parentData) {
+int read_glyph_children (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData) {
 	int res = 0;
 	while (!feof (f)) {
 		read_element_start
@@ -86014,26 +86014,26 @@ int read_glyph_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, sv
 		switch(tolower(svg->elt[0])) {
 		case 'a':
 			if (nameLenght == 1)
-				res = read_a_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+				res = read_a_attributes (svg, f, attribs, parentData);
 			else {
 				switch(tolower(svg->elt[1])) {
 				case 'l':
-					res = read_altGlyphDef_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+					res = read_altGlyphDef_attributes (svg, f, attribs, parentData);
 					break;
 				case 'n':
 					if (!strncasecmp (&svg->elt[2],"imate",5)) {//down
 						if (nameLenght == 7)
-							res = read_animate_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+							res = read_animate_attributes (svg, f, attribs, parentData);
 						else {
 							switch(tolower(svg->elt[7])) {
 							case 'c':
-								res = read_animateColor_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+								res = read_animateColor_attributes (svg, f, attribs, parentData);
 								break;
 							case 'm':
-								res = read_animateMotion_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+								res = read_animateMotion_attributes (svg, f, attribs, parentData);
 								break;
 							case 't':
-								res = read_animateTransform_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+								res = read_animateTransform_attributes (svg, f, attribs, parentData);
 								break;
 							default:
 								skip_element
@@ -86052,16 +86052,16 @@ int read_glyph_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, sv
 		case 'c':
 			switch(tolower(svg->elt[1])) {
 			case 'i':
-				res = read_circle_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+				res = read_circle_attributes (svg, f, attribs, parentData);
 				break;
 			case 'l':
-				res = read_clipPath_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+				res = read_clipPath_attributes (svg, f, attribs, parentData);
 				break;
 			case 'o':
-				res = read_color_profile_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+				res = read_color_profile_attributes (svg, f, attribs, parentData);
 				break;
 			case 'u':
-				res = read_cursor_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+				res = read_cursor_attributes (svg, f, attribs, parentData);
 				break;
 			default:
 				skip_element
@@ -86072,10 +86072,10 @@ int read_glyph_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, sv
 			if (tolower(svg->elt[1]) == 'e') {//up
 				switch(tolower(svg->elt[2])) {
 				case 'f':
-					res = read_defs_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+					res = read_defs_attributes (svg, f, attribs, parentData);
 					break;
 				case 's':
-					res = read_desc_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+					res = read_desc_attributes (svg, f, attribs, parentData);
 					break;
 				default:
 					skip_element
@@ -86085,22 +86085,22 @@ int read_glyph_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, sv
 				skip_element
 			break;
 		case 'e':
-			res = read_ellipse_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+			res = read_ellipse_attributes (svg, f, attribs, parentData);
 			break;
 		case 'f':
 			switch(tolower(svg->elt[1])) {
 			case 'i':
-				res = read_filter_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+				res = read_filter_attributes (svg, f, attribs, parentData);
 				break;
 			case 'o':
 				switch(tolower(svg->elt[2])) {
 				case 'n':
 					if (tolower(svg->elt[3]) == 't') {//down
 						if (nameLenght == 4)
-							res = read_font_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+							res = read_font_attributes (svg, f, attribs, parentData);
 						else {
 							if (!strcasecmp (&svg->elt[4],"_face"))
-								res = read_font_face_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+								res = read_font_face_attributes (svg, f, attribs, parentData);
 							else
 								skip_element
 						}
@@ -86108,7 +86108,7 @@ int read_glyph_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, sv
 						skip_element
 					break;
 				case 'r':
-					res = read_foreignObject_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+					res = read_foreignObject_attributes (svg, f, attribs, parentData);
 					break;
 				default:
 					skip_element
@@ -86121,18 +86121,18 @@ int read_glyph_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, sv
 			}
 			break;
 		case 'g':
-			res = read_g_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+			res = read_g_attributes (svg, f, attribs, parentData);
 			break;
 		case 'i':
-			res = read_image_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+			res = read_image_attributes (svg, f, attribs, parentData);
 			break;
 		case 'l':
 			if (!strncasecmp (&svg->elt[1],"ine",3)) {//down
 				if (nameLenght == 4)
-					res = read_line_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+					res = read_line_attributes (svg, f, attribs, parentData);
 				else {
 					if (!strcasecmp (&svg->elt[4],"argradient"))
-						res = read_linearGradient_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+						res = read_linearGradient_attributes (svg, f, attribs, parentData);
 					else
 						skip_element
 				}
@@ -86144,10 +86144,10 @@ int read_glyph_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, sv
 			case 'a':
 				switch(tolower(svg->elt[2])) {
 				case 'r':
-					res = read_marker_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+					res = read_marker_attributes (svg, f, attribs, parentData);
 					break;
 				case 's':
-					res = read_mask_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+					res = read_mask_attributes (svg, f, attribs, parentData);
 					break;
 				default:
 					skip_element
@@ -86155,7 +86155,7 @@ int read_glyph_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, sv
 				}
 				break;
 			case 'e':
-				res = read_metadata_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+				res = read_metadata_attributes (svg, f, attribs, parentData);
 				break;
 			default:
 				skip_element
@@ -86168,10 +86168,10 @@ int read_glyph_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, sv
 				if (tolower(svg->elt[2]) == 't') {//up
 					switch(tolower(svg->elt[3])) {
 					case 'h':
-						res = read_path_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+						res = read_path_attributes (svg, f, attribs, parentData);
 						break;
 					case 't':
-						res = read_pattern_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+						res = read_pattern_attributes (svg, f, attribs, parentData);
 						break;
 					default:
 						skip_element
@@ -86184,10 +86184,10 @@ int read_glyph_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, sv
 				if (!strncasecmp (&svg->elt[2],"ly",2)) {//up
 					switch(tolower(svg->elt[4])) {
 					case 'g':
-						res = read_polygon_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+						res = read_polygon_attributes (svg, f, attribs, parentData);
 						break;
 					case 'l':
-						res = read_polyline_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+						res = read_polyline_attributes (svg, f, attribs, parentData);
 						break;
 					default:
 						skip_element
@@ -86204,10 +86204,10 @@ int read_glyph_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, sv
 		case 'r':
 			switch(tolower(svg->elt[1])) {
 			case 'a':
-				res = read_radialGradient_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+				res = read_radialGradient_attributes (svg, f, attribs, parentData);
 				break;
 			case 'e':
-				res = read_rect_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+				res = read_rect_attributes (svg, f, attribs, parentData);
 				break;
 			default:
 				skip_element
@@ -86217,22 +86217,22 @@ int read_glyph_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, sv
 		case 's':
 			switch(tolower(svg->elt[1])) {
 			case 'c':
-				res = read_script_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+				res = read_script_attributes (svg, f, attribs, parentData);
 				break;
 			case 'e':
-				res = read_set_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+				res = read_set_attributes (svg, f, attribs, parentData);
 				break;
 			case 't':
-				res = read_style_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+				res = read_style_attributes (svg, f, attribs, parentData);
 				break;
 			case 'v':
-				res = read_svg_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+				res = read_svg_attributes (svg, f, attribs, parentData);
 				break;
 			case 'w':
-				res = read_switch_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+				res = read_switch_attributes (svg, f, attribs, parentData);
 				break;
 			case 'y':
-				res = read_symbol_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+				res = read_symbol_attributes (svg, f, attribs, parentData);
 				break;
 			default:
 				skip_element
@@ -86242,10 +86242,10 @@ int read_glyph_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, sv
 		case 't':
 			switch(tolower(svg->elt[1])) {
 			case 'e':
-				res = read_text_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+				res = read_text_attributes (svg, f, attribs, parentData);
 				break;
 			case 'i':
-				res = read_title_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+				res = read_title_attributes (svg, f, attribs, parentData);
 				break;
 			default:
 				skip_element
@@ -86253,10 +86253,10 @@ int read_glyph_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, sv
 			}
 			break;
 		case 'u':
-			res = read_use_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+			res = read_use_attributes (svg, f, attribs, parentData);
 			break;
 		case 'v':
-			res = read_view_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+			res = read_view_attributes (svg, f, attribs, parentData);
 			break;
 		default:
 			skip_element
@@ -86265,7 +86265,7 @@ int read_glyph_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, sv
 	}
 	return res;
 }
-int read_missing_glyph_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_paint_type hasFill, uint32_t stroke, uint32_t fill, void* parentData) {
+int read_missing_glyph_children (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData) {
 	int res = 0;
 	while (!feof (f)) {
 		read_element_start
@@ -86273,26 +86273,26 @@ int read_missing_glyph_children (svg_context* svg, FILE* f, svg_paint_type hasSt
 		switch(tolower(svg->elt[0])) {
 		case 'a':
 			if (nameLenght == 1)
-				res = read_a_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+				res = read_a_attributes (svg, f, attribs, parentData);
 			else {
 				switch(tolower(svg->elt[1])) {
 				case 'l':
-					res = read_altGlyphDef_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+					res = read_altGlyphDef_attributes (svg, f, attribs, parentData);
 					break;
 				case 'n':
 					if (!strncasecmp (&svg->elt[2],"imate",5)) {//down
 						if (nameLenght == 7)
-							res = read_animate_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+							res = read_animate_attributes (svg, f, attribs, parentData);
 						else {
 							switch(tolower(svg->elt[7])) {
 							case 'c':
-								res = read_animateColor_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+								res = read_animateColor_attributes (svg, f, attribs, parentData);
 								break;
 							case 'm':
-								res = read_animateMotion_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+								res = read_animateMotion_attributes (svg, f, attribs, parentData);
 								break;
 							case 't':
-								res = read_animateTransform_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+								res = read_animateTransform_attributes (svg, f, attribs, parentData);
 								break;
 							default:
 								skip_element
@@ -86311,16 +86311,16 @@ int read_missing_glyph_children (svg_context* svg, FILE* f, svg_paint_type hasSt
 		case 'c':
 			switch(tolower(svg->elt[1])) {
 			case 'i':
-				res = read_circle_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+				res = read_circle_attributes (svg, f, attribs, parentData);
 				break;
 			case 'l':
-				res = read_clipPath_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+				res = read_clipPath_attributes (svg, f, attribs, parentData);
 				break;
 			case 'o':
-				res = read_color_profile_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+				res = read_color_profile_attributes (svg, f, attribs, parentData);
 				break;
 			case 'u':
-				res = read_cursor_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+				res = read_cursor_attributes (svg, f, attribs, parentData);
 				break;
 			default:
 				skip_element
@@ -86331,10 +86331,10 @@ int read_missing_glyph_children (svg_context* svg, FILE* f, svg_paint_type hasSt
 			if (tolower(svg->elt[1]) == 'e') {//up
 				switch(tolower(svg->elt[2])) {
 				case 'f':
-					res = read_defs_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+					res = read_defs_attributes (svg, f, attribs, parentData);
 					break;
 				case 's':
-					res = read_desc_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+					res = read_desc_attributes (svg, f, attribs, parentData);
 					break;
 				default:
 					skip_element
@@ -86344,22 +86344,22 @@ int read_missing_glyph_children (svg_context* svg, FILE* f, svg_paint_type hasSt
 				skip_element
 			break;
 		case 'e':
-			res = read_ellipse_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+			res = read_ellipse_attributes (svg, f, attribs, parentData);
 			break;
 		case 'f':
 			switch(tolower(svg->elt[1])) {
 			case 'i':
-				res = read_filter_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+				res = read_filter_attributes (svg, f, attribs, parentData);
 				break;
 			case 'o':
 				switch(tolower(svg->elt[2])) {
 				case 'n':
 					if (tolower(svg->elt[3]) == 't') {//down
 						if (nameLenght == 4)
-							res = read_font_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+							res = read_font_attributes (svg, f, attribs, parentData);
 						else {
 							if (!strcasecmp (&svg->elt[4],"_face"))
-								res = read_font_face_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+								res = read_font_face_attributes (svg, f, attribs, parentData);
 							else
 								skip_element
 						}
@@ -86367,7 +86367,7 @@ int read_missing_glyph_children (svg_context* svg, FILE* f, svg_paint_type hasSt
 						skip_element
 					break;
 				case 'r':
-					res = read_foreignObject_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+					res = read_foreignObject_attributes (svg, f, attribs, parentData);
 					break;
 				default:
 					skip_element
@@ -86380,18 +86380,18 @@ int read_missing_glyph_children (svg_context* svg, FILE* f, svg_paint_type hasSt
 			}
 			break;
 		case 'g':
-			res = read_g_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+			res = read_g_attributes (svg, f, attribs, parentData);
 			break;
 		case 'i':
-			res = read_image_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+			res = read_image_attributes (svg, f, attribs, parentData);
 			break;
 		case 'l':
 			if (!strncasecmp (&svg->elt[1],"ine",3)) {//down
 				if (nameLenght == 4)
-					res = read_line_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+					res = read_line_attributes (svg, f, attribs, parentData);
 				else {
 					if (!strcasecmp (&svg->elt[4],"argradient"))
-						res = read_linearGradient_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+						res = read_linearGradient_attributes (svg, f, attribs, parentData);
 					else
 						skip_element
 				}
@@ -86403,10 +86403,10 @@ int read_missing_glyph_children (svg_context* svg, FILE* f, svg_paint_type hasSt
 			case 'a':
 				switch(tolower(svg->elt[2])) {
 				case 'r':
-					res = read_marker_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+					res = read_marker_attributes (svg, f, attribs, parentData);
 					break;
 				case 's':
-					res = read_mask_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+					res = read_mask_attributes (svg, f, attribs, parentData);
 					break;
 				default:
 					skip_element
@@ -86414,7 +86414,7 @@ int read_missing_glyph_children (svg_context* svg, FILE* f, svg_paint_type hasSt
 				}
 				break;
 			case 'e':
-				res = read_metadata_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+				res = read_metadata_attributes (svg, f, attribs, parentData);
 				break;
 			default:
 				skip_element
@@ -86427,10 +86427,10 @@ int read_missing_glyph_children (svg_context* svg, FILE* f, svg_paint_type hasSt
 				if (tolower(svg->elt[2]) == 't') {//up
 					switch(tolower(svg->elt[3])) {
 					case 'h':
-						res = read_path_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+						res = read_path_attributes (svg, f, attribs, parentData);
 						break;
 					case 't':
-						res = read_pattern_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+						res = read_pattern_attributes (svg, f, attribs, parentData);
 						break;
 					default:
 						skip_element
@@ -86443,10 +86443,10 @@ int read_missing_glyph_children (svg_context* svg, FILE* f, svg_paint_type hasSt
 				if (!strncasecmp (&svg->elt[2],"ly",2)) {//up
 					switch(tolower(svg->elt[4])) {
 					case 'g':
-						res = read_polygon_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+						res = read_polygon_attributes (svg, f, attribs, parentData);
 						break;
 					case 'l':
-						res = read_polyline_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+						res = read_polyline_attributes (svg, f, attribs, parentData);
 						break;
 					default:
 						skip_element
@@ -86463,10 +86463,10 @@ int read_missing_glyph_children (svg_context* svg, FILE* f, svg_paint_type hasSt
 		case 'r':
 			switch(tolower(svg->elt[1])) {
 			case 'a':
-				res = read_radialGradient_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+				res = read_radialGradient_attributes (svg, f, attribs, parentData);
 				break;
 			case 'e':
-				res = read_rect_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+				res = read_rect_attributes (svg, f, attribs, parentData);
 				break;
 			default:
 				skip_element
@@ -86476,22 +86476,22 @@ int read_missing_glyph_children (svg_context* svg, FILE* f, svg_paint_type hasSt
 		case 's':
 			switch(tolower(svg->elt[1])) {
 			case 'c':
-				res = read_script_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+				res = read_script_attributes (svg, f, attribs, parentData);
 				break;
 			case 'e':
-				res = read_set_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+				res = read_set_attributes (svg, f, attribs, parentData);
 				break;
 			case 't':
-				res = read_style_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+				res = read_style_attributes (svg, f, attribs, parentData);
 				break;
 			case 'v':
-				res = read_svg_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+				res = read_svg_attributes (svg, f, attribs, parentData);
 				break;
 			case 'w':
-				res = read_switch_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+				res = read_switch_attributes (svg, f, attribs, parentData);
 				break;
 			case 'y':
-				res = read_symbol_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+				res = read_symbol_attributes (svg, f, attribs, parentData);
 				break;
 			default:
 				skip_element
@@ -86501,10 +86501,10 @@ int read_missing_glyph_children (svg_context* svg, FILE* f, svg_paint_type hasSt
 		case 't':
 			switch(tolower(svg->elt[1])) {
 			case 'e':
-				res = read_text_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+				res = read_text_attributes (svg, f, attribs, parentData);
 				break;
 			case 'i':
-				res = read_title_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+				res = read_title_attributes (svg, f, attribs, parentData);
 				break;
 			default:
 				skip_element
@@ -86512,10 +86512,10 @@ int read_missing_glyph_children (svg_context* svg, FILE* f, svg_paint_type hasSt
 			}
 			break;
 		case 'u':
-			res = read_use_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+			res = read_use_attributes (svg, f, attribs, parentData);
 			break;
 		case 'v':
-			res = read_view_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+			res = read_view_attributes (svg, f, attribs, parentData);
 			break;
 		default:
 			skip_element
@@ -86524,7 +86524,7 @@ int read_missing_glyph_children (svg_context* svg, FILE* f, svg_paint_type hasSt
 	}
 	return res;
 }
-int read_font_face_src_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_paint_type hasFill, uint32_t stroke, uint32_t fill, void* parentData) {
+int read_font_face_src_children (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData) {
 	int res = 0;
 	while (!feof (f)) {
 		read_element_start
@@ -86532,10 +86532,10 @@ int read_font_face_src_children (svg_context* svg, FILE* f, svg_paint_type hasSt
 		if (!strncasecmp (&svg->elt[0],"font_face_",10)) {//up
 			switch(tolower(svg->elt[10])) {
 			case 'n':
-				res = read_font_face_name_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+				res = read_font_face_name_attributes (svg, f, attribs, parentData);
 				break;
 			case 'u':
-				res = read_font_face_uri_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+				res = read_font_face_uri_attributes (svg, f, attribs, parentData);
 				break;
 			default:
 				skip_element
@@ -86546,13 +86546,13 @@ int read_font_face_src_children (svg_context* svg, FILE* f, svg_paint_type hasSt
 	}
 	return res;
 }
-int read_font_face_uri_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_paint_type hasFill, uint32_t stroke, uint32_t fill, void* parentData) {
+int read_font_face_uri_children (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData) {
 	int res = 0;
 	while (!feof (f)) {
 		read_element_start
 		int nameLenght = strlen (svg->elt);
 		if (!strcasecmp (&svg->elt[0],"font_face_format"))
-			res = read_font_face_format_attributes (svg, f, hasStroke, hasFill, stroke, fill, parentData);
+			res = read_font_face_format_attributes (svg, f, attribs, parentData);
 		else
 			skip_element
 	}

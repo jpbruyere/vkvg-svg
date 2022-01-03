@@ -26,6 +26,8 @@
 #define LOG
 #endif
 
+#define degToRad (x) (x * M_PI / 180.0)
+
 typedef enum {
 	svg_element_type_linear_gradient,
 	svg_element_type_radial_gradient
@@ -46,11 +48,21 @@ typedef enum {
 	svg_unit_pc,
 	svg_unit_px,
 	svg_unit_percentage,
+	svg_unit_deg,
+	svg_unit_grad,
+	svg_unit_rad
 }svg_unit;
+
 typedef enum {
 	svg_gradient_unit_objectBoundingBox,
 	svg_gradient_unit_userSpaceOnUse
 }svg_gradient_unit;
+
+typedef enum {
+	svg_text_anchor_start,
+	svg_text_anchor_middle,
+	svg_text_anchor_end
+}svg_text_anchor;
 
 typedef struct {
 	float number;
@@ -81,6 +93,14 @@ typedef struct {
 	VkvgPattern pattern;
 }svg_element_linear_gradient;
 
+typedef struct {
+	svg_paint_type hasStroke;
+	svg_paint_type hasFill;
+	uint32_t stroke;
+	uint32_t fill;
+	svg_text_anchor text_anchor;
+}svg_attributes;
+
 uint32_t _get_element_hash (void* elt);
 svg_element_type _get_element_type (void* elt);
 
@@ -101,6 +121,7 @@ typedef struct {
 	uint32_t	width;//force surface width & height
 	uint32_t	height;
 	svg_viewbox viewBox;
+	bool		fit;//fit rendering surface
 	bool		preserveAspectRatio;
 	bool		skip;//skip tag and children
 	uint32_t	currentIdHash;
@@ -112,8 +133,8 @@ typedef struct {
 
 enum prevCmd {none, quad, cubic};
 
-int skip_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_paint_type hasFill, uint32_t stroke, uint32_t fill, void* parentData);
-int read_tag (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_paint_type hasFill, uint32_t stroke, uint32_t fill);
+int skip_children (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData);
+int read_tag (svg_context* svg, FILE* f, svg_attributes attribs);
 
 #define get_attribute fscanf(f, " %[^=>]=%*[\"']%[^\"']%*[\"']", svg->att, svg->value)
 
@@ -135,9 +156,10 @@ int read_tag (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_paint_typ
 	}else\
 		res = 1;
 
-int skip_attributes_and_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_paint_type hasFill, uint32_t stroke, uint32_t fill);
+int skip_attributes_and_children (svg_context* svg, FILE* f, svg_attributes attribs);
 
 #define read_element_start										\
+	fscanf(f, "%[^<]", svg->value);								\
 	res = fscanf(f, " <%[^> \n\r]", svg->elt);					\
 	if (res < 0)												\
 		return 0;												\
@@ -173,13 +195,13 @@ int skip_attributes_and_children (svg_context* svg, FILE* f, svg_paint_type hasS
 		continue;												\
 	}															\
 	if (svg->skip) {											\
-		res = skip_attributes_and_children (svg, f, hasStroke, hasFill, stroke, fill);\
+		res = skip_attributes_and_children (svg, f, attribs);	\
 		continue;												\
 	}															\
 
 #define skip_element {																\
 	svg->skip = true;																\
-	res = skip_attributes_and_children (svg, f, hasStroke, hasFill, stroke, fill);	\
+	res = skip_attributes_and_children (svg, f, attribs);							\
 	svg->skip = false;																\
 }
 

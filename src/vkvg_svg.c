@@ -602,6 +602,8 @@ uint32_t parseColorName (const char* name) {
 			return 0xFF4763FF;//Tomato
 		case 'u':
 			return 0xFFD0E040;//Turquoise
+		case 'r':
+			return 0x00000000;//Transparent
 		}
 		break;
 	case 'v':
@@ -674,6 +676,18 @@ bool try_parse_lenghtOrPercentage (const char* measure, float* number, svg_unit*
 		}
 		if (l == 2) {
 			switch (tolower(str_units[0])) {
+			case 'd':
+				*units = svg_unit_deg;
+				return true;
+				break;
+			case 'g':
+				*units = svg_unit_grad;
+				return true;
+				break;
+			case 'r':
+				*units = svg_unit_rad;
+				return true;
+				break;
 			case 'p':
 				switch (tolower(str_units[1])) {
 				case 't':
@@ -1136,10 +1150,10 @@ void _parse_path_d_attribute (svg_context* svg) {
 			else
 				result = parse_floats(tmp, 7, &rx, &ry, &rotx, &large, &sweep, &x, &y);
 			if (result) {
-				vkvg_get_current_point(svg->ctx, &cpX, &cpY);
 				bool lf = large > __FLT_EPSILON__;
 				bool sw = sweep > __FLT_EPSILON__;
-				vkvg_elliptic_arc(svg->ctx, cpX, cpY, x, y, lf, sw, rx, ry, rotx);
+				rotx = rotx * M_PI / 180.0f;
+				vkvg_elliptical_arc(svg->ctx, x, y, lf, sw, rx, ry, rotx);
 				repeat = parse_floats(tmp, 1, &rx);
 
 			} else
@@ -1154,6 +1168,9 @@ void _parse_path_d_attribute (svg_context* svg) {
 				vkvg_get_current_point(svg->ctx, &cpX, &cpY);
 				bool lf = large > __FLT_EPSILON__;
 				bool sw = sweep > __FLT_EPSILON__;
+				rotx = rotx * M_PI / 180.0f;
+				//rotx = degToRad (rotx);
+
 				vkvg_elliptic_arc(svg->ctx, cpX, cpY, cpX + x, cpY + y, lf, sw, rx, ry, rotx);
 				repeat = parse_floats(tmp, 1, &rx);
 
@@ -1252,26 +1269,26 @@ void set_pattern (svg_context* svg, uint32_t patternHash) {
 	} else
 		LOG ("pattern hash not resolved: %d\n", patternHash);
 }
-int draw (svg_context* svg, svg_paint_type hasStroke, svg_paint_type hasFill, uint32_t stroke, uint32_t fill) {
-	if (hasFill) {
-		if (hasFill == svg_paint_type_pattern)
-			set_pattern(svg, fill);
+int draw (svg_context* svg, svg_attributes attribs) {
+	if (attribs.hasFill) {
+		if (attribs.hasFill == svg_paint_type_pattern)
+			set_pattern(svg, attribs.fill);
 		else
-			vkvg_set_source_color(svg->ctx, fill);
-		if (hasStroke) {
+			vkvg_set_source_color(svg->ctx, attribs.fill);
+		if (attribs.hasStroke) {
 			vkvg_fill_preserve(svg->ctx);
-			if (hasStroke == svg_paint_type_pattern)
-				set_pattern(svg, stroke);
+			if (attribs.hasStroke == svg_paint_type_pattern)
+				set_pattern(svg, attribs.stroke);
 			else
-				vkvg_set_source_color(svg->ctx, stroke);
+				vkvg_set_source_color(svg->ctx, attribs.stroke);
 			vkvg_stroke(svg->ctx);
 		} else
 			vkvg_fill (svg->ctx);
-	} else if (hasStroke) {
-		if (hasStroke == svg_paint_type_pattern)
-			set_pattern(svg, stroke);
+	} else if (attribs.hasStroke) {
+		if (attribs.hasStroke == svg_paint_type_pattern)
+			set_pattern(svg, attribs.stroke);
 		else
-			vkvg_set_source_color(svg->ctx, stroke);
+			vkvg_set_source_color(svg->ctx, attribs.stroke);
 		vkvg_stroke(svg->ctx);
 	}
 }
@@ -1286,7 +1303,34 @@ void _copy_pattern_color_stops (VkvgPattern orig, VkvgPattern dest) {
 	} else
 		LOG ("Error processing referenced pattern\n");
 }
+void _draw_text (svg_context* svg, FILE* f, svg_attributes attribs,
+				svg_length_or_percentage* x, svg_length_or_percentage* y, svg_length_or_percentage* dx, svg_length_or_percentage* dy) {
+	if (attribs.hasFill) {
+		if (attribs.hasFill == svg_paint_type_pattern)
+			set_pattern(svg, attribs.fill);
+		else
+			vkvg_set_source_color(svg->ctx, attribs.fill);
+	} else if (attribs.hasStroke) {
+		if (attribs.hasStroke == svg_paint_type_pattern)
+			set_pattern(svg, attribs.stroke);
+		else
+			vkvg_set_source_color(svg->ctx, attribs.stroke);
+	}
+	float cx = x->number + dx->number;
+	float cy = y->number + dy->number;
 
+	if (attribs.text_anchor > svg_text_anchor_start) {
+		vkvg_text_extents_t e = {0};
+		vkvg_text_extents(svg->ctx, svg->value, &e);
+		if (attribs.text_anchor == svg_text_anchor_middle)
+			cx -= e.width / 2.0f;
+		else
+			cx -= e.width;
+	}
+
+	vkvg_move_to(svg->ctx, cx, cy);
+	vkvg_show_text(svg->ctx, svg->value);
+}
 #define PROCESS_SVG_XLINK_ATTRIB_XLINK_HREF \
 {\
 	if (svg->value[0] == '#') {\
@@ -1300,12 +1344,12 @@ void _copy_pattern_color_stops (VkvgPattern orig, VkvgPattern dest) {
 
 #define PROCESS_SVG_COLOR_ATTRIB_COLOR \
 {\
-	try_parse_color (svg->value, &hasFill, &fill);\
-	hasStroke = hasFill;\
-	stroke = hasStroke;\
+	try_parse_color (svg->value, &attribs.hasFill, &attribs.fill);\
+	attribs.hasStroke = attribs.hasFill;\
+	attribs.stroke = attribs.fill;\
 }
-#define PROCESS_SVG_PAINT_ATTRIB_STROKE	try_parse_color (svg->value, &hasStroke, &stroke);
-#define PROCESS_SVG_PAINT_ATTRIB_FILL	try_parse_color (svg->value, &hasFill, &fill);
+#define PROCESS_SVG_PAINT_ATTRIB_STROKE	try_parse_color (svg->value, &attribs.hasStroke, &attribs.stroke);
+#define PROCESS_SVG_PAINT_ATTRIB_FILL	try_parse_color (svg->value, &attribs.hasFill, &attribs.fill);
 #define PROCESS_SVG_PAINT_ATTRIB_STROKE_WIDTH \
 {\
 	svg_unit units;\
@@ -1313,15 +1357,25 @@ void _copy_pattern_color_stops (VkvgPattern orig, VkvgPattern dest) {
 	if (try_parse_lenghtOrPercentage(svg->value, &value, &units))\
 		vkvg_set_line_width(svg->ctx, value);\
 }
-#define PROCESS_SVG_PAINT_ATTRIB_FILL_RULE_NONZERO vkvg_set_fill_rule(svg->ctx, VKVG_FILL_RULE_NON_ZERO);
-#define PROCESS_SVG_PAINT_ATTRIB_FILL_RULE_EVENODD vkvg_set_fill_rule(svg->ctx, VKVG_FILL_RULE_EVEN_ODD);
-#define PROCESS_SVG_PAINT_ATTRIB_STROKE_LINECAP_BUTT vkvg_set_line_cap(svg->ctx, VKVG_LINE_CAP_BUTT);
-#define PROCESS_SVG_PAINT_ATTRIB_STROKE_LINECAP_ROUND vkvg_set_line_cap(svg->ctx, VKVG_LINE_CAP_ROUND);
-#define PROCESS_SVG_PAINT_ATTRIB_STROKE_LINECAP_SQUARE vkvg_set_line_cap(svg->ctx, VKVG_LINE_CAP_SQUARE);
-#define PROCESS_SVG_PAINT_ATTRIB_STROKE_LINEJOIN_MITER vkvg_set_line_join(svg->ctx, VKVG_LINE_JOIN_MITER);
-#define PROCESS_SVG_PAINT_ATTRIB_STROKE_LINEJOIN_ROUND vkvg_set_line_join(svg->ctx, VKVG_LINE_JOIN_ROUND);
-#define PROCESS_SVG_PAINT_ATTRIB_STROKE_LINEJOIN_BEVEL vkvg_set_line_join(svg->ctx, VKVG_LINE_JOIN_BEVEL);
+#define PROCESS_SVG_PAINT_ATTRIB_FILL_RULE_NONZERO		vkvg_set_fill_rule(svg->ctx, VKVG_FILL_RULE_NON_ZERO);
+#define PROCESS_SVG_PAINT_ATTRIB_FILL_RULE_EVENODD		vkvg_set_fill_rule(svg->ctx, VKVG_FILL_RULE_EVEN_ODD);
+#define PROCESS_SVG_PAINT_ATTRIB_STROKE_LINECAP_BUTT	vkvg_set_line_cap(svg->ctx, VKVG_LINE_CAP_BUTT);
+#define PROCESS_SVG_PAINT_ATTRIB_STROKE_LINECAP_ROUND	vkvg_set_line_cap(svg->ctx, VKVG_LINE_CAP_ROUND);
+#define PROCESS_SVG_PAINT_ATTRIB_STROKE_LINECAP_SQUARE	vkvg_set_line_cap(svg->ctx, VKVG_LINE_CAP_SQUARE);
+#define PROCESS_SVG_PAINT_ATTRIB_STROKE_LINEJOIN_MITER	vkvg_set_line_join(svg->ctx, VKVG_LINE_JOIN_MITER);
+#define PROCESS_SVG_PAINT_ATTRIB_STROKE_LINEJOIN_ROUND	vkvg_set_line_join(svg->ctx, VKVG_LINE_JOIN_ROUND);
+#define PROCESS_SVG_PAINT_ATTRIB_STROKE_LINEJOIN_BEVEL	vkvg_set_line_join(svg->ctx, VKVG_LINE_JOIN_BEVEL);
 
+#define PROCESS_SVG_FONT_ATTRIB_FONT_FAMILY vkvg_select_font_face(svg->ctx, svg->value);
+#define PROCESS_SVG_FONT_ATTRIB_FONT_SIZE {\
+	svg_length_or_percentage font_size = {0, svg_unit_pt};\
+	_parse_lenghtOrPercentage(svg, &font_size);\
+	vkvg_set_font_size(svg->ctx, font_size.number);\
+}
+
+#define PROCESS_SVG_TEXTCONTENT_ATTRIB_TEXT_ANCHOR_START	attribs.text_anchor = svg_text_anchor_start;
+#define PROCESS_SVG_TEXTCONTENT_ATTRIB_TEXT_ANCHOR_MIDDLE	attribs.text_anchor = svg_text_anchor_middle;
+#define PROCESS_SVG_TEXTCONTENT_ATTRIB_TEXT_ANCHOR_END		attribs.text_anchor = svg_text_anchor_end;
 
 #define PROCESS_PATH_TRANSFORM		_parse_transform (svg);
 #define PROCESS_RECT_TRANSFORM		_parse_transform (svg);
@@ -1330,26 +1384,29 @@ void _copy_pattern_color_stops (VkvgPattern orig, VkvgPattern dest) {
 #define PROCESS_ELLIPSE_TRANSFORM	_parse_transform (svg);
 #define PROCESS_POLYLINE_TRANSFORM	_parse_transform (svg);
 #define PROCESS_POLYGON_TRANSFORM	_parse_transform (svg);
+#define PROCESS_TEXT_TRANSFORM		_parse_transform (svg);
 
 //========SVG============
 #define HEADING_SVG				\
 	bool hasViewBox = false;	\
-	float width = 0, height = 0;\
+	svg_length_or_percentage width = {100.0f, svg_unit_percentage}, height = {100.0f, svg_unit_percentage};\
 	svg_unit units;\
 	float value;
 
 #define ELEMENT_PRE_PROCESS_SVG \
-	int surfW = 0, surfH = 0;		\
+	int surfW = 0, surfH = 0;\
 	float xScale = 1, yScale = 1;\
-	if (svg->width)\
+	if (svg->fit) {\
 		surfW = svg->width;\
-	else\
-		surfW = width;\
-	if (svg->height)\
 		surfH = svg->height;\
-	else\
-		surfH = height;\
-	if (hasViewBox) {\
+	} else {\
+		surfW = _get_pixel_coord(svg->width, &width);\
+		surfH = _get_pixel_coord(svg->width, &height);\
+	}\
+	if (!hasViewBox) {\
+		svg->viewBox = (svg_viewbox) {0,0,_get_pixel_coord(surfW, &width),_get_pixel_coord(surfH, &height)};\
+	}\
+	if (hasViewBox || svg->fit) {\
 		if (surfW)\
 			xScale = (float)surfW / svg->viewBox.w;\
 		else\
@@ -1358,8 +1415,7 @@ void _copy_pattern_color_stops (VkvgPattern orig, VkvgPattern dest) {
 			yScale = (float)surfH / svg->viewBox.h;\
 		else\
 			surfH = svg->viewBox.h;\
-	} else\
-		svg->viewBox = (svg_viewbox) {0,0,surfW,surfH};\
+	}\
 	svg->surf = vkvg_surface_create(svg->dev, surfW, surfH);\
 	svg->ctx = vkvg_create (svg->surf);\
 	vkvg_set_fill_rule(svg->ctx, VKVG_FILL_RULE_EVEN_ODD);\
@@ -1395,17 +1451,8 @@ void _copy_pattern_color_stops (VkvgPattern orig, VkvgPattern dest) {
 		hasViewBox = true;\
 	}\
 }
-#define PROCESS_SVG_WIDTH \
-	if (try_parse_lenghtOrPercentage (svg->value, &value, &units))\
-		width = value;\
-	else\
-		LOG ("error parsing %s: %s\n", svg->att, svg->value);
-
-#define PROCESS_SVG_HEIGHT \
-	if (try_parse_lenghtOrPercentage (svg->value, &value, &units))\
-		height = value;\
-	else\
-		LOG ("error parsing %s: %s\n", svg->att, svg->value);
+#define PROCESS_SVG_WIDTH	_parse_lenghtOrPercentage(svg, &width);
+#define PROCESS_SVG_HEIGHT	_parse_lenghtOrPercentage(svg, &height);
 //=============================
 
 //========G============
@@ -1423,10 +1470,11 @@ void _copy_pattern_color_stops (VkvgPattern orig, VkvgPattern dest) {
 	svg_unit units;\
 	float value;
 #define ELEMENT_PRE_PROCESS_LINE \
-	if (hasStroke) {\
+	if (attribs.hasStroke) {\
 		vkvg_move_to(svg->ctx, x1, y1);\
 		vkvg_line_to(svg->ctx, x2, y2);\
-		draw (svg, hasStroke, false, stroke, 0);\
+		attribs.hasFill = false;\
+		draw (svg, attribs);\
 	}
 #define ELEMENT_POST_PROCESS_LINE vkvg_restore (svg->ctx);
 
@@ -1445,7 +1493,7 @@ void _copy_pattern_color_stops (VkvgPattern orig, VkvgPattern dest) {
 	vkvg_save (svg->ctx);\
 	svg_length_or_percentage x = {0}, y = {0}, w = {0}, h = {0}, rx = {0}, ry = {0};
 #define ELEMENT_PRE_PROCESS_RECT \
-	if (w.number && h.number && (hasFill || hasStroke)) {\
+	if (w.number && h.number && (attribs.hasFill || attribs.hasStroke)) {\
 		if (rx.number > w.number / 2.0f)\
 			rx.number = w.number / 2.0f;\
 		if (ry.number > h.number / 2.0f)\
@@ -1454,7 +1502,7 @@ void _copy_pattern_color_stops (VkvgPattern orig, VkvgPattern dest) {
 			vkvg_rounded_rectangle2(svg->ctx, x.number, y.number, w.number, h.number, rx.number, ry.number);\
 		else\
 			vkvg_rectangle(svg->ctx, x.number, y.number, w.number, h.number);\
-		draw (svg, hasStroke, hasFill, stroke, fill);\
+		draw (svg, attribs);\
 	}
 
 #define ELEMENT_POST_PROCESS_RECT vkvg_restore (svg->ctx);
@@ -1474,9 +1522,9 @@ void _copy_pattern_color_stops (VkvgPattern orig, VkvgPattern dest) {
 	svg_unit units;\
 	float value;
 #define ELEMENT_PRE_PROCESS_CIRCLE \
-	if (r > 0 && (hasFill || hasStroke)) {\
+	if (r > 0 && (attribs.hasFill || attribs.hasStroke)) {\
 		vkvg_arc(svg->ctx, cx, cy, r, 0, M_PI * 2);\
-		draw (svg, hasStroke, hasFill, stroke, fill);\
+		draw (svg, attribs);\
 	}
 #define ELEMENT_POST_PROCESS_CIRCLE vkvg_restore (svg->ctx);
 
@@ -1494,9 +1542,9 @@ void _copy_pattern_color_stops (VkvgPattern orig, VkvgPattern dest) {
 	vkvg_save (svg->ctx);\
 	svg_length_or_percentage cx = {0}, cy = {0}, rx = {0}, ry = {0};
 #define ELEMENT_PRE_PROCESS_ELLIPSE \
-	if (rx.number && ry.number && (hasFill || hasStroke)) {\
+	if (rx.number && ry.number && (attribs.hasFill || attribs.hasStroke)) {\
 		vkvg_ellipse (svg->ctx, rx.number, ry.number, cx.number, cy.number, 0);\
-		draw (svg, hasStroke, hasFill, stroke, fill);\
+		draw (svg, attribs);\
 	}
 #define ELEMENT_POST_PROCESS_ELLIPSE vkvg_restore (svg->ctx);
 
@@ -1510,8 +1558,8 @@ void _copy_pattern_color_stops (VkvgPattern orig, VkvgPattern dest) {
 //========POLYLINE============
 #define HEADING_POLYLINE vkvg_save (svg->ctx);
 #define ELEMENT_PRE_PROCESS_POLYLINE \
-	if (hasFill || hasStroke)\
-		draw (svg, hasStroke, hasFill, stroke, fill);
+	if (attribs.hasFill || attribs.hasStroke)\
+		draw (svg, attribs);
 #define ELEMENT_POST_PROCESS_POLYLINE vkvg_restore (svg->ctx);
 
 #define PROCESS_POLYLINE_POINTS _parse_point_list (svg);
@@ -1520,9 +1568,9 @@ void _copy_pattern_color_stops (VkvgPattern orig, VkvgPattern dest) {
 //========POLYGON============
 #define HEADING_POLYGON vkvg_save (svg->ctx);
 #define ELEMENT_PRE_PROCESS_POLYGON \
-	if (hasFill || hasStroke) {\
+	if (attribs.hasFill || attribs.hasStroke) {\
 		vkvg_close_path (svg->ctx);\
-		draw (svg, hasStroke, hasFill, stroke, fill);\
+		draw (svg, attribs);\
 	}
 #define ELEMENT_POST_PROCESS_POLYGON vkvg_restore (svg->ctx);
 #define PROCESS_POLYGON_POINTS _parse_point_list (svg);
@@ -1531,11 +1579,29 @@ void _copy_pattern_color_stops (VkvgPattern orig, VkvgPattern dest) {
 //========PATH============
 #define HEADING_PATH vkvg_save (svg->ctx);
 #define ELEMENT_PRE_PROCESS_PATH \
-	if (hasFill || hasStroke)\
-		draw (svg, hasStroke, hasFill, stroke, fill);
+	if (attribs.hasFill || attribs.hasStroke)\
+		draw (svg, attribs);
 #define ELEMENT_POST_PROCESS_PATH vkvg_restore (svg->ctx);
 
 #define PROCESS_PATH_D _parse_path_d_attribute (svg);
+//=============================
+
+//========TEXT============
+#define HEADING_TEXT \
+	vkvg_save (svg->ctx);\
+	svg_length_or_percentage x = {0}, y = {0}, dx = {0}, dy = {0};
+
+#define ELEMENT_PRE_PROCESS_TEXT
+#define ELEMENT_POST_PROCESS_TEXT \
+	_draw_text (svg, f, attribs, &x, &y, &dx, &dy);\
+	vkvg_restore (svg->ctx);
+
+#define PROCESS_TEXT_X	_parse_lenghtOrPercentage(svg, &x);
+#define PROCESS_TEXT_Y	_parse_lenghtOrPercentage(svg, &y);
+#define PROCESS_TEXT_DX	_parse_lenghtOrPercentage(svg, &dx);
+#define PROCESS_TEXT_DY	_parse_lenghtOrPercentage(svg, &dy);
+
+
 //=============================
 
 //========LINEARGRADIENT============
@@ -1656,7 +1722,7 @@ void _copy_pattern_color_stops (VkvgPattern orig, VkvgPattern dest) {
 #define PARSER_GEN_IMPLEMENTATION
 #include "parser_gen.h"
 
-int skip_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_paint_type hasFill, uint32_t stroke, uint32_t fill, void *parentData) {
+int skip_children (svg_context* svg, FILE* f, svg_attributes attribs, void *parentData) {
 	int res = 0;
 	while (!feof (f)) {
 		read_element_start
@@ -1665,7 +1731,7 @@ int skip_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_pain
 	return res;
 }
 
-int skip_attributes_and_children (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_paint_type hasFill, uint32_t stroke, uint32_t fill) {
+int skip_attributes_and_children (svg_context* svg, FILE* f, svg_attributes attribs) {
 	int res = get_attribute;
 	while (res > 0) {
 		if (res == 1 && (svg->att[0] == '/' || svg->att[0] == '?'))
@@ -1674,49 +1740,19 @@ int skip_attributes_and_children (svg_context* svg, FILE* f, svg_paint_type hasS
 	}
 	read_tag_end
 	if (res>0)
-		res = skip_children (svg, f, hasStroke, hasFill, stroke, fill, NULL);
+		res = skip_children (svg, f, attribs, NULL);
 	return res;
 }
 
-int read_tag (svg_context* svg, FILE* f, svg_paint_type hasStroke, svg_paint_type hasFill, uint32_t stroke, uint32_t fill) {
+int read_tag (svg_context* svg, FILE* f, svg_attributes attribs) {
 	int res = 0;
 	while (!feof (f)) {
 
 		read_element_start
 
 		if (!strcasecmp(svg->elt,"svg"))
-			res = read_svg_attributes	(svg, f, hasStroke, hasFill, stroke, fill, NULL);
-		/*else if (!strcasecmp(svg->elt,"g")) {
-			vkvg_save (svg->ctx);
-			res = read_g_attributes		(svg, f, hasStroke, hasFill, stroke, fill);
-			vkvg_restore (svg->ctx);
-		} else if (!strcasecmp(svg->elt,"rect")) {
-			vkvg_save (svg->ctx);
-			res = read_rect_attributes	(svg, f, hasStroke, hasFill, stroke, fill);
-			vkvg_restore (svg->ctx);
-		} else if (!strcasecmp(svg->elt,"line")) {
-			vkvg_save (svg->ctx);
-			res = read_line_attributes	(svg, f, hasStroke, hasFill, stroke, fill);
-			vkvg_restore (svg->ctx);
-		} else if (!strcasecmp(svg->elt,"circle")) {
-			vkvg_save (svg->ctx);
-			res = read_circle_attributes (svg, f, hasStroke, hasFill, stroke, fill);
-			vkvg_restore (svg->ctx);
-		} else if (!strcasecmp(svg->elt,"polyline")) {
-			vkvg_save (svg->ctx);
-			res = read_polyline_attributes (svg, f, false, hasStroke, hasFill, stroke, fill);
-			vkvg_restore (svg->ctx);
-		} else if (!strcasecmp(svg->elt,"polygon")) {
-			vkvg_save (svg->ctx);
-			res = read_polyline_attributes (svg, f, true, hasStroke, hasFill, stroke, fill);
-			vkvg_restore (svg->ctx);
-		} else if (!strcasecmp(svg->elt,"path")) {
-			vkvg_save (svg->ctx);
-			res = read_path_attributes	(svg, f, hasStroke, hasFill, stroke, fill);
-			vkvg_restore (svg->ctx);
-		} else if (!strcasecmp(svg->elt,"defs")) {
-			res = read_defs_attributes (svg, f, hasStroke, hasFill, stroke, fill);
-		}*/ else
+			res = read_svg_attributes	(svg, f, attribs, NULL);
+		else
 			skip_element
 	}
 	return res;
@@ -1733,9 +1769,15 @@ VkvgSurface parse_svg_file (VkvgDevice dev, const char* filename, uint32_t width
 	svg.dev		= dev;
 	svg.width	= width;
 	svg.height	= height;
+	svg.fit		= true;
 	svg.idList	= array_create();
 
-	read_tag (&svg, f, svg_paint_type_none, svg_paint_type_solid, 0xff000000, 0xff000000);
+	svg_attributes attribs = {
+		svg_paint_type_none, svg_paint_type_solid, 0xff000000, 0xff000000,
+		svg_text_anchor_start
+	};
+
+	read_tag (&svg, f, attribs);
 
 	fclose(f);
 
