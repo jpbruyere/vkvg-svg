@@ -68,6 +68,7 @@ typedef struct {
 	float number;
 	svg_unit units;
 } svg_length_or_percentage;
+
 typedef struct {
 	uint32_t hash;
 	svg_element_type type;
@@ -98,6 +99,9 @@ typedef struct {
 	svg_paint_type hasFill;
 	uint32_t stroke;
 	uint32_t fill;
+	float opacity;
+	float fill_opacity;
+	float stroke_opacity;
 	svg_text_anchor text_anchor;
 }svg_attributes;
 

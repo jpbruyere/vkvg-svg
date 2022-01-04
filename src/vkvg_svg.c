@@ -1179,7 +1179,9 @@ void _parse_path_d_attribute (svg_context* svg) {
 			break;
 		case 'z':
 		case 'Z':
+			vkvg_get_current_point(svg->ctx, &x, &y);
 			vkvg_close_path(svg->ctx);
+			vkvg_move_to(svg->ctx, x, y);
 			break;
 		}
 		prev = none;
@@ -1187,6 +1189,7 @@ void _parse_path_d_attribute (svg_context* svg) {
 	fclose (tmp);
 }
 bool try_find_by_id (svg_context* svg, uint32_t hash, void** elt) {
+	*elt = NULL;
 	for (uint32_t i=0; i < svg->idList->count; i++) {
 		if (_get_element_hash (svg->idList->elements[i]) == hash) {
 			*elt = svg->idList->elements[i];
@@ -1271,12 +1274,14 @@ void set_pattern (svg_context* svg, uint32_t patternHash) {
 }
 int draw (svg_context* svg, svg_attributes attribs) {
 	if (attribs.hasFill) {
+		vkvg_set_opacity(svg->ctx, attribs.opacity * attribs.fill_opacity);
 		if (attribs.hasFill == svg_paint_type_pattern)
 			set_pattern(svg, attribs.fill);
 		else
 			vkvg_set_source_color(svg->ctx, attribs.fill);
 		if (attribs.hasStroke) {
 			vkvg_fill_preserve(svg->ctx);
+			vkvg_set_opacity(svg->ctx, attribs.opacity * attribs.stroke_opacity);
 			if (attribs.hasStroke == svg_paint_type_pattern)
 				set_pattern(svg, attribs.stroke);
 			else
@@ -1285,6 +1290,7 @@ int draw (svg_context* svg, svg_attributes attribs) {
 		} else
 			vkvg_fill (svg->ctx);
 	} else if (attribs.hasStroke) {
+		vkvg_set_opacity(svg->ctx, attribs.opacity * attribs.fill_opacity);
 		if (attribs.hasStroke == svg_paint_type_pattern)
 			set_pattern(svg, attribs.stroke);
 		else
@@ -1354,8 +1360,11 @@ void _draw_text (svg_context* svg, FILE* f, svg_attributes attribs,
 {\
 	svg_unit units;\
 	float value;\
-	if (try_parse_lenghtOrPercentage(svg->value, &value, &units))\
+	if (try_parse_lenghtOrPercentage(svg->value, &value, &units)) {\
 		vkvg_set_line_width(svg->ctx, value);\
+		if (value > 0)\
+			attribs.hasStroke = true;\
+	}\
 }
 #define PROCESS_SVG_PAINT_ATTRIB_FILL_RULE_NONZERO		vkvg_set_fill_rule(svg->ctx, VKVG_FILL_RULE_NON_ZERO);
 #define PROCESS_SVG_PAINT_ATTRIB_FILL_RULE_EVENODD		vkvg_set_fill_rule(svg->ctx, VKVG_FILL_RULE_EVEN_ODD);
@@ -1418,7 +1427,7 @@ void _draw_text (svg_context* svg, FILE* f, svg_attributes attribs,
 	}\
 	svg->surf = vkvg_surface_create(svg->dev, surfW, surfH);\
 	svg->ctx = vkvg_create (svg->surf);\
-	vkvg_set_fill_rule(svg->ctx, VKVG_FILL_RULE_EVEN_ODD);\
+	vkvg_set_fill_rule(svg->ctx, VKVG_FILL_RULE_NON_ZERO);\
 	if (xScale < yScale)\
 		vkvg_scale(svg->ctx, xScale, xScale);\
 	else\
@@ -1498,9 +1507,13 @@ void _draw_text (svg_context* svg, FILE* f, svg_attributes attribs,
 			rx.number = w.number / 2.0f;\
 		if (ry.number > h.number / 2.0f)\
 			ry.number = h.number / 2.0f;\
-		if (rx.number > 0 || ry.number > 0)\
+		if (rx.number > 0 || ry.number > 0) {\
+			if (rx.number == 0)\
+				rx = ry;\
+			else if (ry.number == 0)\
+				ry = rx;\
 			vkvg_rounded_rectangle2(svg->ctx, x.number, y.number, w.number, h.number, rx.number, ry.number);\
-		else\
+		} else\
 			vkvg_rectangle(svg->ctx, x.number, y.number, w.number, h.number);\
 		draw (svg, attribs);\
 	}
@@ -1711,12 +1724,11 @@ void _draw_text (svg_context* svg, FILE* f, svg_attributes attribs,
 
 //=============================
 
-#define HEADING_SVG_OPACITY_ATTRIB \
-	float opacity = 1.0f, fill_opacity = 1.0f, stroke_opacity = 1.0f;
+#define HEADING_SVG_OPACITY_ATTRIB
 #define PROCESS_SVG_OPACITY_ATTRIB //TODO
-#define PROCESS_SVG_OPACITY_ATTRIB_OPACITY			opacity			= _parse_opacity (svg);
-#define PROCESS_SVG_OPACITY_ATTRIB_FILL_OPACITY		fill_opacity	= _parse_opacity (svg);
-#define PROCESS_SVG_OPACITY_ATTRIB_STROKE_OPACITY	stroke_opacity	= _parse_opacity (svg);
+#define PROCESS_SVG_OPACITY_ATTRIB_OPACITY			attribs.opacity			= _parse_opacity (svg);
+#define PROCESS_SVG_OPACITY_ATTRIB_FILL_OPACITY		attribs.fill_opacity	= _parse_opacity (svg);
+#define PROCESS_SVG_OPACITY_ATTRIB_STROKE_OPACITY	attribs.stroke_opacity	= _parse_opacity (svg);
 
 
 #define PARSER_GEN_IMPLEMENTATION
@@ -1774,7 +1786,8 @@ VkvgSurface parse_svg_file (VkvgDevice dev, const char* filename, uint32_t width
 
 	svg_attributes attribs = {
 		svg_paint_type_none, svg_paint_type_solid, 0xff000000, 0xff000000,
-		svg_text_anchor_start
+		1.0f,1.0f,1.0f,//opacities
+		svg_text_anchor_start,
 	};
 
 	read_tag (&svg, f, attribs);

@@ -71,7 +71,7 @@ void readSVG (VkEngine e) {
 							vkvg_surface_destroy(surf);
 						}
 						x += iconSize + margin;
-						if (x > width) {
+						if (x > width - iconSize) {
 							x = 0;
 							y += iconSize + margin;
 							if (y >= height + scrollY)
@@ -116,6 +116,17 @@ void readSVG (VkEngine e) {
 	svgSurf = newSvgSurf;
 
 	//vkengine_wait_idle(e);
+#ifdef VKVG_DBG_STATS
+		vkvg_debug_stats_t dbgStats = vkvg_device_get_stats (dev);
+		vkvg_device_reset_stats (dev);
+		LOG("maximum point array size		= %d\n", dbgStats.sizePoints);
+		LOG("maximum path array size			= %d\n", dbgStats.sizePathes);
+		LOG("maximum size of host vertice cache	= %d\n", dbgStats.sizeVertices);
+		LOG("maximum size of host index cache	= %d\n", dbgStats.sizeIndices);
+		LOG("maximum size of vulkan vertex buffer	= %d\n", dbgStats.sizeVBO);
+		LOG("maximum size of vulkan index buffer	= %d\n", dbgStats.sizeIBO);
+#endif
+
 }
 
 struct dirent *get_next_svg_file_in_current_directory (bool cycle) {
@@ -240,11 +251,11 @@ int main (int argc, char *argv[]){
 		}
 	}
 
-	//vkvg_log_level = VKVG_LOG_INFO;
-
 	while (!vkengine_should_close (e)) {
 
+		//vkvg_log_level = VKVG_LOG_INFO;
 		readSVG (e);
+		//vkvg_log_level = VKVG_LOG_DEBUG;
 
 		VkvgContext ctx = vkvg_create(surf);
 		vkvg_set_source_rgb(ctx,0.1,0.1,0.1);
@@ -278,6 +289,9 @@ int main (int argc, char *argv[]){
 		}
 
 	}
+	
+	vkengine_wait_idle(e);
+	
 	if (svgSurf)
 		vkvg_surface_destroy(svgSurf);
 	vkvg_surface_destroy(surf);
