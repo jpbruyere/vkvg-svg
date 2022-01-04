@@ -1206,6 +1206,17 @@ float _get_pixel_coord (float reference, svg_length_or_percentage* lop) {
 		return lop->number;
 	}
 }
+void _copy_pattern_color_stops (VkvgPattern orig, VkvgPattern dest) {
+	uint32_t stopCount;
+	if (vkvg_pattern_get_color_stop_count(orig, &stopCount) == VKVG_STATUS_SUCCESS) {
+		for (uint32_t i=0; i<stopCount; i++) {
+			float offset, r, g, b, a;
+			vkvg_pattern_get_color_stop_rgba(orig, i, &offset, &r, &g, &b, &a);
+			vkvg_pattern_add_color_stop(dest, offset, r, g, b, a);
+		}
+	} else
+		LOG ("Error processing referenced pattern\n");
+}
 void set_pattern (svg_context* svg, uint32_t patternHash) {
 	void* elt;
 	VkvgPattern pat;
@@ -1213,11 +1224,22 @@ void set_pattern (svg_context* svg, uint32_t patternHash) {
 		switch (_get_element_type(elt)) {
 		case svg_element_type_linear_gradient:
 			{
-				svg_element_linear_gradient* lg = (svg_element_linear_gradient*)elt;
-				pat = lg->pattern;
+				svg_element_linear_gradient* g = (svg_element_linear_gradient*)elt;
+				svg_element_id* id = (svg_element_id*)elt;
+
+				if (id->xlinkHref) {
+					if (try_find_by_id(svg, id->xlinkHref, &elt) && _get_element_type(elt) == svg_element_type_linear_gradient) {
+						VkvgPattern refPatter = (VkvgPattern) ((svg_element_linear_gradient*)elt)->pattern;
+						_copy_pattern_color_stops(refPatter, g->pattern);
+						id->xlinkHref = 0;//reset once resolved
+					} else
+						LOG ("xlink:href svg element error  %s\n", svg->value);
+				}
+
+				pat = g->pattern;
 
 				float x0 = 0, y0 = 0, x1, y1;
-				if (lg->gradientUnits == svg_gradient_unit_objectBoundingBox)
+				if (g->gradientUnits == svg_gradient_unit_objectBoundingBox)
 					vkvg_path_extents(svg->ctx, &x0, &y0, &x1, &y1);
 				else {
 					x0 = svg->viewBox.x;
@@ -1230,22 +1252,33 @@ void set_pattern (svg_context* svg, uint32_t patternHash) {
 				float h = y1 - y0;
 
 				float px0,py0,px1,py1;
-				px0 = _get_pixel_coord (w, &lg->x1);
-				py0 = _get_pixel_coord (h, &lg->y1);
-				px1 = _get_pixel_coord (w, &lg->x2);
-				py1 = _get_pixel_coord (h, &lg->y2);
+				px0 = _get_pixel_coord (w, &g->x1);
+				py0 = _get_pixel_coord (h, &g->y1);
+				px1 = _get_pixel_coord (w, &g->x2);
+				py1 = _get_pixel_coord (h, &g->y2);
 
-				vkvg_pattern_edit_linear(lg->pattern, px0, py0, px1, py1);
-				vkvg_set_source(svg->ctx, lg->pattern);
+				vkvg_pattern_edit_linear(g->pattern, px0, py0, px1, py1);
+				vkvg_set_source(svg->ctx, g->pattern);
 			}
 
 			break;
 		case svg_element_type_radial_gradient:
 			{
-				svg_element_radial_gradient* lg = (svg_element_radial_gradient*)elt;
-				pat = lg->pattern;
+				svg_element_radial_gradient* g = (svg_element_radial_gradient*)elt;
+				svg_element_id* id = (svg_element_id*)elt;
+
+				if (id->xlinkHref) {
+					if (try_find_by_id(svg, id->xlinkHref, &elt) && _get_element_type(elt) == svg_element_type_radial_gradient) {
+						VkvgPattern refPatter = (VkvgPattern) ((svg_element_radial_gradient*)elt)->pattern;
+						_copy_pattern_color_stops(refPatter, g->pattern);
+						id->xlinkHref = 0;//reset once resolved
+					} else
+						LOG ("xlink:href svg element error  %s\n", svg->value);
+				}
+
+				pat = g->pattern;
 				float x0 = 0, y0 = 0, x1, y1;
-				if (lg->gradientUnits == svg_gradient_unit_objectBoundingBox)
+				if (g->gradientUnits == svg_gradient_unit_objectBoundingBox)
 					vkvg_path_extents(svg->ctx, &x0, &y0, &x1, &y1);
 				else {
 					x0 = svg->viewBox.x;
@@ -1258,14 +1291,14 @@ void set_pattern (svg_context* svg, uint32_t patternHash) {
 				float h = y1 - y0;
 
 				float cx,cy,fx,fy,r;
-				cx = _get_pixel_coord (w, &lg->cx)+x0;
-				cy = _get_pixel_coord (h, &lg->cy)+y0;
-				fx = _get_pixel_coord (w, &lg->fx)+x0;
-				fy = _get_pixel_coord (h, &lg->fy)+y0;
-				r = _get_pixel_coord (w, &lg->r);
+				cx = _get_pixel_coord (w, &g->cx)+x0;
+				cy = _get_pixel_coord (h, &g->cy)+y0;
+				fx = _get_pixel_coord (w, &g->fx)+x0;
+				fy = _get_pixel_coord (h, &g->fy)+y0;
+				r = _get_pixel_coord (w, &g->r);
 
-				vkvg_pattern_edit_radial (lg->pattern, cx, cy, 0, cx, cy, r);
-				vkvg_set_source(svg->ctx, lg->pattern);
+				vkvg_pattern_edit_radial (g->pattern, cx, cy, 0, cx, cy, r);
+				vkvg_set_source(svg->ctx, g->pattern);
 			}
 			break;
 		}
@@ -1298,17 +1331,6 @@ int draw (svg_context* svg, svg_attributes attribs) {
 		vkvg_stroke(svg->ctx);
 	}
 }
-void _copy_pattern_color_stops (VkvgPattern orig, VkvgPattern dest) {
-	uint32_t stopCount;
-	if (vkvg_pattern_get_color_stop_count(orig, &stopCount) == VKVG_STATUS_SUCCESS) {
-		for (uint32_t i=0; i<stopCount; i++) {
-			float offset, r, g, b, a;
-			vkvg_pattern_get_color_stop_rgba(orig, i, &offset, &r, &g, &b, &a);
-			vkvg_pattern_add_color_stop(dest, offset, r, g, b, a);
-		}
-	} else
-		LOG ("Error processing referenced pattern\n");
-}
 void _draw_text (svg_context* svg, FILE* f, svg_attributes attribs,
 				svg_length_or_percentage* x, svg_length_or_percentage* y, svg_length_or_percentage* dx, svg_length_or_percentage* dy) {
 	if (attribs.hasFill) {
@@ -1339,10 +1361,9 @@ void _draw_text (svg_context* svg, FILE* f, svg_attributes attribs,
 }
 #define PROCESS_SVG_XLINK_ATTRIB_XLINK_HREF \
 {\
-	if (svg->value[0] == '#') {\
-		if (!try_find_by_id(svg, hash_string(&svg->value[1]), &svg->currentXlinkHref))\
-			LOG ("xlink:href not found %s\n", svg->value);\
-	} else\
+	if (svg->value[0] == '#')\
+		svg->currentXlinkHref = hash_string(&svg->value[1]);\
+	else\
 		LOG ("xlink:href type not handled %s\n", svg->value);\
 }
 
@@ -1629,13 +1650,7 @@ void _draw_text (svg_context* svg, FILE* f, svg_attributes attribs,
 #define ELEMENT_PRE_PROCESS_LINEARGRADIENT \
 	rg->pattern = vkvg_pattern_create_linear (rg->x1.number, rg->y1.number, rg->x2.number, rg->y2.number);\
 	rg->id.hash = svg->currentIdHash;\
-	if (svg->currentXlinkHref) {\
-		if (_get_element_type(svg->currentXlinkHref) == svg_element_type_linear_gradient) {\
-			VkvgPattern refPatter = (VkvgPattern) ((svg_element_linear_gradient*)svg->currentXlinkHref)->pattern;\
-			_copy_pattern_color_stops(refPatter, rg->pattern);\
-		} else\
-			LOG ("xlink:href svg element mismatch  %s\n", svg->value);\
-	}\
+	rg->id.xlinkHref = svg->currentXlinkHref;\
 	array_add (svg->idList, rg);\
 	parentData = (void*)rg->pattern;
 
@@ -1663,13 +1678,7 @@ void _draw_text (svg_context* svg, FILE* f, svg_attributes attribs,
 #define ELEMENT_PRE_PROCESS_RADIALGRADIENT \
 	rg->pattern = vkvg_pattern_create_radial (rg->fx.number, rg->fy.number, 0, rg->cx.number, rg->cy.number, rg->r.number);\
 	rg->id.hash = svg->currentIdHash;\
-	if (svg->currentXlinkHref) {\
-		if (_get_element_type(svg->currentXlinkHref) == svg_element_type_radial_gradient) {\
-			VkvgPattern refPatter = (VkvgPattern) ((svg_element_radial_gradient*)svg->currentXlinkHref)->pattern;\
-			_copy_pattern_color_stops(refPatter, rg->pattern);\
-		} else\
-			LOG ("xlink:href svg element mismatch  %s\n", svg->value);\
-	}\
+	rg->id.xlinkHref = svg->currentXlinkHref;\
 	array_add (svg->idList, rg);\
 	parentData = (void*)rg->pattern;
 

@@ -72,6 +72,7 @@ typedef struct {
 typedef struct {
 	uint32_t hash;
 	svg_element_type type;
+	uint32_t xlinkHref;//0 if unused
 } svg_element_id;
 
 typedef struct {
@@ -129,7 +130,7 @@ typedef struct {
 	bool		preserveAspectRatio;
 	bool		skip;//skip tag and children
 	uint32_t	currentIdHash;
-	void*		currentXlinkHref;
+	uint32_t	currentXlinkHref;
 	array_t*	idList;
 	/*long		currentTagStartPos;*/
 
@@ -143,7 +144,7 @@ int read_tag (svg_context* svg, FILE* f, svg_attributes attribs);
 #define get_attribute fscanf(f, " %[^=>]=%*[\"']%[^\"']%*[\"']", svg->att, svg->value)
 
 #define read_tag_end \
-	svg->currentXlinkHref = NULL;								\
+	svg->currentXlinkHref = 0;									\
 	svg->currentIdHash = 0;										\
 	if (res < 0) {												\
 		LOG("error parsing: %s\n", svg->att);					\
