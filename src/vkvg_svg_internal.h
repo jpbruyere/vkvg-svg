@@ -150,8 +150,10 @@ typedef struct {
 }svg_element_linear_gradient;
 
 typedef struct {
+	svg_paint_type hasColor;
 	svg_paint_type hasStroke;
 	svg_paint_type hasFill;
+	uint32_t color;
 	uint32_t stroke;
 	uint32_t fill;
 	float opacity;

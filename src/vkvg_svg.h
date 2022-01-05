@@ -3,7 +3,7 @@
 
 #include "vkvg.h"
 
-#define DEBUG_LOG
+//#define DEBUG_LOG
 
 #ifdef DEBUG_LOG
 #define LOG(...) fprintf (stdout, __VA_ARGS__)

@@ -43,7 +43,7 @@ void readSVG (VkEngine e) {
 		char tmp[FILENAME_MAX];
 		double x = 0, y = 0;
 		int cellSize = iconSize + margin;
-		int iconPerLine = ceil((double)width / cellSize);
+		int iconPerLine = ceil((double)(width-iconSize) / cellSize);
 		int lineToSkip = floor(scrollY / cellSize);
 		int iconToSkip = lineToSkip * iconPerLine;
 
@@ -170,8 +170,8 @@ static void key_callback(GLFWwindow* window, int key, int scancode, int action, 
 	}
 }
 static void scroll_callback(GLFWwindow* window, double x, double y) {
-	scrollX -= x * 5;
-	scrollY -= y * 5;
+	scrollX -= x * 25;
+	scrollY -= y * 25;
 	if (scrollX < 0)
 		scrollX = 0;
 	if (scrollY < 0)

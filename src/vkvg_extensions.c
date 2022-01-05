@@ -31,6 +31,12 @@ void vkvg_elliptical_arc (VkvgContext ctx, float x2, float y2, bool largeArc, bo
 void vkvg_elliptic_arc (VkvgContext ctx, float x1, float y1, float x2, float y2, bool largeArc, bool counterClockWise, float rx, float ry, float phi) {
 	if (ctx->status)
 		return;
+	if (rx<=0||ry<=0) {
+		if (_current_path_is_empty(ctx))
+			vkvg_move_to(ctx, x1, y1);
+		vkvg_line_to(ctx, x2, y2);
+		return;
+	}
 
 	mat2 m = {
 		{ cosf (phi), sinf (phi)},

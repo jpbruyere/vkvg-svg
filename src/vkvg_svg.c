@@ -993,6 +993,91 @@ void _parse_point_list (svg_context* svg) {
 	}
 	fclose (tmp);
 }
+
+typedef struct {
+	char* str;
+	int pos;
+	int len;
+}_stream_t;
+
+typedef _stream_t* stream;
+
+#define NEW_STREAM(var, str) \
+	_stream_t streamvar_##var = {str,0,strlen(str)};\
+	stream var = &streamvar_##var
+
+#define STR_EOF(s) (s->pos >= s->len)
+#define STR_PEEK(s) s->str[s->pos]
+#define STR_GET(s) s->str[s->pos++]
+#define STR_ADVANCE(s) s->pos++
+#define STR_SKIP(s,c) if(!STR_EOF(s) && s->str[s->pos]==c) s->pos++
+
+#define ISWHITESPACE(c) (c==0x9 || c==0x20 || c==0xA || c==0xD)
+
+void stream_skip_white_spaces (stream s) {
+	while (!STR_EOF(s) && ISWHITESPACE(STR_PEEK(s)))
+		s->pos++;
+}
+bool _try_parse_float (stream s, float* f) {
+	int start = s->pos;
+	bool hasDecimal = false, hasDigit = false, hasExponent=false;
+	while(!STR_EOF(s)) {
+		if (STR_PEEK(s)=='0') {
+			STR_ADVANCE(s);
+			if (!hasDecimal && !hasDigit && !STR_EOF(s) && STR_PEEK(s)=='0')
+				break;
+			hasDigit = true;
+		} else if (STR_PEEK(s) >= '0' && STR_PEEK(s) <= '9') {
+			STR_ADVANCE(s);
+			hasDigit = true;
+		} else if (STR_PEEK(s)=='-' || STR_PEEK(s)=='+') {
+			if (s->pos - start > 0)
+				break;
+			STR_ADVANCE(s);
+		} else if (STR_PEEK(s)=='e' || STR_PEEK(s)=='E') {
+			STR_ADVANCE(s);
+			if (!STR_EOF(s) && (STR_PEEK(s)=='-' || STR_PEEK(s)=='+')){
+				STR_ADVANCE(s);
+				hasExponent = true;
+			} else
+				return false;
+		} else if (STR_PEEK(s)=='.') {
+			if (hasDecimal||hasExponent)
+				break;
+			hasDecimal = true;
+			STR_ADVANCE(s);
+		} else
+			break;
+	}
+	if (hasDigit) {
+		char* pEnd = &s->str[s->pos];
+		if (STR_EOF(s))
+			*f = strtod (&s->str[start], NULL);
+		else
+			*f = strtod (&s->str[start], &pEnd);
+		return true;
+	}
+	return false;
+}
+bool _try_parse_floats (stream s, int floatCount, ...) {
+	va_list args;
+	va_start(args, floatCount);
+
+	for (int i=0; i<floatCount; i++) {
+		float* pF = va_arg(args, float*);
+
+		stream_skip_white_spaces (s);
+		if (!_try_parse_float(s, pF)) {
+			va_end(args);
+			return false;
+		}
+		stream_skip_white_spaces (s);
+		STR_SKIP(s,',');
+	}
+	va_end(args);
+	return true;
+}
+
 void _parse_path_d_attribute (svg_context* svg, char* str) {
 	if (!str)
 		return;
@@ -1001,20 +1086,21 @@ void _parse_path_d_attribute (svg_context* svg, char* str) {
 	int repeat=0;
 	float subpathX = 0, subpathY = 0;
 	char c;
-	FILE *tmp = fmemopen(str, strlen (str), "r");
-	bool parseError = false, result = false;
-	while (!(parseError || feof(tmp))) {
-		if (!repeat && fscanf(tmp, " %c ", &c) != 1) {
-			LOG ("error parsing path: expectin char\n");
-			break;
-		}
+	NEW_STREAM(tmp,str);
+	bool result = false;
+	while (!STR_EOF(tmp)) {
+
+		stream_skip_white_spaces (tmp);
+
+		if (!repeat)
+			c = STR_GET(tmp);
 
 		switch (c) {
 		case 'M':
 			if (repeat)
-				result = parse_floats(tmp, 1, &y);
+				result = _try_parse_floats(tmp, 1, &y);
 			else
-				result = parse_floats(tmp, 2, &x, &y);
+				result = _try_parse_floats(tmp, 2, &x, &y);
 			if (result) {
 				if (repeat)
 					vkvg_line_to (svg->ctx, x, y);
@@ -1022,15 +1108,15 @@ void _parse_path_d_attribute (svg_context* svg, char* str) {
 					vkvg_move_to (svg->ctx, x, y);
 					vkvg_get_current_point(svg->ctx, &subpathX, &subpathY);
 				}
-				repeat = parse_floats(tmp, 1, &x);
+				repeat = _try_parse_floats(tmp, 1, &x);
 			} else
-				parseError = true;
+				return;
 			break;
 		case 'm':
 			if (repeat)
-				result = parse_floats(tmp, 1, &y);
+				result = _try_parse_floats(tmp, 1, &y);
 			else
-				result = parse_floats(tmp, 2, &x, &y);
+				result = _try_parse_floats(tmp, 2, &x, &y);
 			if (result) {
 				if (repeat)
 					vkvg_rel_line_to (svg->ctx, x, y);
@@ -1038,92 +1124,100 @@ void _parse_path_d_attribute (svg_context* svg, char* str) {
 					vkvg_rel_move_to (svg->ctx, x, y);
 					vkvg_get_current_point(svg->ctx, &subpathX, &subpathY);
 				}
-				repeat = parse_floats(tmp, 1, &x);
+				repeat = _try_parse_floats(tmp, 1, &x);
 			} else
-				parseError = true;
+				return;
 			break;
 		case 'L':
 			if (repeat)
-				result = parse_floats(tmp, 1, &y);
+				result = _try_parse_floats(tmp, 1, &y);
 			else
-				result = parse_floats(tmp, 2, &x, &y);
+				result = _try_parse_floats(tmp, 2, &x, &y);
 			if (result) {
 				vkvg_line_to (svg->ctx, x, y);
-				repeat = parse_floats(tmp, 1, &x);
+				repeat = _try_parse_floats(tmp, 1, &x);
 			} else
-				parseError = true;
+				return;
 			break;
 		case 'l':
 			if (repeat)
-				result = parse_floats(tmp, 1, &y);
+				result = _try_parse_floats(tmp, 1, &y);
 			else
-				result = parse_floats(tmp, 2, &x, &y);
+				result = _try_parse_floats(tmp, 2, &x, &y);
 			if (result) {
 				vkvg_rel_line_to (svg->ctx, x, y);
-				repeat = parse_floats(tmp, 1, &x);
+				repeat = _try_parse_floats(tmp, 1, &x);
 			} else
-				parseError = true;
+				return;
 			break;
 		case 'H':
-			if (parse_floats(tmp, 1, &x)) {
-				vkvg_get_current_point (svg->ctx, &c1x, &c1y);
-				vkvg_line_to (svg->ctx, x, c1y);
-			} else
-				parseError = true;
+			if (!repeat) {
+				if (!_try_parse_floats(tmp, 1, &x))
+					return;
+			}
+			vkvg_get_current_point (svg->ctx, &c1x, &c1y);
+			vkvg_line_to (svg->ctx, x, c1y);
+			repeat = _try_parse_floats(tmp, 1, &x);
 			break;
 		case 'h':
-			if (parse_floats(tmp, 1, &x))
-				vkvg_rel_line_to (svg->ctx, x, 0);
-			else
-				parseError = true;
+			if (!repeat) {
+				if (!_try_parse_floats(tmp, 1, &x))
+					return;
+			}
+			vkvg_rel_line_to (svg->ctx, x, 0);
+			repeat = _try_parse_floats(tmp, 1, &x);
 			break;
 		case 'V':
-			if (parse_floats(tmp, 1, &y)) {
-				vkvg_get_current_point (svg->ctx, &c1x, &c1y);
-				vkvg_line_to (svg->ctx, c1x, y);
-			} else
-				parseError = true;
+			if (!repeat) {
+				if (!_try_parse_floats(tmp, 1, &y))
+					return;
+			}
+			vkvg_get_current_point (svg->ctx, &c1x, &c1y);
+			vkvg_line_to (svg->ctx, c1x, y);
+			repeat = _try_parse_floats(tmp, 1, &y);
 			break;
 		case 'v':
-			if (parse_floats(tmp, 1, &y))
-				vkvg_rel_line_to (svg->ctx, 0, y);
-			else
-				parseError = true;
+			if (!repeat) {
+				if (!_try_parse_floats(tmp, 1, &y))
+					return;
+			}
+			vkvg_rel_line_to (svg->ctx, 0, y);
+			repeat = _try_parse_floats(tmp, 1, &y);
 			break;
 		case 'Q':
 			if (repeat)
-				result = parse_floats(tmp, 3, &c1y, &x, &y);
+				result = _try_parse_floats(tmp, 3, &c1y, &x, &y);
 			else
-				result = parse_floats(tmp, 4, &c1x, &c1y, &x, &y);
+				result = _try_parse_floats(tmp, 4, &c1x, &c1y, &x, &y);
 			if (result) {
 				vkvg_quadratic_to (svg->ctx, c1x, c1y, x, y);
 				prev = quad;
-				repeat = parse_floats(tmp, 1, &c1x);
+				repeat = _try_parse_floats(tmp, 1, &c1x);
 				continue;
 			} else
-				parseError = true;
+				return;
 			break;
 		case 'q':
 			if (repeat)
-				result = parse_floats(tmp, 3, &c1y, &x, &y);
+				result = _try_parse_floats(tmp, 3, &c1y, &x, &y);
 			else
-				result = parse_floats(tmp, 4, &c1x, &c1y, &x, &y);
+				result = _try_parse_floats(tmp, 4, &c1x, &c1y, &x, &y);
 			if (result) {
 				vkvg_get_current_point(svg->ctx, &cpX, &cpY);
 				vkvg_rel_quadratic_to (svg->ctx, c1x, c1y, x, y);
 				prev = quad;
 				c1x += cpX;
 				c1y += cpY;
-				repeat = parse_floats(tmp, 1, &c1x);
+				repeat = _try_parse_floats(tmp, 1, &c1x);
 				continue;
 			} else
-				parseError = true;
+				return;
 			break;
 		case 'T':
 			if (repeat)
-				result = parse_floats(tmp, 1, &y);
+				result = _try_parse_floats(tmp, 1, &y);
 			else
-				result = parse_floats(tmp, 2, &x, &y);
+				result = _try_parse_floats(tmp, 2, &x, &y);
 			if (result) {
 				vkvg_get_current_point(svg->ctx, &cpX, &cpY);
 				if (prev == quad) {
@@ -1135,16 +1229,16 @@ void _parse_path_d_attribute (svg_context* svg, char* str) {
 				}
 				vkvg_quadratic_to (svg->ctx, c1x, c1y, x, y);
 				prev = quad;
-				repeat = parse_floats(tmp, 1, &x);
+				repeat = _try_parse_floats(tmp, 1, &x);
 				continue;
 			} else
-				parseError = true;
+				return;
 			break;
 		case 't':
 			if (repeat)
-				result = parse_floats(tmp, 1, &y);
+				result = _try_parse_floats(tmp, 1, &y);
 			else
-				result = parse_floats(tmp, 2, &x, &y);
+				result = _try_parse_floats(tmp, 2, &x, &y);
 			if (result) {
 				vkvg_get_current_point(svg->ctx, &cpX, &cpY);
 				if (prev == quad) {
@@ -1158,45 +1252,45 @@ void _parse_path_d_attribute (svg_context* svg, char* str) {
 				prev = quad;
 				c1x += cpX;
 				c1y += cpY;
-				repeat = parse_floats(tmp, 1, &x);
+				repeat = _try_parse_floats(tmp, 1, &x);
 				continue;
 			} else
-				parseError = true;
+				return;
 			break;
 		case 'C':
 			if (repeat)
-				result = parse_floats(tmp, 5, &c1y, &c2x, &c2y, &x, &y);
+				result = _try_parse_floats(tmp, 5, &c1y, &c2x, &c2y, &x, &y);
 			else
-				result = parse_floats(tmp, 6, &c1x, &c1y, &c2x, &c2y, &x, &y);
+				result = _try_parse_floats(tmp, 6, &c1x, &c1y, &c2x, &c2y, &x, &y);
 			if (result) {
 				vkvg_curve_to (svg->ctx, c1x, c1y, c2x, c2y, x, y);
 				prev = cubic;
-				repeat = parse_floats(tmp, 1, &c1x);
+				repeat = _try_parse_floats(tmp, 1, &c1x);
 				continue;
 			} else
-				parseError = true;
+				return;
 			break;
 		case 'c':
 			if (repeat)
-				result = parse_floats(tmp, 5, &c1y, &c2x, &c2y, &x, &y);
+				result = _try_parse_floats(tmp, 5, &c1y, &c2x, &c2y, &x, &y);
 			else
-				result = parse_floats(tmp, 6, &c1x, &c1y, &c2x, &c2y, &x, &y);
+				result = _try_parse_floats(tmp, 6, &c1x, &c1y, &c2x, &c2y, &x, &y);
 			if (result) {
 				vkvg_get_current_point(svg->ctx, &cpX, &cpY);
 				vkvg_rel_curve_to (svg->ctx, c1x, c1y, c2x, c2y, x, y);
 				c2x += cpX;
 				c2y += cpY;
 				prev = cubic;
-				repeat = parse_floats(tmp, 1, &c1x);
+				repeat = _try_parse_floats(tmp, 1, &c1x);
 				continue;
 			} else
-				parseError = true;
+				return;
 			break;
 		case 'S':
 			if (repeat)
-				result = parse_floats(tmp, 3, &c1y, &x, &y);
+				result = _try_parse_floats(tmp, 3, &c1y, &x, &y);
 			else
-				result = parse_floats(tmp, 4, &c1x, &c1y, &x, &y);
+				result = _try_parse_floats(tmp, 4, &c1x, &c1y, &x, &y);
 			if (result) {
 				vkvg_get_current_point(svg->ctx, &cpX, &cpY);
 				if (prev == cubic) {
@@ -1207,16 +1301,16 @@ void _parse_path_d_attribute (svg_context* svg, char* str) {
 				c2x = c1x;
 				c2y = c1y;
 				prev = cubic;
-				repeat = parse_floats(tmp, 1, &c1x);
+				repeat = _try_parse_floats(tmp, 1, &c1x);
 				continue;
 			} else
-				parseError = true;
+				return;
 			break;
 		case 's':
 			if (repeat)
-				result = parse_floats(tmp, 3, &c1y, &x, &y);
+				result = _try_parse_floats(tmp, 3, &c1y, &x, &y);
 			else
-				result = parse_floats(tmp, 4, &c1x, &c1y, &x, &y);
+				result = _try_parse_floats(tmp, 4, &c1x, &c1y, &x, &y);
 			if (result) {
 				vkvg_get_current_point(svg->ctx, &cpX, &cpY);
 				if (prev == cubic) {
@@ -1227,31 +1321,31 @@ void _parse_path_d_attribute (svg_context* svg, char* str) {
 				c2x = cpX + c1x;
 				c2y = cpY + c1y;
 				prev = cubic;
-				repeat = parse_floats(tmp, 1, &c1x);
+				repeat = _try_parse_floats(tmp, 1, &c1x);
 				continue;
 			} else
-				parseError = true;
+				return;
 			break;
 		case 'A'://rx ry x-axis-rotation large-arc-flag sweep-flag x y
 			if (repeat)
-				result = parse_floats(tmp, 6, &ry, &rotx, &large, &sweep, &x, &y);
+				result = _try_parse_floats(tmp, 6, &ry, &rotx, &large, &sweep, &x, &y);
 			else
-				result = parse_floats(tmp, 7, &rx, &ry, &rotx, &large, &sweep, &x, &y);
+				result = _try_parse_floats(tmp, 7, &rx, &ry, &rotx, &large, &sweep, &x, &y);
 			if (result) {
 				bool lf = large > __FLT_EPSILON__;
 				bool sw = sweep > __FLT_EPSILON__;
 				rotx = rotx * M_PI / 180.0f;
 				vkvg_elliptical_arc(svg->ctx, x, y, lf, sw, rx, ry, rotx);
-				repeat = parse_floats(tmp, 1, &rx);
+				repeat = _try_parse_floats(tmp, 1, &rx);
 
 			} else
-				parseError = true;
+				return;
 			break;
 		case 'a'://rx ry x-axis-rotation large-arc-flag sweep-flag x y
 			if (repeat)
-				result = parse_floats(tmp, 6, &ry, &rotx, &large, &sweep, &x, &y);
+				result = _try_parse_floats(tmp, 6, &ry, &rotx, &large, &sweep, &x, &y);
 			else
-				result = parse_floats(tmp, 7, &rx, &ry, &rotx, &large, &sweep, &x, &y);
+				result = _try_parse_floats(tmp, 7, &rx, &ry, &rotx, &large, &sweep, &x, &y);
 			if (result) {
 				vkvg_get_current_point(svg->ctx, &cpX, &cpY);
 				bool lf = large > __FLT_EPSILON__;
@@ -1260,20 +1354,23 @@ void _parse_path_d_attribute (svg_context* svg, char* str) {
 				//rotx = degToRad (rotx);
 
 				vkvg_elliptic_arc(svg->ctx, cpX, cpY, cpX + x, cpY + y, lf, sw, rx, ry, rotx);
-				repeat = parse_floats(tmp, 1, &rx);
+				repeat = _try_parse_floats(tmp, 1, &rx);
 
 			} else
-				parseError = true;
+				return;
 			break;
 		case 'z':
 		case 'Z':
 			vkvg_close_path(svg->ctx);
 			vkvg_move_to(svg->ctx, subpathX, subpathY);
 			break;
+		default:
+			LOG ("error parsing path: unexpected char: %c\n", c);
+			return;
 		}
 		prev = none;
 	}
-	fclose (tmp);
+
 }
 bool try_find_by_id (svg_context* svg, uint32_t hash, void** elt) {
 	*elt = NULL;
@@ -1588,7 +1685,7 @@ void _process_use (svg_context* svg, svg_attributes* attribs) {
 
 #define PROCESS_SVG_CORE_ATTRIB_ID svg->currentIdHash = hash_string(svg->value);
 
-#define PROCESS_SVG_COLOR_ATTRIB_COLOR	try_parse_color (svg->value, &attribs.hasFill, &attribs.fill);
+#define PROCESS_SVG_COLOR_ATTRIB_COLOR	try_parse_color (svg->value, &attribs.hasColor, &attribs.color);
 #define PROCESS_SVG_PAINT_ATTRIB_STROKE	try_parse_color (svg->value, &attribs.hasStroke, &attribs.stroke);
 #define PROCESS_SVG_PAINT_ATTRIB_FILL	try_parse_color (svg->value, &attribs.hasFill, &attribs.fill);
 #define PROCESS_SVG_PAINT_ATTRIB_STROKE_WIDTH \
@@ -1997,7 +2094,7 @@ VkvgSurface parse_svg_file (VkvgDevice dev, const char* filename, uint32_t width
 	svg.idList	= array_create();
 
 	svg_attributes attribs = {
-		svg_paint_type_none, svg_paint_type_solid, 0xff000000, 0xff000000,
+		svg_paint_type_solid, svg_paint_type_none, svg_paint_type_solid, 0xff000000, 0xff000000, 0xff000000,
 		1.0f,1.0f,1.0f,//opacities
 		svg_text_anchor_start,
 	};
