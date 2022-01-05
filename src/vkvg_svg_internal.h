@@ -26,9 +26,15 @@
 #define LOG
 #endif
 
-#define degToRad (x) (x * M_PI / 180.0)
+#define degToRad(x) (x * M_PI / 180.0)
 
 typedef enum {
+	svg_element_type_rect,
+	svg_element_type_circle,
+	svg_element_type_line,
+	svg_element_type_ellipse,
+	svg_element_type_polygon,
+	svg_element_type_polyline,
 	svg_element_type_linear_gradient,
 	svg_element_type_radial_gradient
 }svg_element_type;
@@ -77,6 +83,47 @@ typedef struct {
 
 typedef struct {
 	svg_element_id id;
+	svg_length_or_percentage x;
+	svg_length_or_percentage y;
+	svg_length_or_percentage w;
+	svg_length_or_percentage h;
+	svg_length_or_percentage rx;
+	svg_length_or_percentage ry;
+}svg_element_rect;
+
+typedef struct {
+	svg_element_id id;
+	svg_length_or_percentage cx;
+	svg_length_or_percentage cy;
+	svg_length_or_percentage r;
+}svg_element_circle;
+
+typedef struct {
+	svg_element_id id;
+	svg_length_or_percentage x1;
+	svg_length_or_percentage y1;
+	svg_length_or_percentage x2;
+	svg_length_or_percentage y2;
+}svg_element_line;
+
+typedef struct {
+	svg_element_id id;
+	svg_length_or_percentage cx;
+	svg_length_or_percentage cy;
+	svg_length_or_percentage rx;
+	svg_length_or_percentage ry;
+}svg_element_ellipse;
+
+typedef struct {
+	svg_element_id id;
+}svg_element_polygon;
+
+typedef struct {
+	svg_element_id id;
+}svg_element_polyline;
+
+typedef struct {
+	svg_element_id id;
 	svg_gradient_unit gradientUnits;
 	svg_length_or_percentage cx;
 	svg_length_or_percentage cy;
@@ -85,6 +132,7 @@ typedef struct {
 	svg_length_or_percentage r;
 	VkvgPattern pattern;
 }svg_element_radial_gradient;
+
 typedef struct {
 	svg_element_id id;
 	svg_gradient_unit gradientUnits;
