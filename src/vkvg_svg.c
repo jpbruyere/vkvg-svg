@@ -26,13 +26,15 @@ CREATE_CTOR_ELT(path)
 
 #define CASTELT(var,type,data) svg_element_##type* var = (svg_element_##type*)data
 
+
+
 svg_element_linear_gradient* _new_linear_gradient() {
 	svg_element_linear_gradient* g = (svg_element_linear_gradient*)calloc(1,sizeof(svg_element_linear_gradient));
 	g->id.type = svg_element_type_linear_gradient;
 	g->x1 = (svg_length_or_percentage){0,svg_unit_percentage};
 	g->y1 = (svg_length_or_percentage){0,svg_unit_percentage};
 	g->x2 = (svg_length_or_percentage){100,svg_unit_percentage};
-	g->y2 = (svg_length_or_percentage){100,svg_unit_percentage};
+	g->y2 = (svg_length_or_percentage){0,svg_unit_percentage};
 	return g;
 }
 svg_element_radial_gradient* _new_radial_gradient() {
@@ -900,64 +902,82 @@ float _parse_opacity (svg_context* svg) {
 	else
 		return opacity.number;
 }
-void _parse_transform (svg_context* svg) {
+
+bool _try_parse_transform (svg_context* svg, vkvg_matrix_t* mat) {
 	FILE *tmp = fmemopen(svg->value, strlen (svg->value), "r");
 	char transform[16];
 	while (!feof(tmp)) {
 		if (fscanf(tmp, " %[^(](", transform) == 1) {
-			if (!strcasecmp (transform, "matrix")) {
-				vkvg_matrix_t m, current, newMat;
+			if (!strcasecmp (transform, "none"))
+				break;
+			else if (!strcasecmp (transform, "matrix")) {
+				vkvg_matrix_t m, newMat;
 				if (!parse_floats(tmp, 6, &m.xx, &m.yx, &m.xy, &m.yy, &m.x0, &m.y0)) {
 					LOG ("error parsing transformation matrix: %s\n", svg->value);
-					break;
+					fclose (tmp);
+					return false;
 				}
-				vkvg_get_matrix(svg->ctx, &current);
-				vkvg_matrix_multiply(&newMat, &m, &current);
-				vkvg_set_matrix(svg->ctx, &newMat);
+
+				vkvg_matrix_multiply(&newMat, &m, mat);
+				*mat = newMat;
 			} else if (!strcasecmp (transform, "translate")) {
 				float dx, dy;
 				if (!parse_floats(tmp, 1, &dx)) {
 					LOG ("error parsing translation transform: %s\n", svg->value);
-					break;
+					fclose (tmp);
+					return false;
 				}
 				if (parse_floats(tmp, 1, &dy))
-					vkvg_translate(svg->ctx, dx, dy);
+					vkvg_matrix_translate(mat, dx, dy);
 				else
-					vkvg_translate(svg->ctx, dx, 0);
+					vkvg_matrix_translate(mat, dx, 0);
 			} else if (!strcasecmp (transform, "scale")) {
 				float sx, sy;
 				if (!parse_floats(tmp, 1, &sx)) {
 					LOG ("error parsing scale transform: %s\n", svg->value);
-					break;
+					fclose (tmp);
+					return false;
 				}
 				if (parse_floats(tmp, 1, &sy))
-					vkvg_scale(svg->ctx, sx, sy);
+					vkvg_matrix_scale(mat, sx, sy);
 				else
-					vkvg_scale(svg->ctx, sx, sx);
+					vkvg_matrix_scale(mat, sx, sx);
 			} else if (!strcasecmp (transform, "rotate")) {
 				float angle, cx, cy;
 				if (!parse_floats(tmp, 1, &angle)) {
 					LOG ("error parsing rotate transform: %s\n", svg->value);
-					break;
+					fclose (tmp);
+					return false;
 				}
 				if (parse_floats(tmp, 2, &cx, &cy)) {
-					vkvg_translate	(svg->ctx, cx, cy);
-					vkvg_rotate		(svg->ctx, degToRad(angle));
-					vkvg_translate	(svg->ctx, cx, cy);
+					vkvg_matrix_translate	(mat, cx, cy);
+					vkvg_matrix_rotate		(mat, degToRad(angle));
+					vkvg_matrix_translate	(mat, cx, cy);
 				} else
-					vkvg_rotate (svg->ctx, degToRad(angle));
-			} else
+					vkvg_matrix_rotate (mat, degToRad(angle));
+			} else {
 				LOG ("unimplemented transform: %s\n", transform);
+				fclose (tmp);
+				return false;
+			}
 			fscanf(tmp, "[^)]");
 			if (getc(tmp) != ')') {
 				LOG ("error parsing transformation, expecting ')'\n");
-				break;
+				fclose (tmp);
+				return false;
 			}
-		} else
+		} else if (feof(tmp))
 			break;
 	}
 
 	fclose (tmp);
+	return true;
+}
+void _apply_transform (svg_context* svg) {
+	vkvg_matrix_t current;
+	vkvg_get_matrix(svg->ctx, &current);
+	if (_try_parse_transform(svg, &current))
+		vkvg_set_matrix(svg->ctx, &current);
 }
 void _parse_point_list (svg_context* svg) {
 	float x = 0, y = 0;
@@ -1300,6 +1320,31 @@ void _copy_pattern_color_stops (VkvgPattern orig, VkvgPattern dest) {
 	} else
 		LOG ("Error processing referenced pattern\n");
 }
+void _resolve_pattern_href (svg_context* svg, void* rootElt, VkvgPattern pat) {
+	void* elt = NULL;
+	svg_element_id* id = (svg_element_id*)rootElt;
+	while (id->xlinkHref) {
+		if (try_find_by_id(svg, id->xlinkHref, &elt)) {
+			id->xlinkHref = 0;//reset once resolved
+			id = (svg_element_id*)elt;
+		} else {
+			LOG ("xlink:href svg element error  %s\n", svg->value);
+			return;
+		}
+	}
+	if (elt) {
+		VkvgPattern refPatter = NULL;
+		if (_get_element_type(elt) == svg_element_type_radial_gradient)
+			refPatter = (VkvgPattern) ((svg_element_radial_gradient*)elt)->pattern;
+		else if (_get_element_type(elt) == svg_element_type_linear_gradient)
+			refPatter = (VkvgPattern) ((svg_element_linear_gradient*)elt)->pattern;
+		else {
+			LOG ("xlink:href svg element error, expecting gradient%s\n", svg->value);
+			return;
+		}
+		_copy_pattern_color_stops(refPatter, pat);
+	}
+}
 void set_pattern (svg_context* svg, uint32_t patternHash) {
 	void* elt;
 	VkvgPattern pat;
@@ -1308,26 +1353,8 @@ void set_pattern (svg_context* svg, uint32_t patternHash) {
 		case svg_element_type_linear_gradient:
 			{
 				svg_element_linear_gradient* g = (svg_element_linear_gradient*)elt;
-				svg_element_id* id = (svg_element_id*)elt;
 
-				if (id->xlinkHref) {
-					if (try_find_by_id(svg, id->xlinkHref, &elt)) {
-						VkvgPattern refPatter = NULL;
-						if (_get_element_type(elt) == svg_element_type_radial_gradient)
-							refPatter = (VkvgPattern) ((svg_element_radial_gradient*)elt)->pattern;
-						else if (_get_element_type(elt) == svg_element_type_linear_gradient)
-							refPatter = (VkvgPattern) ((svg_element_linear_gradient*)elt)->pattern;
-						else {
-							LOG ("xlink:href svg element error, expecting gradient%s\n", svg->value);
-							return;
-						}
-						_copy_pattern_color_stops(refPatter, g->pattern);
-						id->xlinkHref = 0;//reset once resolved
-					} else {
-						LOG ("xlink:href svg element error  %s\n", svg->value);
-						return;
-					}
-				}
+				_resolve_pattern_href (svg, elt, g->pattern);
 
 				pat = g->pattern;
 
@@ -1345,10 +1372,10 @@ void set_pattern (svg_context* svg, uint32_t patternHash) {
 				float h = y1 - y0;
 
 				float px0,py0,px1,py1;
-				px0 = _get_pixel_coord (w, &g->x1);
-				py0 = _get_pixel_coord (h, &g->y1);
-				px1 = _get_pixel_coord (w, &g->x2);
-				py1 = _get_pixel_coord (h, &g->y2);
+				px0 = _get_pixel_coord (w, &g->x1) + x0;
+				py0 = _get_pixel_coord (h, &g->y1) + y0;
+				px1 = _get_pixel_coord (w, &g->x2) + x0;
+				py1 = _get_pixel_coord (h, &g->y2) + y0;
 
 				vkvg_pattern_edit_linear(g->pattern, px0, py0, px1, py1);
 				vkvg_set_source(svg->ctx, g->pattern);
@@ -1358,26 +1385,8 @@ void set_pattern (svg_context* svg, uint32_t patternHash) {
 		case svg_element_type_radial_gradient:
 			{
 				svg_element_radial_gradient* g = (svg_element_radial_gradient*)elt;
-				svg_element_id* id = (svg_element_id*)elt;
 
-				if (id->xlinkHref) {
-					if (try_find_by_id(svg, id->xlinkHref, &elt)) {
-						VkvgPattern refPatter = NULL;
-						if (_get_element_type(elt) == svg_element_type_radial_gradient)
-							refPatter = (VkvgPattern) ((svg_element_radial_gradient*)elt)->pattern;
-						else if (_get_element_type(elt) == svg_element_type_linear_gradient)
-							refPatter = (VkvgPattern) ((svg_element_linear_gradient*)elt)->pattern;
-						else {
-							LOG ("xlink:href svg element error, expecting gradient%s\n", svg->value);
-							return;
-						}
-						_copy_pattern_color_stops(refPatter, g->pattern);
-						id->xlinkHref = 0;//reset once resolved
-					} else {
-						LOG ("xlink:href svg element error  %s\n", svg->value);
-						return;
-					}
-				}
+				_resolve_pattern_href (svg, elt, g->pattern);
 
 				pat = g->pattern;
 				float x0 = 0, y0 = 0, x1, y1;
@@ -1470,7 +1479,7 @@ void _process_element (svg_context* svg, svg_attributes* attribs, void* elt, boo
 		switch (_get_element_type(elt)) {
 		case svg_element_type_rect:
 			{
-				svg_element_rect* r = (svg_element_rect*)elt;
+				CASTELT(r,rect,elt);
 				if (r->w.number && r->h.number && (attribs->hasFill || attribs->hasStroke)) {
 					float	x = _get_pixel_coord(svg->viewBox.w, &r->x),
 							y = _get_pixel_coord(svg->viewBox.h, &r->y),
@@ -1497,7 +1506,7 @@ void _process_element (svg_context* svg, svg_attributes* attribs, void* elt, boo
 			break;
 		case svg_element_type_circle:
 			{
-				svg_element_circle* c = (svg_element_circle*)elt;
+				CASTELT(c,circle,elt);
 				if (c->r.number > 0 && (attribs->hasFill || attribs->hasStroke)) {
 					float	cx = _get_pixel_coord(svg->viewBox.w, &c->cx),
 							cy = _get_pixel_coord(svg->viewBox.h, &c->cy),
@@ -1510,7 +1519,7 @@ void _process_element (svg_context* svg, svg_attributes* attribs, void* elt, boo
 			break;
 		case svg_element_type_line:
 			{
-				svg_element_line* l = (svg_element_line*)elt;
+				CASTELT(l,line,elt);
 				if (attribs->hasStroke) {
 					float	x1 = _get_pixel_coord(svg->viewBox.w, &l->x1),
 							y1 = _get_pixel_coord(svg->viewBox.h, &l->y1),
@@ -1527,7 +1536,7 @@ void _process_element (svg_context* svg, svg_attributes* attribs, void* elt, boo
 			break;
 		case svg_element_type_ellipse:
 			{
-				svg_element_ellipse* e = (svg_element_ellipse*)elt;
+				CASTELT(e,ellipse,elt);
 				if (e->rx.number && e->ry.number && (attribs->hasFill || attribs->hasStroke)) {
 					float	cx = _get_pixel_coord(svg->viewBox.w, &e->cx),
 							cy = _get_pixel_coord(svg->viewBox.h, &e->cy),
@@ -1541,7 +1550,7 @@ void _process_element (svg_context* svg, svg_attributes* attribs, void* elt, boo
 			break;
 		case svg_element_type_path:
 			{
-				svg_element_path* p = (svg_element_path*)elt;
+				CASTELT(p,path,elt);
 				_parse_path_d_attribute (svg, p->d);
 				draw (svg, attribs);
 			}
@@ -1569,9 +1578,10 @@ void _process_use (svg_context* svg, svg_attributes* attribs) {
 
 #define PROCESS_SVG_XLINK_ATTRIB_XLINK_HREF \
 {\
-	if (svg->value[0] == '#')\
+	if (svg->value[0] == '#') {\
 		svg->currentXlinkHref = hash_string(&svg->value[1]);\
-	else\
+		LOG ("xlink:href %s -> %u\n", svg->value, svg->currentXlinkHref);\
+	} else\
 		LOG ("xlink:href type not handled %s\n", svg->value);\
 }
 #define PROCESS_SVG_XLINKEMBED_ATTRIB_XLINK_HREF PROCESS_SVG_XLINK_ATTRIB_XLINK_HREF
@@ -1616,15 +1626,17 @@ void _process_use (svg_context* svg, svg_attributes* attribs) {
 #define PROCESS_SVG_TEXTCONTENT_ATTRIB_TEXT_ANCHOR_MIDDLE	attribs.text_anchor = svg_text_anchor_middle;
 #define PROCESS_SVG_TEXTCONTENT_ATTRIB_TEXT_ANCHOR_END		attribs.text_anchor = svg_text_anchor_end;
 
-#define PROCESS_PATH_TRANSFORM		_parse_transform (svg);
-#define PROCESS_RECT_TRANSFORM		_parse_transform (svg);
-#define PROCESS_CIRCLE_TRANSFORM	_parse_transform (svg);
-#define PROCESS_LINE_TRANSFORM		_parse_transform (svg);
-#define PROCESS_ELLIPSE_TRANSFORM	_parse_transform (svg);
-#define PROCESS_POLYLINE_TRANSFORM	_parse_transform (svg);
-#define PROCESS_POLYGON_TRANSFORM	_parse_transform (svg);
-#define PROCESS_TEXT_TRANSFORM		_parse_transform (svg);
-#define PROCESS_USE_TRANSFORM		_parse_transform (svg);
+#define PROCESS_G_TRANSFORM			_apply_transform (svg);
+#define PROCESS_PATH_TRANSFORM		_apply_transform (svg);
+#define PROCESS_RECT_TRANSFORM		_apply_transform (svg);
+#define PROCESS_CIRCLE_TRANSFORM	_apply_transform (svg);
+#define PROCESS_LINE_TRANSFORM		_apply_transform (svg);
+#define PROCESS_ELLIPSE_TRANSFORM	_apply_transform (svg);
+#define PROCESS_POLYLINE_TRANSFORM	_apply_transform (svg);
+#define PROCESS_POLYGON_TRANSFORM	_apply_transform (svg);
+#define PROCESS_TEXT_TRANSFORM		_apply_transform (svg);
+#define PROCESS_USE_TRANSFORM		_apply_transform (svg);
+#define PROCESS_DEFS_TRANSFORM		_apply_transform (svg);
 
 //========SVG============
 #define HEADING_SVG				\
@@ -1700,7 +1712,6 @@ void _process_use (svg_context* svg, svg_attributes* attribs) {
 #define ELEMENT_PRE_PROCESS_G
 #define ELEMENT_POST_PROCESS_G	vkvg_restore (svg->ctx);
 
-#define PROCESS_G_TRANSFORM		_parse_transform (svg);
 //=============================
 
 //========LINE============
@@ -1818,14 +1829,20 @@ void _process_use (svg_context* svg, svg_attributes* attribs) {
 
 //=============================
 
+
 //========LINEARGRADIENT============
 #define HEADING_LINEARGRADIENT \
-	svg_element_linear_gradient* rg = _new_linear_gradient();
+	svg_element_linear_gradient* rg = _new_linear_gradient();\
+	bool hasTransform = false;\
+	vkvg_matrix_t transform = VKVG_IDENTITY_MATRIX;
 
 #define ELEMENT_PRE_PROCESS_LINEARGRADIENT \
 	rg->pattern = vkvg_pattern_create_linear (rg->x1.number, rg->y1.number, rg->x2.number, rg->y2.number);\
 	rg->id.hash = svg->currentIdHash;\
 	rg->id.xlinkHref = svg->currentXlinkHref;\
+	LOG ("store pattern id:%u href:%u\n", rg->id.hash, rg->id.xlinkHref);\
+	if (hasTransform)\
+		vkvg_pattern_set_matrix(rg->pattern, &transform);\
 	array_add (svg->idList, rg);\
 	parentData = (void*)rg->pattern;
 
@@ -1835,18 +1852,23 @@ void _process_use (svg_context* svg, svg_attributes* attribs) {
 #define PROCESS_LINEARGRADIENT_Y2 _parse_lenghtOrPercentage(svg, &rg->y2);
 #define PROCESS_LINEARGRADIENT_GRADIENTUNITS_USERSPACEONUSE		rg->gradientUnits = svg_gradient_unit_userSpaceOnUse;
 #define PROCESS_LINEARGRADIENT_GRADIENTUNITS_OBJECTBOUNDINGBOX	rg->gradientUnits = svg_gradient_unit_objectBoundingBox;
-//#define PROCESS_LINEARGRADIENT_GRADIENTTRANSFORM _parse_transform(svg);
+#define PROCESS_LINEARGRADIENT_GRADIENTTRANSFORM	hasTransform = _try_parse_transform(svg, &transform);
 //=============================
 
 
 //========RADIALGRADIENT============
 #define HEADING_RADIALGRADIENT \
-	svg_element_radial_gradient* rg = _new_radial_gradient();
+	svg_element_radial_gradient* rg = _new_radial_gradient();\
+	bool hasTransform = false;\
+	vkvg_matrix_t transform = VKVG_IDENTITY_MATRIX;
 
 #define ELEMENT_PRE_PROCESS_RADIALGRADIENT \
 	rg->pattern = vkvg_pattern_create_radial (rg->fx.number, rg->fy.number, 0, rg->cx.number, rg->cy.number, rg->r.number);\
 	rg->id.hash = svg->currentIdHash;\
 	rg->id.xlinkHref = svg->currentXlinkHref;\
+	LOG ("store pattern id:%u href:%u\n", rg->id.hash, rg->id.xlinkHref);\
+	if (hasTransform)\
+		vkvg_pattern_set_matrix(rg->pattern, &transform);\
 	array_add (svg->idList, rg);\
 	parentData = (void*)rg->pattern;
 
@@ -1857,7 +1879,7 @@ void _process_use (svg_context* svg, svg_attributes* attribs) {
 #define PROCESS_RADIALGRADIENT_FY _parse_lenghtOrPercentage(svg, &rg->fy);
 #define PROCESS_RADIALGRADIENT_GRADIENTUNITS_USERSPACEONUSE		rg->gradientUnits = svg_gradient_unit_userSpaceOnUse;
 #define PROCESS_RADIALGRADIENT_GRADIENTUNITS_OBJECTBOUNDINGBOX	rg->gradientUnits = svg_gradient_unit_objectBoundingBox;
-//#define PROCESS_RADIALGRADIENT_GRADIENTTRANSFORM _parse_transform(svg);
+#define PROCESS_RADIALGRADIENT_GRADIENTTRANSFORM PROCESS_LINEARGRADIENT_GRADIENTTRANSFORM
 
 
 //=============================
