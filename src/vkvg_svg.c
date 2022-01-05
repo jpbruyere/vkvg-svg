@@ -11,17 +11,20 @@
 
 #include "vkvg_svg_internal.h"
 
-#define NEWELT(elt) \
+#define CREATE_CTOR_ELT(elt) \
 	svg_element_##elt* _new_##elt() {\
 		svg_element_##elt* c = (svg_element_##elt*)calloc (1, sizeof (svg_element_##elt));\
 		c->id.type = svg_element_type_##elt;\
 		return c;\
 	}
 
-NEWELT(rect)
-NEWELT(circle)
-NEWELT(line)
-NEWELT(ellipse)
+CREATE_CTOR_ELT(rect)
+CREATE_CTOR_ELT(circle)
+CREATE_CTOR_ELT(line)
+CREATE_CTOR_ELT(ellipse)
+CREATE_CTOR_ELT(path)
+
+#define CASTELT(var,type,data) svg_element_##type* var = (svg_element_##type*)data
 
 svg_element_linear_gradient* _new_linear_gradient() {
 	svg_element_linear_gradient* g = (svg_element_linear_gradient*)calloc(1,sizeof(svg_element_linear_gradient));
@@ -970,13 +973,15 @@ void _parse_point_list (svg_context* svg) {
 	}
 	fclose (tmp);
 }
-void _parse_path_d_attribute (svg_context* svg) {
+void _parse_path_d_attribute (svg_context* svg, char* str) {
+	if (!str)
+		return;
 	float x, y, c1x, c1y, c2x, c2y, cpX, cpY, rx, ry, rotx, large, sweep;
 	enum prevCmd prev = none;
 	int repeat=0;
 	float subpathX = 0, subpathY = 0;
 	char c;
-	FILE *tmp = fmemopen(svg->value, strlen (svg->value), "r");
+	FILE *tmp = fmemopen(str, strlen (str), "r");
 	bool parseError = false, result = false;
 	while (!(parseError || feof(tmp))) {
 		if (!repeat && fscanf(tmp, " %c ", &c) != 1) {
@@ -1268,9 +1273,12 @@ bool _idlist_contains (svg_context* svg, uint32_t hash) {
 	return false;
 }
 void _store_or_throw (svg_context* svg, void* elt) {
-	if (svg->currentIdHash)
+	if (svg->currentIdHash) {
+		svg_element_id* id = (svg_element_id*)elt;
+		id->hash = svg->currentIdHash;
+		LOG("store elemnt: %u type:%u\n", id->hash, id->type);
 		array_add (svg->idList, elt);
-	else
+	} else
 		free (elt);
 }
 float _get_pixel_coord (float reference, svg_length_or_percentage* lop) {
@@ -1457,85 +1465,106 @@ void _draw_text (svg_context* svg, FILE* f, svg_attributes* attribs,
 float _normalized_diagonal (float w, float h) {
 	return sqrtf(powf(w,2) + powf(h,2))/sqrtf(2);
 }
-void _process_element (svg_context* svg, svg_attributes* attribs, void* elt) {
-	switch (_get_element_type(elt)) {
-	case svg_element_type_rect:
-		{
-			svg_element_rect* r = (svg_element_rect*)elt;
-			if (r->w.number && r->h.number && (attribs->hasFill || attribs->hasStroke)) {
-				float	x = _get_pixel_coord(svg->viewBox.w, &r->x),
-						y = _get_pixel_coord(svg->viewBox.h, &r->y),
-						w = _get_pixel_coord(svg->viewBox.w, &r->w),
-						h = _get_pixel_coord(svg->viewBox.h, &r->h),
-						rx = _get_pixel_coord(svg->viewBox.w, &r->rx),
-						ry = _get_pixel_coord(svg->viewBox.h, &r->ry);
+void _process_element (svg_context* svg, svg_attributes* attribs, void* elt, bool use) {
+	if (!svg->skipDraw) {
+		switch (_get_element_type(elt)) {
+		case svg_element_type_rect:
+			{
+				svg_element_rect* r = (svg_element_rect*)elt;
+				if (r->w.number && r->h.number && (attribs->hasFill || attribs->hasStroke)) {
+					float	x = _get_pixel_coord(svg->viewBox.w, &r->x),
+							y = _get_pixel_coord(svg->viewBox.h, &r->y),
+							w = _get_pixel_coord(svg->viewBox.w, &r->w),
+							h = _get_pixel_coord(svg->viewBox.h, &r->h),
+							rx = _get_pixel_coord(svg->viewBox.w, &r->rx),
+							ry = _get_pixel_coord(svg->viewBox.h, &r->ry);
 
-				if (rx > w / 2.0f)
-					rx = w / 2.0f;
-				if (ry > h / 2.0f)
-					ry = h / 2.0f;
-				if (rx > 0 || ry > 0) {
-					if (rx == 0)
-						rx = ry;
-					else if (ry == 0)
-						ry = rx;
-					vkvg_rounded_rectangle2(svg->ctx, x, y, w, h, rx, ry);
-				} else
-					vkvg_rectangle(svg->ctx, x, y, w, h);
+					if (rx > w / 2.0f)
+						rx = w / 2.0f;
+					if (ry > h / 2.0f)
+						ry = h / 2.0f;
+					if (rx > 0 || ry > 0) {
+						if (rx == 0)
+							rx = ry;
+						else if (ry == 0)
+							ry = rx;
+						vkvg_rounded_rectangle2(svg->ctx, x, y, w, h, rx, ry);
+					} else
+						vkvg_rectangle(svg->ctx, x, y, w, h);
+					draw (svg, attribs);
+				}
+			}
+			break;
+		case svg_element_type_circle:
+			{
+				svg_element_circle* c = (svg_element_circle*)elt;
+				if (c->r.number > 0 && (attribs->hasFill || attribs->hasStroke)) {
+					float	cx = _get_pixel_coord(svg->viewBox.w, &c->cx),
+							cy = _get_pixel_coord(svg->viewBox.h, &c->cy),
+							r  = _get_pixel_coord(_normalized_diagonal(svg->viewBox.w, svg->viewBox.h), &c->r);
+
+					vkvg_arc(svg->ctx, cx, cy, r, 0, M_PI * 2);
+					draw (svg, attribs);
+				}
+			}
+			break;
+		case svg_element_type_line:
+			{
+				svg_element_line* l = (svg_element_line*)elt;
+				if (attribs->hasStroke) {
+					float	x1 = _get_pixel_coord(svg->viewBox.w, &l->x1),
+							y1 = _get_pixel_coord(svg->viewBox.h, &l->y1),
+							x2 = _get_pixel_coord(svg->viewBox.w, &l->x2),
+							y2 = _get_pixel_coord(svg->viewBox.h, &l->y2);
+
+					vkvg_move_to(svg->ctx, x1, y1);
+					vkvg_line_to(svg->ctx, x2, y2);
+
+					attribs->hasFill = false;
+					draw (svg, attribs);
+				}
+			}
+			break;
+		case svg_element_type_ellipse:
+			{
+				svg_element_ellipse* e = (svg_element_ellipse*)elt;
+				if (e->rx.number && e->ry.number && (attribs->hasFill || attribs->hasStroke)) {
+					float	cx = _get_pixel_coord(svg->viewBox.w, &e->cx),
+							cy = _get_pixel_coord(svg->viewBox.h, &e->cy),
+							rx = _get_pixel_coord(svg->viewBox.w, &e->rx),
+							ry = _get_pixel_coord(svg->viewBox.h, &e->ry);
+
+					vkvg_ellipse (svg->ctx, rx, ry, cx, cy, 0);
+					draw (svg, attribs);
+				}
+			}
+			break;
+		case svg_element_type_path:
+			{
+				svg_element_path* p = (svg_element_path*)elt;
+				_parse_path_d_attribute (svg, p->d);
 				draw (svg, attribs);
 			}
+			break;
+		default:
+			LOG ("Unprocessed element type: %d\n", _get_element_type(elt));
+			return;
 		}
-		break;
-	case svg_element_type_circle:
-		{
-			svg_element_circle* c = (svg_element_circle*)elt;
-			if (c->r.number > 0 && (attribs->hasFill || attribs->hasStroke)) {
-				float	cx = _get_pixel_coord(svg->viewBox.w, &c->cx),
-						cy = _get_pixel_coord(svg->viewBox.h, &c->cy),
-						r  = _get_pixel_coord(_normalized_diagonal(svg->viewBox.w, svg->viewBox.h), &c->r);
-
-				vkvg_arc(svg->ctx, cx, cy, r, 0, M_PI * 2);
-				draw (svg, attribs);
-			}
-		}
-		break;
-	case svg_element_type_line:
-		{
-			svg_element_line* l = (svg_element_line*)elt;
-			if (attribs->hasStroke) {
-				float	x1 = _get_pixel_coord(svg->viewBox.w, &l->x1),
-						y1 = _get_pixel_coord(svg->viewBox.h, &l->y1),
-						x2 = _get_pixel_coord(svg->viewBox.w, &l->x2),
-						y2 = _get_pixel_coord(svg->viewBox.h, &l->y2);
-
-				vkvg_move_to(svg->ctx, x1, y1);
-				vkvg_line_to(svg->ctx, x2, y2);
-
-				attribs->hasFill = false;
-				draw (svg, attribs);
-			}
-		}
-		break;
-	case svg_element_type_ellipse:
-		{
-			svg_element_ellipse* e = (svg_element_ellipse*)elt;
-			if (e->rx.number && e->ry.number && (attribs->hasFill || attribs->hasStroke)) {
-				float	cx = _get_pixel_coord(svg->viewBox.w, &e->cx),
-						cy = _get_pixel_coord(svg->viewBox.h, &e->cy),
-						rx = _get_pixel_coord(svg->viewBox.w, &e->rx),
-						ry = _get_pixel_coord(svg->viewBox.h, &e->ry);
-
-				vkvg_ellipse (svg->ctx, rx, ry, cx, cy, 0);
-				draw (svg, attribs);
-			}
-		}
-		break;
-	default:
-		LOG ("Unprocessed element type: %d\n", _get_element_type(elt));
+	}
+	if (!use)
+		_store_or_throw(svg, elt);
+}
+void _process_use (svg_context* svg, svg_attributes* attribs) {
+	if (!svg->currentXlinkHref) {
+		LOG ("no xlink:href defined for use element\n");
 		return;
 	}
-
-	_store_or_throw(svg, elt);
+	void* elt;
+	if (!try_find_by_id(svg, svg->currentXlinkHref, &elt)) {
+		LOG ("xlink:href not resolved %s\n", svg->value);
+		return;
+	}
+	_process_element(svg, attribs, elt, true);
 }
 
 #define PROCESS_SVG_XLINK_ATTRIB_XLINK_HREF \
@@ -1545,6 +1574,7 @@ void _process_element (svg_context* svg, svg_attributes* attribs, void* elt) {
 	else\
 		LOG ("xlink:href type not handled %s\n", svg->value);\
 }
+#define PROCESS_SVG_XLINKEMBED_ATTRIB_XLINK_HREF PROCESS_SVG_XLINK_ATTRIB_XLINK_HREF
 
 #define PROCESS_SVG_CORE_ATTRIB_ID svg->currentIdHash = hash_string(svg->value);
 
@@ -1568,6 +1598,13 @@ void _process_element (svg_context* svg, svg_attributes* attribs, void* elt) {
 #define PROCESS_SVG_PAINT_ATTRIB_STROKE_LINEJOIN_ROUND	vkvg_set_line_join(svg->ctx, VKVG_LINE_JOIN_ROUND);
 #define PROCESS_SVG_PAINT_ATTRIB_STROKE_LINEJOIN_BEVEL	vkvg_set_line_join(svg->ctx, VKVG_LINE_JOIN_BEVEL);
 
+#define HEADING_SVG_OPACITY_ATTRIB
+#define PROCESS_SVG_OPACITY_ATTRIB
+#define PROCESS_SVG_OPACITY_ATTRIB_OPACITY			attribs.opacity			= _parse_opacity (svg);
+#define PROCESS_SVG_OPACITY_ATTRIB_FILL_OPACITY		attribs.fill_opacity	= _parse_opacity (svg);
+#define PROCESS_SVG_OPACITY_ATTRIB_STROKE_OPACITY	attribs.stroke_opacity	= _parse_opacity (svg);
+
+
 #define PROCESS_SVG_FONT_ATTRIB_FONT_FAMILY vkvg_select_font_face(svg->ctx, svg->value);
 #define PROCESS_SVG_FONT_ATTRIB_FONT_SIZE {\
 	svg_length_or_percentage font_size = {0, svg_unit_pt};\
@@ -1587,6 +1624,7 @@ void _process_element (svg_context* svg, svg_attributes* attribs, void* elt) {
 #define PROCESS_POLYLINE_TRANSFORM	_parse_transform (svg);
 #define PROCESS_POLYGON_TRANSFORM	_parse_transform (svg);
 #define PROCESS_TEXT_TRANSFORM		_parse_transform (svg);
+#define PROCESS_USE_TRANSFORM		_parse_transform (svg);
 
 //========SVG============
 #define HEADING_SVG				\
@@ -1670,7 +1708,7 @@ void _process_element (svg_context* svg, svg_attributes* attribs, void* elt) {
 	vkvg_save (svg->ctx);\
 	svg_element_line* l = _new_line ();
 
-#define ELEMENT_PRE_PROCESS_LINE	_process_element(svg, &attribs, l);
+#define ELEMENT_PRE_PROCESS_LINE	_process_element(svg, &attribs, l, false);
 #define ELEMENT_POST_PROCESS_LINE	vkvg_restore (svg->ctx);
 
 #define PROCESS_LINE_X1		_parse_lenghtOrPercentage(svg, &l->x1);
@@ -1684,7 +1722,7 @@ void _process_element (svg_context* svg, svg_attributes* attribs, void* elt) {
 	vkvg_save (svg->ctx);\
 	svg_element_rect* r = _new_rect();
 
-#define ELEMENT_PRE_PROCESS_RECT	_process_element(svg, &attribs, r);
+#define ELEMENT_PRE_PROCESS_RECT	_process_element(svg, &attribs, r, false);
 #define ELEMENT_POST_PROCESS_RECT	vkvg_restore (svg->ctx);
 
 #define PROCESS_RECT_X		_parse_lenghtOrPercentage(svg, &r->x);
@@ -1700,7 +1738,7 @@ void _process_element (svg_context* svg, svg_attributes* attribs, void* elt) {
 	vkvg_save (svg->ctx);\
 	svg_element_circle* c = _new_circle();
 
-#define ELEMENT_PRE_PROCESS_CIRCLE	_process_element(svg, &attribs, c);
+#define ELEMENT_PRE_PROCESS_CIRCLE	_process_element(svg, &attribs, c, false);
 #define ELEMENT_POST_PROCESS_CIRCLE vkvg_restore (svg->ctx);
 
 #define PROCESS_CIRCLE_CX	_parse_lenghtOrPercentage(svg, &c->cx);
@@ -1713,7 +1751,7 @@ void _process_element (svg_context* svg, svg_attributes* attribs, void* elt) {
 	vkvg_save (svg->ctx);\
 	svg_element_ellipse* e = _new_ellipse();
 
-#define ELEMENT_PRE_PROCESS_ELLIPSE		_process_element(svg, &attribs, e);
+#define ELEMENT_PRE_PROCESS_ELLIPSE		_process_element(svg, &attribs, e, false);
 #define ELEMENT_POST_PROCESS_ELLIPSE	vkvg_restore (svg->ctx);
 
 #define PROCESS_ELLIPSE_CX	_parse_lenghtOrPercentage(svg, &e->cx);
@@ -1745,13 +1783,21 @@ void _process_element (svg_context* svg, svg_attributes* attribs, void* elt) {
 //=============================
 
 //========PATH============
-#define HEADING_PATH vkvg_save (svg->ctx);
-#define ELEMENT_PRE_PROCESS_PATH \
-	if (attribs.hasFill || attribs.hasStroke)\
-		draw (svg, &attribs);
-#define ELEMENT_POST_PROCESS_PATH vkvg_restore (svg->ctx);
+#define HEADING_PATH \
+	vkvg_save (svg->ctx);\
+	svg_element_path* p = _new_path ();
 
-#define PROCESS_PATH_D _parse_path_d_attribute (svg);
+#define ELEMENT_PRE_PROCESS_PATH	_process_element(svg, &attribs, p, false);
+#define ELEMENT_POST_PROCESS_PATH	vkvg_restore (svg->ctx);
+
+#define PROCESS_PATH_D \
+{\
+	int len = strlen(svg->value);\
+	if (len > 0) {\
+		p->d = (char*)malloc(len*sizeof(char)+1);\
+		strcpy (p->d, svg->value);\
+	}\
+}
 //=============================
 
 //========TEXT============
@@ -1855,12 +1901,24 @@ void _process_element (svg_context* svg, svg_attributes* attribs, void* elt) {
 
 //=============================
 
-#define HEADING_SVG_OPACITY_ATTRIB
-#define PROCESS_SVG_OPACITY_ATTRIB //TODO
-#define PROCESS_SVG_OPACITY_ATTRIB_OPACITY			attribs.opacity			= _parse_opacity (svg);
-#define PROCESS_SVG_OPACITY_ATTRIB_FILL_OPACITY		attribs.fill_opacity	= _parse_opacity (svg);
-#define PROCESS_SVG_OPACITY_ATTRIB_STROKE_OPACITY	attribs.stroke_opacity	= _parse_opacity (svg);
+//========DEFS============
+#define HEADING_DEFS
+#define ELEMENT_PRE_PROCESS_DEFS	svg->skipDraw = true;
+#define ELEMENT_POST_PROCESS_DEFS	svg->skipDraw = false;
+//=============================
 
+
+//========USE============
+#define HEADING_USE
+#define ELEMENT_PRE_PROCESS_USE		_process_use(svg, &attribs);
+#define ELEMENT_POST_PROCESS_USE
+
+/*#define PROCESS_USE_X
+#define PROCESS_USE_Y
+#define PROCESS_USE_WIDTH
+#define PROCESS_USE_HEIGHT*/
+
+//=============================
 
 #define PARSER_GEN_IMPLEMENTATION
 #include "parser_gen.h"
@@ -1907,6 +1965,7 @@ VkvgSurface parse_svg_file (VkvgDevice dev, const char* filename, uint32_t width
 		perror ("vkvg_svg: file not found");
 		return NULL;
 	}
+	LOG ("loading %s\n", filename);
 
 	svg_context svg = {0};
 	svg.dev		= dev;
@@ -1932,6 +1991,13 @@ VkvgSurface parse_svg_file (VkvgDevice dev, const char* filename, uint32_t width
 			break;
 		case svg_element_type_radial_gradient:
 			vkvg_pattern_destroy((VkvgPattern) ((svg_element_radial_gradient*)svg.idList->elements[i])->pattern);
+			break;
+		case svg_element_type_path:
+			{
+				CASTELT(p,path,svg.idList->elements[i]);
+				if (p->d)
+					free (p->d);
+			}
 			break;
 		}
 		free (svg.idList->elements[i]);

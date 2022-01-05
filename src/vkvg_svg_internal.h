@@ -35,6 +35,7 @@ typedef enum {
 	svg_element_type_ellipse,
 	svg_element_type_polygon,
 	svg_element_type_polyline,
+	svg_element_type_path,
 	svg_element_type_linear_gradient,
 	svg_element_type_radial_gradient
 }svg_element_type;
@@ -124,6 +125,11 @@ typedef struct {
 
 typedef struct {
 	svg_element_id id;
+	char* d;
+}svg_element_path;
+
+typedef struct {
+	svg_element_id id;
 	svg_gradient_unit gradientUnits;
 	svg_length_or_percentage cx;
 	svg_length_or_percentage cy;
@@ -177,6 +183,8 @@ typedef struct {
 	bool		fit;//fit rendering surface
 	bool		preserveAspectRatio;
 	bool		skip;//skip tag and children
+	bool		skipDraw;//in defs
+	bool		skipStore;//use
 	uint32_t	currentIdHash;
 	uint32_t	currentXlinkHref;
 	array_t*	idList;

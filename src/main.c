@@ -62,7 +62,6 @@ void readSVG (VkEngine e) {
 				if (!strcasecmp(strrchr(de->d_name, '\0') - 4, ".svg")) {
 					if (i >= iconToSkip) {
 						sprintf(tmp, "%s/%s", directory, de->d_name);
-						LOG ("loading %s\n", tmp);
 						VkvgSurface surf = parse_svg_file(dev, tmp, iconSize, iconSize);
 
 						if (surf) {
