@@ -1,7 +1,8 @@
-
+// Copyright (c) 2022  Jean-Philippe Bruyère <jp_bruyere@hotmail.com>
+//
+// This code is licensed under the MIT license (MIT) (http://opensource.org/licenses/MIT)
 
 #include "vkvg_svg.h"
-#include "vkvg_extensions.h"
 
 #define ARRAY_INIT	8
 #define ARRAY_ELEMENT_TYPE void*
@@ -1335,9 +1336,10 @@ void _parse_path_d_attribute (svg_context* svg, char* str) {
 				bool lf = large > __FLT_EPSILON__;
 				bool sw = sweep > __FLT_EPSILON__;
 				rotx = rotx * M_PI / 180.0f;
-				vkvg_elliptical_arc(svg->ctx, x, y, lf, sw, rx, ry, rotx);
-				repeat = _try_parse_floats(tmp, 1, &rx);
 
+				vkvg_elliptic_arc (svg->ctx, x, y, lf, sw, rx, ry, rotx);
+
+				repeat = _try_parse_floats(tmp, 1, &rx);
 			} else
 				return;
 			break;
@@ -1350,12 +1352,11 @@ void _parse_path_d_attribute (svg_context* svg, char* str) {
 				vkvg_get_current_point(svg->ctx, &cpX, &cpY);
 				bool lf = large > __FLT_EPSILON__;
 				bool sw = sweep > __FLT_EPSILON__;
-				rotx = rotx * M_PI / 180.0f;
-				//rotx = degToRad (rotx);
+				rotx = degToRad (rotx);
 
-				vkvg_elliptic_arc(svg->ctx, cpX, cpY, cpX + x, cpY + y, lf, sw, rx, ry, rotx);
+				vkvg_elliptic_arc(svg->ctx, cpX + x, cpY + y, lf, sw, rx, ry, rotx);
+
 				repeat = _try_parse_floats(tmp, 1, &rx);
-
 			} else
 				return;
 			break;
