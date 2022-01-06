@@ -2,13 +2,14 @@
 //
 // This code is licensed under the MIT license (MIT) (http://opensource.org/licenses/MIT)
 
-#include "vkvg_svg.h"
+#include "vkvg-svg.h"
 
 #define ARRAY_INIT	8
 #define ARRAY_ELEMENT_TYPE void*
 
 #define ARRAY_IMPLEMENTATION
 #include "array.h"
+
 
 #include "vkvg_svg_internal.h"
 
@@ -2079,7 +2080,7 @@ int read_tag (svg_context* svg, FILE* f, svg_attributes attribs) {
 	return res;
 }
 
-VkvgSurface parse_svg_file (VkvgDevice dev, const char* filename, uint32_t width, uint32_t height) {
+VkvgSurface vkvg_create_surface_from_svg (VkvgDevice dev, const char* filename, uint32_t width, uint32_t height) {
 	FILE* f = fopen(filename, "r");
 	if (f == NULL){
 		perror ("vkvg_svg: file not found");

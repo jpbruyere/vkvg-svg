@@ -11,6 +11,8 @@
 #include <stdarg.h>
 #include <ctype.h>
 
+#include "fmemopen.h"
+
 #include "vkvg.h"
 
 #define ARRAY_INIT	8

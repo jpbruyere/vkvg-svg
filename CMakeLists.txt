@@ -46,5 +46,9 @@ TARGET_LINK_LIBRARIES(${PROJECT_NAME}
 	${VKH_LIBRARIES}
 )
 
+INCLUDE("${CMAKE_CURRENT_SOURCE_DIR}/cmake/ConfigLibrary.cmake")
+
+configure_library ()
+
 ADD_SUBDIRECTORY(tests)
 
