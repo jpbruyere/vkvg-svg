@@ -1295,9 +1295,9 @@ void _parse_path_d_attribute (svg_context* svg, char* str) {
 				result = _try_parse_floats(tmp, 4, &c1x, &c1y, &x, &y);
 			if (result) {
 				vkvg_get_current_point(svg->ctx, &cpX, &cpY);
-				if (prev == cubic) {
+				if (prev == cubic)
 					vkvg_curve_to (svg->ctx, 2.0 * cpX - c2x, 2.0 * cpY - c2y, c1x, c1y, x, y);
-				} else
+				else
 					vkvg_curve_to (svg->ctx, cpX, cpY, c1x, c1y, x, y);
 
 				c2x = c1x;
@@ -1315,9 +1315,9 @@ void _parse_path_d_attribute (svg_context* svg, char* str) {
 				result = _try_parse_floats(tmp, 4, &c1x, &c1y, &x, &y);
 			if (result) {
 				vkvg_get_current_point(svg->ctx, &cpX, &cpY);
-				if (prev == cubic) {
+				if (prev == cubic)
 					vkvg_rel_curve_to (svg->ctx, cpX - c2x, cpY - c2y, c1x, c1y, x, y);
-				} else
+				else
 					vkvg_rel_curve_to (svg->ctx, 0, 0, c1x, c1y, x, y);
 
 				c2x = cpX + c1x;
@@ -1338,7 +1338,7 @@ void _parse_path_d_attribute (svg_context* svg, char* str) {
 				bool sw = sweep > __FLT_EPSILON__;
 				rotx = rotx * M_PI / 180.0f;
 
-				vkvg_elliptic_arc (svg->ctx, x, y, lf, sw, rx, ry, rotx);
+				vkvg_elliptic_arc_to (svg->ctx, x, y, lf, sw, rx, ry, rotx);
 
 				repeat = _try_parse_floats(tmp, 1, &rx);
 			} else
@@ -1350,12 +1350,11 @@ void _parse_path_d_attribute (svg_context* svg, char* str) {
 			else
 				result = _try_parse_floats(tmp, 7, &rx, &ry, &rotx, &large, &sweep, &x, &y);
 			if (result) {
-				vkvg_get_current_point(svg->ctx, &cpX, &cpY);
 				bool lf = large > __FLT_EPSILON__;
 				bool sw = sweep > __FLT_EPSILON__;
 				rotx = degToRad (rotx);
 
-				vkvg_elliptic_arc(svg->ctx, cpX + x, cpY + y, lf, sw, rx, ry, rotx);
+				vkvg_rel_elliptic_arc_to(svg->ctx, x, y, lf, sw, rx, ry, rotx);
 
 				repeat = _try_parse_floats(tmp, 1, &rx);
 			} else
@@ -2086,7 +2085,8 @@ VkvgSurface vkvg_surface_create_from_svg (VkvgDevice dev, uint32_t width, uint32
 		perror ("vkvg_svg: file not found");
 		return NULL;
 	}
-	LOG ("loading %s\n", filename);
+	//LOG ("loading %s\n", filename);
+	//printf ("loading %s\n", filename);
 
 	svg_context svg = {0};
 	svg.dev		= dev;

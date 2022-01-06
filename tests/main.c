@@ -34,6 +34,19 @@ struct stat file_stat;
 #define GREEN  "\x1B[32m"
 #define BLUE  "\x1B[34m"
 
+static int svg_file_count;
+static float maxScroll;
+
+int _count_svg_files () {
+	struct dirent *de;
+	rewinddir (pCurrentDir);
+	int i = 0;
+	while ((de = readdir(pCurrentDir)) != NULL) {
+		if(de->d_type != DT_DIR && !strcasecmp(strrchr(de->d_name, '\0') - 4, ".svg"))
+			i++;
+	}
+	return i;
+}
 void readSVG (VkEngine e) {
 	struct stat sb;
 	VkvgSurface newSvgSurf = NULL;
@@ -48,8 +61,6 @@ void readSVG (VkEngine e) {
 		int iconToSkip = lineToSkip * iconPerLine;
 
 		y = (lineToSkip * cellSize) - scrollY;
-
-		//printf ("lineToSkip: %d iconToSkip: %d y:%f scrollY:%f iconPerLine:%d\n", lineToSkip, iconToSkip, y, scrollY, iconPerLine );
 
 		newSvgSurf = vkvg_surface_create(dev, width, height);
 		VkvgContext ctx = vkvg_create(newSvgSurf);
@@ -73,7 +84,7 @@ void readSVG (VkEngine e) {
 						if (x > width - iconSize) {
 							x = 0;
 							y += iconSize + margin;
-							if (y >= height + scrollY)
+							if (y >= height)
 								break;
 						}
 					}
@@ -81,7 +92,6 @@ void readSVG (VkEngine e) {
 				}
 			}
 		}
-		//printf ("totPrinted: %d lineToSkip: %d iconToSkip: %d y:%d scrollY:%f iconPerLine:%d\n",i, lineToSkip, iconToSkip, y, scrollY, iconPerLine );
 		vkvg_destroy(ctx);
 		repaintIconList = false;
 	}else if (filename) {
@@ -170,19 +180,29 @@ static void key_callback(GLFWwindow* window, int key, int scancode, int action, 
 	}
 }
 static void scroll_callback(GLFWwindow* window, double x, double y) {
+	if (iconSize == 0)
+		return;
 	scrollX -= x * 25;
 	scrollY -= y * 25;
 	if (scrollX < 0)
 		scrollX = 0;
 	if (scrollY < 0)
 		scrollY = 0;
+	else if (scrollY > maxScroll)
+		scrollY = maxScroll;
 	repaintIconList = true;
 }
 
 void print_help_and_exit () {
-	printf("VKVG svg parser\n");
+	printf("\nUsage: svgviewer [options] [svgfilepath]\n\n");
+	printf("if the -d option is not specified, svgfile path is mandatory.\n");
+	printf("\t-d directory:\tdirectory containing svg files, cycle pressing Enter.\n");
+	printf("\t-i size:\tif -d option is present, display all svg files as a list with the size specified.\n");
+	printf("\t-m margin:\tset margin for the -i option\n");
+	printf("\n");
 	exit(-1);
 }
+
 
 int main (int argc, char *argv[]){
 	int i = 1;
@@ -246,7 +266,15 @@ int main (int argc, char *argv[]){
 		if (!dir) {
 			printf ("No .svg file found in %s\n", directory);
 			closedir(pCurrentDir);
-			exit(VK_SUCCESS);
+			exit(EXIT_FAILURE);
+		}
+		if (iconSize > 0) {
+			svg_file_count = _count_svg_files();
+			int cellSize = iconSize + margin;
+			int iconPerLine = ceil((double)(width-iconSize) / cellSize);
+			int visibleLines = ceil((double)(height) / cellSize);
+			int totLines = ceil((double)svg_file_count / iconPerLine);
+			maxScroll = (totLines-visibleLines) * cellSize;
 		}
 	}
 
