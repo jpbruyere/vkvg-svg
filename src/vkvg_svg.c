@@ -2080,7 +2080,7 @@ int read_tag (svg_context* svg, FILE* f, svg_attributes attribs) {
 	return res;
 }
 
-VkvgSurface vkvg_create_surface_from_svg (VkvgDevice dev, const char* filename, uint32_t width, uint32_t height) {
+VkvgSurface vkvg_surface_create_from_svg (VkvgDevice dev, uint32_t width, uint32_t height, const char* filename) {
 	FILE* f = fopen(filename, "r");
 	if (f == NULL){
 		perror ("vkvg_svg: file not found");

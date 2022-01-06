@@ -62,7 +62,7 @@ void readSVG (VkEngine e) {
 				if (!strcasecmp(strrchr(de->d_name, '\0') - 4, ".svg")) {
 					if (i >= iconToSkip) {
 						sprintf(tmp, "%s/%s", directory, de->d_name);
-						VkvgSurface surf = vkvg_create_surface_from_svg(dev, tmp, iconSize, iconSize);
+						VkvgSurface surf = vkvg_surface_create_from_svg (dev, iconSize, iconSize, tmp);
 
 						if (surf) {
 							vkvg_set_source_surface(ctx, surf, x, y);
@@ -93,7 +93,7 @@ void readSVG (VkEngine e) {
 		if (sb.st_mtim.tv_sec == file_stat.st_mtim.tv_sec)
 			return;
 		file_stat = sb;
-		newSvgSurf = vkvg_create_surface_from_svg(dev, filename, width, height);
+		newSvgSurf = vkvg_surface_create_from_svg(dev, width, height, filename);
 	} else if (dir) {
 		char tmp[FILENAME_MAX];
 		sprintf(tmp, "%s/%s", directory, dir->d_name);
@@ -105,7 +105,7 @@ void readSVG (VkEngine e) {
 		if (sb.st_mtim.tv_sec == file_stat.st_mtim.tv_sec)
 			return;
 		file_stat = sb;
-		newSvgSurf = vkvg_create_surface_from_svg(dev, tmp, width, height);
+		newSvgSurf = vkvg_surface_create_from_svg(dev, width, height, tmp);
 	}
 
 	//vkengine_wait_idle(e);

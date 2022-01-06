@@ -15,7 +15,8 @@ extern "C" {
 #define LOG
 #endif
 
-VkvgSurface vkvg_create_surface_from_svg (VkvgDevice dev, const char* filename, uint32_t width, uint32_t height);
+VkvgSurface vkvg_surface_create_from_svg (VkvgDevice dev, uint32_t width, uint32_t height, const char* filePath);
+VkvgSurface vkvg_surface_create_from_svg_fragment (VkvgDevice dev, uint32_t width, uint32_t height, const char* svgFragment);
 
 #ifdef __cplusplus
 }
