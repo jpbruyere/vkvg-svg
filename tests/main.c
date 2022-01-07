@@ -72,7 +72,7 @@ void readSVG (VkEngine e) {
 			if(de->d_type != DT_DIR) {
 				if (!strcasecmp(strrchr(de->d_name, '\0') - 4, ".svg")) {
 					if (i >= iconToSkip) {
-						sprintf(tmp, "%s/%s", directory, de->d_name);
+						sprintf(tmp, "%s%s", directory, de->d_name);
 						VkvgSurface surf = vkvg_surface_create_from_svg (dev, iconSize, iconSize, tmp);
 
 						if (surf) {
@@ -278,11 +278,12 @@ int main (int argc, char *argv[]){
 		}
 	}
 
-	while (!vkengine_should_close (e)) {
 
-		//vkvg_log_level = VKVG_LOG_INFO;
+
+	while (!vkengine_should_close (e)) {
+		//vkvg_log_level = VKVG_LOG_INFO_PATH|VKVG_LOG_INFO_CMD|VKVG_LOG_INFO_VAO;
 		readSVG (e);
-		//vkvg_log_level = VKVG_LOG_DEBUG;
+		//vkvg_log_level = VKVG_LOG_ERR;
 
 		VkvgContext ctx = vkvg_create(surf);
 		vkvg_set_source_rgb(ctx,0.1,0.1,0.1);

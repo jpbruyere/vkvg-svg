@@ -81,10 +81,10 @@ typedef struct {
 	uint32_t hash;
 	svg_element_type type;
 	uint32_t xlinkHref;//0 if unused
-} svg_element_id;
+} svg_element_header;
 
 typedef struct {
-	svg_element_id id;
+	svg_element_header id;
 	svg_length_or_percentage x;
 	svg_length_or_percentage y;
 	svg_length_or_percentage w;
@@ -94,14 +94,14 @@ typedef struct {
 }svg_element_rect;
 
 typedef struct {
-	svg_element_id id;
+	svg_element_header id;
 	svg_length_or_percentage cx;
 	svg_length_or_percentage cy;
 	svg_length_or_percentage r;
 }svg_element_circle;
 
 typedef struct {
-	svg_element_id id;
+	svg_element_header id;
 	svg_length_or_percentage x1;
 	svg_length_or_percentage y1;
 	svg_length_or_percentage x2;
@@ -109,7 +109,7 @@ typedef struct {
 }svg_element_line;
 
 typedef struct {
-	svg_element_id id;
+	svg_element_header id;
 	svg_length_or_percentage cx;
 	svg_length_or_percentage cy;
 	svg_length_or_percentage rx;
@@ -117,20 +117,20 @@ typedef struct {
 }svg_element_ellipse;
 
 typedef struct {
-	svg_element_id id;
+	svg_element_header id;
 }svg_element_polygon;
 
 typedef struct {
-	svg_element_id id;
+	svg_element_header id;
 }svg_element_polyline;
 
 typedef struct {
-	svg_element_id id;
+	svg_element_header id;
 	char* d;
 }svg_element_path;
 
 typedef struct {
-	svg_element_id id;
+	svg_element_header id;
 	svg_gradient_unit gradientUnits;
 	svg_length_or_percentage cx;
 	svg_length_or_percentage cy;
@@ -141,7 +141,7 @@ typedef struct {
 }svg_element_radial_gradient;
 
 typedef struct {
-	svg_element_id id;
+	svg_element_header id;
 	svg_gradient_unit gradientUnits;
 	svg_length_or_percentage x1;
 	svg_length_or_percentage x2;
@@ -174,6 +174,7 @@ typedef struct {
 } svg_viewbox;
 
 typedef struct {
+	char		namespace[128];
 	char		elt[128];
 	char		att[1024];
 	char		value[1024*1024];

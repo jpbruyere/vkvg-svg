@@ -51,10 +51,10 @@ svg_element_radial_gradient* _new_radial_gradient() {
 	return g;
 }
 uint32_t _get_element_hash (void* elt) {
-	return ((svg_element_id*)elt)->hash;
+	return ((svg_element_header*)elt)->hash;
 }
 svg_element_type _get_element_type (void* elt) {
-	return ((svg_element_id*)elt)->type;
+	return ((svg_element_header*)elt)->type;
 }
 
 uint32_t hash_string(const char * s)
@@ -1026,8 +1026,10 @@ bool _try_parse_float (stream s, float* f) {
 	while(!STR_EOF(s)) {
 		if (STR_PEEK(s)=='0') {
 			STR_ADVANCE(s);
-			if (!hasDecimal && !hasDigit && !STR_EOF(s) && STR_PEEK(s)=='0')
-				break;
+			if (!hasDecimal && !hasDigit && !STR_EOF(s) && STR_PEEK(s)>='0' && STR_PEEK(s)<='9') {
+				*f = 0;
+				return true;
+			}
 			hasDigit = true;
 		} else if (STR_PEEK(s) >= '0' && STR_PEEK(s) <= '9') {
 			STR_ADVANCE(s);
@@ -1052,11 +1054,7 @@ bool _try_parse_float (stream s, float* f) {
 			break;
 	}
 	if (hasDigit) {
-		char* pEnd = &s->str[s->pos];
-		if (STR_EOF(s))
-			*f = strtod (&s->str[start], NULL);
-		else
-			*f = strtod (&s->str[start], &pEnd);
+		*f = atof (&s->str[start]);
 		return true;
 	}
 	return false;
@@ -1079,11 +1077,32 @@ bool _try_parse_floats (stream s, int floatCount, ...) {
 	va_end(args);
 	return true;
 }
+bool _try_parse_flags (stream s, int flagCount, ...) {
+	va_list args;
+	va_start(args, flagCount);
 
+	for (int i=0; i<flagCount; i++) {
+		bool* pF = va_arg(args, bool*);
+
+		stream_skip_white_spaces (s);
+		if (STR_EOF(s) || (STR_PEEK(s) != '0' && STR_PEEK(s) != '1')) {
+			va_end(args);
+			return false;
+		}
+		*pF = STR_GET(s)=='1';
+		stream_skip_white_spaces (s);
+		STR_SKIP(s,',');
+	}
+	va_end(args);
+	return true;
+}
+//prob with:
+//d="M140.451 126.343l.004-24.173h-2.743v24.39c-.001 10 1.876 -.161 2.739-.217z"
 void _parse_path_d_attribute (svg_context* svg, char* str) {
 	if (!str)
 		return;
-	float x, y, c1x, c1y, c2x, c2y, cpX, cpY, rx, ry, rotx, large, sweep;
+	float x, y, c1x, c1y, c2x, c2y, cpX, cpY, rx, ry, rotx;
+	bool large, sweep;
 	enum prevCmd prev = none;
 	int repeat=0;
 	float subpathX = 0, subpathY = 0;
@@ -1330,15 +1349,16 @@ void _parse_path_d_attribute (svg_context* svg, char* str) {
 			break;
 		case 'A'://rx ry x-axis-rotation large-arc-flag sweep-flag x y
 			if (repeat)
-				result = _try_parse_floats(tmp, 6, &ry, &rotx, &large, &sweep, &x, &y);
+				result = _try_parse_floats(tmp, 2, &ry, &rotx);
 			else
-				result = _try_parse_floats(tmp, 7, &rx, &ry, &rotx, &large, &sweep, &x, &y);
+				result = _try_parse_floats(tmp, 3, &rx, &ry, &rotx);
 			if (result) {
-				bool lf = large > __FLT_EPSILON__;
-				bool sw = sweep > __FLT_EPSILON__;
+				if (!_try_parse_flags(tmp, 2, &large, &sweep) ||
+					!_try_parse_floats(tmp, 2, &x, &y))
+					return;
 				rotx = rotx * M_PI / 180.0f;
 
-				vkvg_elliptic_arc_to (svg->ctx, x, y, lf, sw, rx, ry, rotx);
+				vkvg_elliptic_arc_to (svg->ctx, x, y, large, sweep, rx, ry, rotx);
 
 				repeat = _try_parse_floats(tmp, 1, &rx);
 			} else
@@ -1346,15 +1366,17 @@ void _parse_path_d_attribute (svg_context* svg, char* str) {
 			break;
 		case 'a'://rx ry x-axis-rotation large-arc-flag sweep-flag x y
 			if (repeat)
-				result = _try_parse_floats(tmp, 6, &ry, &rotx, &large, &sweep, &x, &y);
+				result = _try_parse_floats(tmp, 2, &ry, &rotx);
 			else
-				result = _try_parse_floats(tmp, 7, &rx, &ry, &rotx, &large, &sweep, &x, &y);
+				result = _try_parse_floats(tmp, 3, &rx, &ry, &rotx);
+
 			if (result) {
-				bool lf = large > __FLT_EPSILON__;
-				bool sw = sweep > __FLT_EPSILON__;
+				if (!_try_parse_flags(tmp, 2, &large, &sweep) ||
+					!_try_parse_floats(tmp, 2, &x, &y))
+					return;
 				rotx = degToRad (rotx);
 
-				vkvg_rel_elliptic_arc_to(svg->ctx, x, y, lf, sw, rx, ry, rotx);
+				vkvg_rel_elliptic_arc_to(svg->ctx, x, y, large, sweep, rx, ry, rotx);
 
 				repeat = _try_parse_floats(tmp, 1, &rx);
 			} else
@@ -1392,7 +1414,7 @@ bool _idlist_contains (svg_context* svg, uint32_t hash) {
 }
 void _store_or_throw (svg_context* svg, void* elt) {
 	if (svg->currentIdHash) {
-		svg_element_id* id = (svg_element_id*)elt;
+		svg_element_header* id = (svg_element_header*)elt;
 		id->hash = svg->currentIdHash;
 		LOG("store elemnt: %u type:%u\n", id->hash, id->type);
 		array_add (svg->idList, elt);
@@ -1420,11 +1442,11 @@ void _copy_pattern_color_stops (VkvgPattern orig, VkvgPattern dest) {
 }
 void _resolve_pattern_href (svg_context* svg, void* rootElt, VkvgPattern pat) {
 	void* elt = NULL;
-	svg_element_id* id = (svg_element_id*)rootElt;
+	svg_element_header* id = (svg_element_header*)rootElt;
 	while (id->xlinkHref) {
 		if (try_find_by_id(svg, id->xlinkHref, &elt)) {
 			id->xlinkHref = 0;//reset once resolved
-			id = (svg_element_id*)elt;
+			id = (svg_element_header*)elt;
 		} else {
 			LOG ("xlink:href svg element error  %s\n", svg->value);
 			return;
