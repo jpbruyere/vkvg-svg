@@ -34,8 +34,8 @@ ELSE ()
 	)
 
 	TARGET_LINK_LIBRARIES(${PROJECT_NAME}
-		${VKVG_LIBRARIES}
-		${VKH_LIBRARIES}
+		${vkvg_LIBRARIES}
+		${vkh_LIBRARIES}
 	)
 
 	INCLUDE("${CMAKE_CURRENT_SOURCE_DIR}/cmake/ConfigLibrary.cmake")
