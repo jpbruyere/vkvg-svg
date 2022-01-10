@@ -8,7 +8,6 @@ IF (CMAKE_BUILD_TYPE STREQUAL "Debug")
 	ADD_DEFINITIONS (-DDEBUG)
 ENDIF ()
 
-
 FILE(GLOB sources src/*.c)
 
 IF (VKVG_SVG)#defined by vkvg if built for
@@ -17,7 +16,10 @@ IF (VKVG_SVG)#defined by vkvg if built for
 		PUBLIC
 			"${CMAKE_CURRENT_SOURCE_DIR}/src"
 			"${CMAKE_CURRENT_SOURCE_DIR}/include"
-	)
+			$<$<BOOL:$<TARGET_EXISTS:vkvg>>:$<TARGET_PROPERTY:vkvg,INCLUDE_DIRECTORIES>>
+			$<$<BOOL:$<TARGET_EXISTS:vkvg_static>>:$<TARGET_PROPERTY:vkvg_static,INCLUDE_DIRECTORIES>>
+			$<$<BOOL:$<TARGET_EXISTS:vkvg_shared>>:$<TARGET_PROPERTY:vkvg_shared,INCLUDE_DIRECTORIES>>
+		)
 ELSE ()
 	FIND_PACKAGE(vkh REQUIRED)
 	FIND_PACKAGE(vkvg REQUIRED)

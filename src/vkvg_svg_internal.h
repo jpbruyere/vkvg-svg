@@ -11,6 +11,10 @@
 #include <stdarg.h>
 #include <ctype.h>
 
+#define _USE_MATH_DEFINES
+#include <math.h>
+
+
 #include "fmemopen.h"
 
 #include "vkvg.h"
@@ -19,6 +23,10 @@
 #define ARRAY_ELEMENT_TYPE void*
 #include "array.h"
 
+#if defined WIN32 || defined _WIN32 || defined __WIN32__
+	#define strncasecmp(x,y,z) _strnicmp(x,y,z)
+	#define strcasecmp(x,y) _stricmp(x,y)
+#endif
 //#define DEBUG_LOG
 
 #ifdef DEBUG_LOG
