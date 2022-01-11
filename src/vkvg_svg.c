@@ -2101,15 +2101,7 @@ int read_tag (svg_context* svg, FILE* f, svg_attributes attribs) {
 	return res;
 }
 
-VkvgSurface vkvg_surface_create_from_svg (VkvgDevice dev, uint32_t width, uint32_t height, const char* filename) {
-	FILE* f = fopen(filename, "r");
-	if (f == NULL){
-		perror ("vkvg_svg: file not found");
-		return NULL;
-	}
-	//LOG ("loading %s\n", filename);
-	//printf ("loading %s\n", filename);
-
+VkvgSurface _create_from_file_handle (VkvgDevice dev, uint32_t width, uint32_t height, FILE* f) {
 	svg_context svg = {0};
 	svg.dev		= dev;
 	svg.width	= width;
@@ -2124,8 +2116,6 @@ VkvgSurface vkvg_surface_create_from_svg (VkvgDevice dev, uint32_t width, uint32
 	};
 
 	read_tag (&svg, f, attribs);
-
-	fclose(f);
 
 	for (uint32_t i=0; i<svg.idList->count; i++) {
 		switch (_get_element_type (svg.idList->elements[i])) {
@@ -2148,4 +2138,23 @@ VkvgSurface vkvg_surface_create_from_svg (VkvgDevice dev, uint32_t width, uint32
 	array_destroy (svg.idList);
 
 	return svg.surf;
+}
+
+VkvgSurface vkvg_surface_create_from_svg_fragment(VkvgDevice dev, uint32_t width, uint32_t height, const char* svgFragment) {
+	FILE *f = fmemopen((void*)svgFragment, strlen (svgFragment), "r");
+	VkvgSurface surf = _create_from_file_handle (dev, width, height, f);
+	fclose(f);
+	return surf;
+}
+VkvgSurface vkvg_surface_create_from_svg (VkvgDevice dev, uint32_t width, uint32_t height, const char* filename) {
+	FILE* f = fopen(filename, "r");
+	if (f == NULL){
+		perror ("vkvg_svg: file not found");
+		return NULL;
+	}
+	//LOG ("loading %s\n", filename);
+	//printf ("loading %s\n", filename);
+	VkvgSurface surf = _create_from_file_handle (dev, width, height, f);
+	fclose(f);
+	return surf;
 }
