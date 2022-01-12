@@ -1593,7 +1593,7 @@ float _normalized_diagonal (float w, float h) {
 	return sqrtf(powf(w,2) + powf(h,2))/sqrtf(2);
 }
 void _process_element (svg_context* svg, svg_attributes* attribs, void* elt, bool use) {
-	if (!svg->skipDraw) {
+	if (!(svg->inDefs || svg->skipDraw)) {
 		switch (_get_element_type(elt)) {
 		case svg_element_type_rect:
 			{
@@ -1704,7 +1704,14 @@ void _process_use (svg_context* svg, svg_attributes* attribs) {
 }
 #define PROCESS_SVG_XLINKEMBED_ATTRIB_XLINK_HREF PROCESS_SVG_XLINK_ATTRIB_XLINK_HREF
 
-#define PROCESS_SVG_CORE_ATTRIB_ID svg->currentIdHash = hash_string(svg->value);
+#define PROCESS_SVG_CORE_ATTRIB_ID {\
+	svg->currentIdHash = hash_string(svg->value);\
+	if (svg->renderOnlyIdHash && svg->renderOnlyIdHash == svg->currentIdHash) {\
+		matchedId = true;\
+		svg->skipDraw = false;\
+		svg->renderOnlyIdHash = 0;\
+	}\
+}
 
 #define PROCESS_SVG_COLOR_ATTRIB_COLOR	try_parse_color (svg->value, &attribs.hasColor, &attribs.color);
 #define PROCESS_SVG_PAINT_ATTRIB_STROKE	try_parse_color (svg->value, &attribs.hasStroke, &attribs.stroke);
@@ -1797,7 +1804,7 @@ void _process_use (svg_context* svg, svg_attributes* attribs) {
 		vkvg_clear(svg->ctx);\
 		svg->ownContext = true;\
 	}\
-	vkvg_set_fill_rule(svg->ctx, VKVG_FILL_RULE_EVEN_ODD);\
+	vkvg_set_fill_rule(svg->ctx, VKVG_FILL_RULE_NON_ZERO);\
 	if (xScale < yScale)\
 		vkvg_scale(svg->ctx, xScale, xScale);\
 	else\
@@ -2055,8 +2062,12 @@ void _process_use (svg_context* svg, svg_attributes* attribs) {
 
 //========DEFS============
 #define HEADING_DEFS
-#define ELEMENT_PRE_PROCESS_DEFS	svg->skipDraw = true;
-#define ELEMENT_POST_PROCESS_DEFS	svg->skipDraw = false;
+#define ELEMENT_PRE_PROCESS_DEFS {\
+	svg->inDefs = true;\
+}
+#define ELEMENT_POST_PROCESS_DEFS {\
+	svg->inDefs = false;\
+}
 //=============================
 
 
@@ -2121,8 +2132,10 @@ VkvgSurface _create_from_file_handle (VkvgDevice dev, uint32_t width, uint32_t h
 	svg.fit		= true;
 	svg.idList	= array_create();
 	svg.ctx		= ctx;
-	if (id)
-		svg.currentIdHash = hash_string(id);
+	if (id && id[0] == '#') {
+		svg.renderOnlyIdHash = hash_string(&id[1]);
+		svg.skipDraw = true;
+	}
 
 	svg_attributes attribs = {
 		svg_paint_type_solid, svg_paint_type_none, svg_paint_type_solid, 0xff000000, 0xff000000, 0xff000000,
@@ -2207,6 +2220,7 @@ VkvgSvg vkvg_svg_load_fragment (const char* svgFragment) {
 	svg->buffer = (char*)malloc(sizeof(char) * svg->size);
 	memcpy(svg->buffer, svgFragment, svg->size);
 	svg->fileHandle = fmemopen((void*)svg->buffer, svg->size, "r");
+	_query_dimensions(svg);
 	return svg;
 }
 

@@ -199,7 +199,8 @@ typedef struct {
 	bool		fit;//fit rendering surface
 	bool		preserveAspectRatio;
 	bool		skip;//skip tag and children
-	bool		skipDraw;//in defs
+	bool		skipDraw;
+	bool		inDefs;//in defs
 	bool		skipStore;//use
 	bool		ownContext;//must destroy vkvg ctx on clean
 	uint32_t	renderOnlyIdHash;

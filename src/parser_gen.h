@@ -3391,6 +3391,7 @@ int read_foreignObject_attributes (svg_context* svg, FILE* f, svg_attributes att
 #endif
 #ifdef PARSER_GEN_IMPLEMENTATION
 int read_svg_attributes (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData) {
+	bool matchedId = false;
 	HEADING_SVG
 	HEADING_SVG_XMLNS_ATTRIB
 	HEADING_SVG_CORE_ATTRIB
@@ -5032,9 +5033,12 @@ int read_svg_attributes (svg_context* svg, FILE* f, svg_attributes attribs, void
 	if (res > 0)
 		res = read_svg_children (svg, f, attribs, parentData);
 	ELEMENT_POST_PROCESS_SVG
+	if (matchedId)
+		svg->skipDraw = true;
 	return res;
 }
 int read_g_attributes (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData) {
+	bool matchedId = false;
 	HEADING_G
 	HEADING_SVG_CORE_ATTRIB
 	HEADING_SVG_CONDITIONAL_ATTRIB
@@ -6542,9 +6546,12 @@ int read_g_attributes (svg_context* svg, FILE* f, svg_attributes attribs, void* 
 	if (res > 0)
 		res = read_g_children (svg, f, attribs, parentData);
 	ELEMENT_POST_PROCESS_G
+	if (matchedId)
+		svg->skipDraw = true;
 	return res;
 }
 int read_defs_attributes (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData) {
+	bool matchedId = false;
 	HEADING_DEFS
 	HEADING_SVG_CORE_ATTRIB
 	HEADING_SVG_CONDITIONAL_ATTRIB
@@ -8052,9 +8059,12 @@ int read_defs_attributes (svg_context* svg, FILE* f, svg_attributes attribs, voi
 	if (res > 0)
 		res = read_defs_children (svg, f, attribs, parentData);
 	ELEMENT_POST_PROCESS_DEFS
+	if (matchedId)
+		svg->skipDraw = true;
 	return res;
 }
 int read_desc_attributes (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData) {
+	bool matchedId = false;
 	HEADING_DESC
 	HEADING_SVG_CORE_ATTRIB
 	HEADING_SVG_STYLE_ATTRIB
@@ -8114,9 +8124,12 @@ int read_desc_attributes (svg_context* svg, FILE* f, svg_attributes attribs, voi
 	if (res > 0)
 		res = skip_children (svg, f, attribs, parentData);
 	ELEMENT_POST_PROCESS_DESC
+	if (matchedId)
+		svg->skipDraw = true;
 	return res;
 }
 int read_title_attributes (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData) {
+	bool matchedId = false;
 	HEADING_TITLE
 	HEADING_SVG_CORE_ATTRIB
 	HEADING_SVG_STYLE_ATTRIB
@@ -8176,9 +8189,12 @@ int read_title_attributes (svg_context* svg, FILE* f, svg_attributes attribs, vo
 	if (res > 0)
 		res = skip_children (svg, f, attribs, parentData);
 	ELEMENT_POST_PROCESS_TITLE
+	if (matchedId)
+		svg->skipDraw = true;
 	return res;
 }
 int read_metadata_attributes (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData) {
+	bool matchedId = false;
 	HEADING_METADATA
 	HEADING_SVG_CORE_ATTRIB
 	read_attributes_loop_start
@@ -8230,9 +8246,12 @@ int read_metadata_attributes (svg_context* svg, FILE* f, svg_attributes attribs,
 	if (res > 0)
 		res = skip_children (svg, f, attribs, parentData);
 	ELEMENT_POST_PROCESS_METADATA
+	if (matchedId)
+		svg->skipDraw = true;
 	return res;
 }
 int read_symbol_attributes (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData) {
+	bool matchedId = false;
 	HEADING_SYMBOL
 	HEADING_SVG_CORE_ATTRIB
 	HEADING_SVG_STYLE_ATTRIB
@@ -9732,9 +9751,12 @@ int read_symbol_attributes (svg_context* svg, FILE* f, svg_attributes attribs, v
 	if (res > 0)
 		res = read_symbol_children (svg, f, attribs, parentData);
 	ELEMENT_POST_PROCESS_SYMBOL
+	if (matchedId)
+		svg->skipDraw = true;
 	return res;
 }
 int read_use_attributes (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData) {
+	bool matchedId = false;
 	HEADING_USE
 	HEADING_SVG_CORE_ATTRIB
 	HEADING_SVG_CONDITIONAL_ATTRIB
@@ -11337,9 +11359,12 @@ int read_use_attributes (svg_context* svg, FILE* f, svg_attributes attribs, void
 	if (res > 0)
 		res = read_use_children (svg, f, attribs, parentData);
 	ELEMENT_POST_PROCESS_USE
+	if (matchedId)
+		svg->skipDraw = true;
 	return res;
 }
 int read_switch_attributes (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData) {
+	bool matchedId = false;
 	HEADING_SWITCH
 	HEADING_SVG_CORE_ATTRIB
 	HEADING_SVG_CONDITIONAL_ATTRIB
@@ -12847,9 +12872,12 @@ int read_switch_attributes (svg_context* svg, FILE* f, svg_attributes attribs, v
 	if (res > 0)
 		res = read_switch_children (svg, f, attribs, parentData);
 	ELEMENT_POST_PROCESS_SWITCH
+	if (matchedId)
+		svg->skipDraw = true;
 	return res;
 }
 int read_image_attributes (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData) {
+	bool matchedId = false;
 	HEADING_IMAGE
 	HEADING_SVG_CORE_ATTRIB
 	HEADING_SVG_CONDITIONAL_ATTRIB
@@ -14462,9 +14490,12 @@ int read_image_attributes (svg_context* svg, FILE* f, svg_attributes attribs, vo
 	if (res > 0)
 		res = read_image_children (svg, f, attribs, parentData);
 	ELEMENT_POST_PROCESS_IMAGE
+	if (matchedId)
+		svg->skipDraw = true;
 	return res;
 }
 int read_style_attributes (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData) {
+	bool matchedId = false;
 	HEADING_STYLE
 	read_attributes_loop_start
 		int nameLenght = strlen (svg->att);
@@ -14523,9 +14554,12 @@ int read_style_attributes (svg_context* svg, FILE* f, svg_attributes attribs, vo
 	if (res > 0)
 		res = skip_children (svg, f, attribs, parentData);
 	ELEMENT_POST_PROCESS_STYLE
+	if (matchedId)
+		svg->skipDraw = true;
 	return res;
 }
 int read_path_attributes (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData) {
+	bool matchedId = false;
 	HEADING_PATH
 	HEADING_SVG_CORE_ATTRIB
 	HEADING_SVG_CONDITIONAL_ATTRIB
@@ -16047,9 +16081,12 @@ int read_path_attributes (svg_context* svg, FILE* f, svg_attributes attribs, voi
 	if (res > 0)
 		res = read_path_children (svg, f, attribs, parentData);
 	ELEMENT_POST_PROCESS_PATH
+	if (matchedId)
+		svg->skipDraw = true;
 	return res;
 }
 int read_rect_attributes (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData) {
+	bool matchedId = false;
 	HEADING_RECT
 	HEADING_SVG_CORE_ATTRIB
 	HEADING_SVG_CONDITIONAL_ATTRIB
@@ -17583,9 +17620,12 @@ int read_rect_attributes (svg_context* svg, FILE* f, svg_attributes attribs, voi
 	if (res > 0)
 		res = read_rect_children (svg, f, attribs, parentData);
 	ELEMENT_POST_PROCESS_RECT
+	if (matchedId)
+		svg->skipDraw = true;
 	return res;
 }
 int read_circle_attributes (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData) {
+	bool matchedId = false;
 	HEADING_CIRCLE
 	HEADING_SVG_CORE_ATTRIB
 	HEADING_SVG_CONDITIONAL_ATTRIB
@@ -19103,9 +19143,12 @@ int read_circle_attributes (svg_context* svg, FILE* f, svg_attributes attribs, v
 	if (res > 0)
 		res = read_circle_children (svg, f, attribs, parentData);
 	ELEMENT_POST_PROCESS_CIRCLE
+	if (matchedId)
+		svg->skipDraw = true;
 	return res;
 }
 int read_line_attributes (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData) {
+	bool matchedId = false;
 	HEADING_LINE
 	HEADING_SVG_CORE_ATTRIB
 	HEADING_SVG_CONDITIONAL_ATTRIB
@@ -20639,9 +20682,12 @@ int read_line_attributes (svg_context* svg, FILE* f, svg_attributes attribs, voi
 	if (res > 0)
 		res = read_line_children (svg, f, attribs, parentData);
 	ELEMENT_POST_PROCESS_LINE
+	if (matchedId)
+		svg->skipDraw = true;
 	return res;
 }
 int read_ellipse_attributes (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData) {
+	bool matchedId = false;
 	HEADING_ELLIPSE
 	HEADING_SVG_CORE_ATTRIB
 	HEADING_SVG_CONDITIONAL_ATTRIB
@@ -22168,9 +22214,12 @@ int read_ellipse_attributes (svg_context* svg, FILE* f, svg_attributes attribs, 
 	if (res > 0)
 		res = read_ellipse_children (svg, f, attribs, parentData);
 	ELEMENT_POST_PROCESS_ELLIPSE
+	if (matchedId)
+		svg->skipDraw = true;
 	return res;
 }
 int read_polyline_attributes (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData) {
+	bool matchedId = false;
 	HEADING_POLYLINE
 	HEADING_SVG_CORE_ATTRIB
 	HEADING_SVG_CONDITIONAL_ATTRIB
@@ -23691,9 +23740,12 @@ int read_polyline_attributes (svg_context* svg, FILE* f, svg_attributes attribs,
 	if (res > 0)
 		res = read_polyline_children (svg, f, attribs, parentData);
 	ELEMENT_POST_PROCESS_POLYLINE
+	if (matchedId)
+		svg->skipDraw = true;
 	return res;
 }
 int read_polygon_attributes (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData) {
+	bool matchedId = false;
 	HEADING_POLYGON
 	HEADING_SVG_CORE_ATTRIB
 	HEADING_SVG_CONDITIONAL_ATTRIB
@@ -25214,9 +25266,12 @@ int read_polygon_attributes (svg_context* svg, FILE* f, svg_attributes attribs, 
 	if (res > 0)
 		res = read_polygon_children (svg, f, attribs, parentData);
 	ELEMENT_POST_PROCESS_POLYGON
+	if (matchedId)
+		svg->skipDraw = true;
 	return res;
 }
 int read_text_attributes (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData) {
+	bool matchedId = false;
 	HEADING_TEXT
 	HEADING_SVG_CORE_ATTRIB
 	HEADING_SVG_CONDITIONAL_ATTRIB
@@ -26780,9 +26835,12 @@ int read_text_attributes (svg_context* svg, FILE* f, svg_attributes attribs, voi
 	if (res > 0)
 		res = read_text_children (svg, f, attribs, parentData);
 	ELEMENT_POST_PROCESS_TEXT
+	if (matchedId)
+		svg->skipDraw = true;
 	return res;
 }
 int read_tspan_attributes (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData) {
+	bool matchedId = false;
 	HEADING_TSPAN
 	HEADING_SVG_CORE_ATTRIB
 	HEADING_SVG_CONDITIONAL_ATTRIB
@@ -28336,9 +28394,12 @@ int read_tspan_attributes (svg_context* svg, FILE* f, svg_attributes attribs, vo
 	if (res > 0)
 		res = read_tspan_children (svg, f, attribs, parentData);
 	ELEMENT_POST_PROCESS_TSPAN
+	if (matchedId)
+		svg->skipDraw = true;
 	return res;
 }
 int read_tref_attributes (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData) {
+	bool matchedId = false;
 	HEADING_TREF
 	HEADING_SVG_CORE_ATTRIB
 	HEADING_SVG_CONDITIONAL_ATTRIB
@@ -29974,9 +30035,12 @@ int read_tref_attributes (svg_context* svg, FILE* f, svg_attributes attribs, voi
 	if (res > 0)
 		res = read_tref_children (svg, f, attribs, parentData);
 	ELEMENT_POST_PROCESS_TREF
+	if (matchedId)
+		svg->skipDraw = true;
 	return res;
 }
 int read_textPath_attributes (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData) {
+	bool matchedId = false;
 	HEADING_TEXTPATH
 	HEADING_SVG_CORE_ATTRIB
 	HEADING_SVG_CONDITIONAL_ATTRIB
@@ -31628,9 +31692,12 @@ int read_textPath_attributes (svg_context* svg, FILE* f, svg_attributes attribs,
 	if (res > 0)
 		res = read_textPath_children (svg, f, attribs, parentData);
 	ELEMENT_POST_PROCESS_TEXTPATH
+	if (matchedId)
+		svg->skipDraw = true;
 	return res;
 }
 int read_altGlyph_attributes (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData) {
+	bool matchedId = false;
 	HEADING_ALTGLYPH
 	HEADING_SVG_CORE_ATTRIB
 	HEADING_SVG_CONDITIONAL_ATTRIB
@@ -33256,9 +33323,12 @@ int read_altGlyph_attributes (svg_context* svg, FILE* f, svg_attributes attribs,
 	if (res > 0)
 		res = skip_children (svg, f, attribs, parentData);
 	ELEMENT_POST_PROCESS_ALTGLYPH
+	if (matchedId)
+		svg->skipDraw = true;
 	return res;
 }
 int read_altGlyphDef_attributes (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData) {
+	bool matchedId = false;
 	HEADING_ALTGLYPHDEF
 	HEADING_SVG_CORE_ATTRIB
 	read_attributes_loop_start
@@ -33310,9 +33380,12 @@ int read_altGlyphDef_attributes (svg_context* svg, FILE* f, svg_attributes attri
 	if (res > 0)
 		res = read_altGlyphDef_children (svg, f, attribs, parentData);
 	ELEMENT_POST_PROCESS_ALTGLYPHDEF
+	if (matchedId)
+		svg->skipDraw = true;
 	return res;
 }
 int read_altGlyphItem_attributes (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData) {
+	bool matchedId = false;
 	HEADING_ALTGLYPHITEM
 	HEADING_SVG_CORE_ATTRIB
 	read_attributes_loop_start
@@ -33364,9 +33437,12 @@ int read_altGlyphItem_attributes (svg_context* svg, FILE* f, svg_attributes attr
 	if (res > 0)
 		res = read_altGlyphItem_children (svg, f, attribs, parentData);
 	ELEMENT_POST_PROCESS_ALTGLYPHITEM
+	if (matchedId)
+		svg->skipDraw = true;
 	return res;
 }
 int read_glyphRef_attributes (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData) {
+	bool matchedId = false;
 	HEADING_GLYPHREF
 	HEADING_SVG_CORE_ATTRIB
 	HEADING_SVG_STYLE_ATTRIB
@@ -34872,9 +34948,12 @@ int read_glyphRef_attributes (svg_context* svg, FILE* f, svg_attributes attribs,
 	if (res > 0)
 		res = skip_children (svg, f, attribs, parentData);
 	ELEMENT_POST_PROCESS_GLYPHREF
+	if (matchedId)
+		svg->skipDraw = true;
 	return res;
 }
 int read_marker_attributes (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData) {
+	bool matchedId = false;
 	HEADING_MARKER
 	HEADING_SVG_CORE_ATTRIB
 	HEADING_SVG_STYLE_ATTRIB
@@ -36356,9 +36435,12 @@ int read_marker_attributes (svg_context* svg, FILE* f, svg_attributes attribs, v
 	if (res > 0)
 		res = read_marker_children (svg, f, attribs, parentData);
 	ELEMENT_POST_PROCESS_MARKER
+	if (matchedId)
+		svg->skipDraw = true;
 	return res;
 }
 int read_color_profile_attributes (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData) {
+	bool matchedId = false;
 	HEADING_COLOR_PROFILE
 	HEADING_SVG_CORE_ATTRIB
 	HEADING_SVG_XLINK_ATTRIB
@@ -36530,9 +36612,12 @@ int read_color_profile_attributes (svg_context* svg, FILE* f, svg_attributes att
 	if (res > 0)
 		res = read_color_profile_children (svg, f, attribs, parentData);
 	ELEMENT_POST_PROCESS_COLOR_PROFILE
+	if (matchedId)
+		svg->skipDraw = true;
 	return res;
 }
 int read_linearGradient_attributes (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData) {
+	bool matchedId = false;
 	HEADING_LINEARGRADIENT
 	HEADING_SVG_CORE_ATTRIB
 	HEADING_SVG_STYLE_ATTRIB
@@ -38109,9 +38194,12 @@ int read_linearGradient_attributes (svg_context* svg, FILE* f, svg_attributes at
 	if (res > 0)
 		res = read_linearGradient_children (svg, f, attribs, parentData);
 	ELEMENT_POST_PROCESS_LINEARGRADIENT
+	if (matchedId)
+		svg->skipDraw = true;
 	return res;
 }
 int read_radialGradient_attributes (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData) {
+	bool matchedId = false;
 	HEADING_RADIALGRADIENT
 	HEADING_SVG_CORE_ATTRIB
 	HEADING_SVG_STYLE_ATTRIB
@@ -39684,9 +39772,12 @@ int read_radialGradient_attributes (svg_context* svg, FILE* f, svg_attributes at
 	if (res > 0)
 		res = read_radialGradient_children (svg, f, attribs, parentData);
 	ELEMENT_POST_PROCESS_RADIALGRADIENT
+	if (matchedId)
+		svg->skipDraw = true;
 	return res;
 }
 int read_stop_attributes (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData) {
+	bool matchedId = false;
 	HEADING_STOP
 	HEADING_SVG_CORE_ATTRIB
 	HEADING_SVG_STYLE_ATTRIB
@@ -41077,9 +41168,12 @@ int read_stop_attributes (svg_context* svg, FILE* f, svg_attributes attribs, voi
 	if (res > 0)
 		res = read_stop_children (svg, f, attribs, parentData);
 	ELEMENT_POST_PROCESS_STOP
+	if (matchedId)
+		svg->skipDraw = true;
 	return res;
 }
 int read_pattern_attributes (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData) {
+	bool matchedId = false;
 	HEADING_PATTERN
 	HEADING_SVG_CORE_ATTRIB
 	HEADING_SVG_CONDITIONAL_ATTRIB
@@ -42674,9 +42768,12 @@ int read_pattern_attributes (svg_context* svg, FILE* f, svg_attributes attribs, 
 	if (res > 0)
 		res = read_pattern_children (svg, f, attribs, parentData);
 	ELEMENT_POST_PROCESS_PATTERN
+	if (matchedId)
+		svg->skipDraw = true;
 	return res;
 }
 int read_clipPath_attributes (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData) {
+	bool matchedId = false;
 	HEADING_CLIPPATH
 	HEADING_SVG_CORE_ATTRIB
 	HEADING_SVG_CONDITIONAL_ATTRIB
@@ -44138,9 +44235,12 @@ int read_clipPath_attributes (svg_context* svg, FILE* f, svg_attributes attribs,
 	if (res > 0)
 		res = read_clipPath_children (svg, f, attribs, parentData);
 	ELEMENT_POST_PROCESS_CLIPPATH
+	if (matchedId)
+		svg->skipDraw = true;
 	return res;
 }
 int read_mask_attributes (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData) {
+	bool matchedId = false;
 	HEADING_MASK
 	HEADING_SVG_CORE_ATTRIB
 	HEADING_SVG_CONDITIONAL_ATTRIB
@@ -45628,9 +45728,12 @@ int read_mask_attributes (svg_context* svg, FILE* f, svg_attributes attribs, voi
 	if (res > 0)
 		res = read_mask_children (svg, f, attribs, parentData);
 	ELEMENT_POST_PROCESS_MASK
+	if (matchedId)
+		svg->skipDraw = true;
 	return res;
 }
 int read_filter_attributes (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData) {
+	bool matchedId = false;
 	HEADING_FILTER
 	HEADING_SVG_CORE_ATTRIB
 	HEADING_SVG_STYLE_ATTRIB
@@ -47189,9 +47292,12 @@ int read_filter_attributes (svg_context* svg, FILE* f, svg_attributes attribs, v
 	if (res > 0)
 		res = read_filter_children (svg, f, attribs, parentData);
 	ELEMENT_POST_PROCESS_FILTER
+	if (matchedId)
+		svg->skipDraw = true;
 	return res;
 }
 int read_feBlend_attributes (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData) {
+	bool matchedId = false;
 	HEADING_FEBLEND
 	HEADING_SVG_CORE_ATTRIB
 	HEADING_SVG_STYLE_ATTRIB
@@ -48636,9 +48742,12 @@ int read_feBlend_attributes (svg_context* svg, FILE* f, svg_attributes attribs, 
 	if (res > 0)
 		res = read_feBlend_children (svg, f, attribs, parentData);
 	ELEMENT_POST_PROCESS_FEBLEND
+	if (matchedId)
+		svg->skipDraw = true;
 	return res;
 }
 int read_feColorMatrix_attributes (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData) {
+	bool matchedId = false;
 	HEADING_FECOLORMATRIX
 	HEADING_SVG_CORE_ATTRIB
 	HEADING_SVG_STYLE_ATTRIB
@@ -50086,9 +50195,12 @@ int read_feColorMatrix_attributes (svg_context* svg, FILE* f, svg_attributes att
 	if (res > 0)
 		res = read_feColorMatrix_children (svg, f, attribs, parentData);
 	ELEMENT_POST_PROCESS_FECOLORMATRIX
+	if (matchedId)
+		svg->skipDraw = true;
 	return res;
 }
 int read_feComponentTransfer_attributes (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData) {
+	bool matchedId = false;
 	HEADING_FECOMPONENTTRANSFER
 	HEADING_SVG_CORE_ATTRIB
 	HEADING_SVG_STYLE_ATTRIB
@@ -51497,9 +51609,12 @@ int read_feComponentTransfer_attributes (svg_context* svg, FILE* f, svg_attribut
 	if (res > 0)
 		res = read_feComponentTransfer_children (svg, f, attribs, parentData);
 	ELEMENT_POST_PROCESS_FECOMPONENTTRANSFER
+	if (matchedId)
+		svg->skipDraw = true;
 	return res;
 }
 int read_feComposite_attributes (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData) {
+	bool matchedId = false;
 	HEADING_FECOMPOSITE
 	HEADING_SVG_CORE_ATTRIB
 	HEADING_SVG_STYLE_ATTRIB
@@ -52983,9 +53098,12 @@ int read_feComposite_attributes (svg_context* svg, FILE* f, svg_attributes attri
 	if (res > 0)
 		res = read_feComposite_children (svg, f, attribs, parentData);
 	ELEMENT_POST_PROCESS_FECOMPOSITE
+	if (matchedId)
+		svg->skipDraw = true;
 	return res;
 }
 int read_feConvolveMatrix_attributes (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData) {
+	bool matchedId = false;
 	HEADING_FECONVOLVEMATRIX
 	HEADING_SVG_CORE_ATTRIB
 	HEADING_SVG_STYLE_ATTRIB
@@ -54508,9 +54626,12 @@ int read_feConvolveMatrix_attributes (svg_context* svg, FILE* f, svg_attributes 
 	if (res > 0)
 		res = read_feConvolveMatrix_children (svg, f, attribs, parentData);
 	ELEMENT_POST_PROCESS_FECONVOLVEMATRIX
+	if (matchedId)
+		svg->skipDraw = true;
 	return res;
 }
 int read_feDiffuseLighting_attributes (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData) {
+	bool matchedId = false;
 	HEADING_FEDIFFUSELIGHTING
 	HEADING_SVG_CORE_ATTRIB
 	HEADING_SVG_STYLE_ATTRIB
@@ -55938,9 +56059,12 @@ int read_feDiffuseLighting_attributes (svg_context* svg, FILE* f, svg_attributes
 	if (res > 0)
 		res = read_feDiffuseLighting_children (svg, f, attribs, parentData);
 	ELEMENT_POST_PROCESS_FEDIFFUSELIGHTING
+	if (matchedId)
+		svg->skipDraw = true;
 	return res;
 }
 int read_feDisplacementMap_attributes (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData) {
+	bool matchedId = false;
 	HEADING_FEDISPLACEMENTMAP
 	HEADING_SVG_CORE_ATTRIB
 	HEADING_SVG_STYLE_ATTRIB
@@ -57414,9 +57538,12 @@ int read_feDisplacementMap_attributes (svg_context* svg, FILE* f, svg_attributes
 	if (res > 0)
 		res = read_feDisplacementMap_children (svg, f, attribs, parentData);
 	ELEMENT_POST_PROCESS_FEDISPLACEMENTMAP
+	if (matchedId)
+		svg->skipDraw = true;
 	return res;
 }
 int read_feFlood_attributes (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData) {
+	bool matchedId = false;
 	HEADING_FEFLOOD
 	HEADING_SVG_CORE_ATTRIB
 	HEADING_SVG_STYLE_ATTRIB
@@ -58822,9 +58949,12 @@ int read_feFlood_attributes (svg_context* svg, FILE* f, svg_attributes attribs, 
 	if (res > 0)
 		res = read_feFlood_children (svg, f, attribs, parentData);
 	ELEMENT_POST_PROCESS_FEFLOOD
+	if (matchedId)
+		svg->skipDraw = true;
 	return res;
 }
 int read_feGaussianBlur_attributes (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData) {
+	bool matchedId = false;
 	HEADING_FEGAUSSIANBLUR
 	HEADING_SVG_CORE_ATTRIB
 	HEADING_SVG_STYLE_ATTRIB
@@ -60236,9 +60366,12 @@ int read_feGaussianBlur_attributes (svg_context* svg, FILE* f, svg_attributes at
 	if (res > 0)
 		res = read_feGaussianBlur_children (svg, f, attribs, parentData);
 	ELEMENT_POST_PROCESS_FEGAUSSIANBLUR
+	if (matchedId)
+		svg->skipDraw = true;
 	return res;
 }
 int read_feImage_attributes (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData) {
+	bool matchedId = false;
 	HEADING_FEIMAGE
 	HEADING_SVG_CORE_ATTRIB
 	HEADING_SVG_STYLE_ATTRIB
@@ -61759,9 +61892,12 @@ int read_feImage_attributes (svg_context* svg, FILE* f, svg_attributes attribs, 
 	if (res > 0)
 		res = read_feImage_children (svg, f, attribs, parentData);
 	ELEMENT_POST_PROCESS_FEIMAGE
+	if (matchedId)
+		svg->skipDraw = true;
 	return res;
 }
 int read_feMerge_attributes (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData) {
+	bool matchedId = false;
 	HEADING_FEMERGE
 	HEADING_SVG_CORE_ATTRIB
 	HEADING_SVG_STYLE_ATTRIB
@@ -63167,9 +63303,12 @@ int read_feMerge_attributes (svg_context* svg, FILE* f, svg_attributes attribs, 
 	if (res > 0)
 		res = read_feMerge_children (svg, f, attribs, parentData);
 	ELEMENT_POST_PROCESS_FEMERGE
+	if (matchedId)
+		svg->skipDraw = true;
 	return res;
 }
 int read_feMergeNode_attributes (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData) {
+	bool matchedId = false;
 	HEADING_FEMERGENODE
 	HEADING_SVG_CORE_ATTRIB
 	read_attributes_loop_start
@@ -63231,9 +63370,12 @@ int read_feMergeNode_attributes (svg_context* svg, FILE* f, svg_attributes attri
 	if (res > 0)
 		res = read_feMergeNode_children (svg, f, attribs, parentData);
 	ELEMENT_POST_PROCESS_FEMERGENODE
+	if (matchedId)
+		svg->skipDraw = true;
 	return res;
 }
 int read_feMorphology_attributes (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData) {
+	bool matchedId = false;
 	HEADING_FEMORPHOLOGY
 	HEADING_SVG_CORE_ATTRIB
 	HEADING_SVG_STYLE_ATTRIB
@@ -64675,9 +64817,12 @@ int read_feMorphology_attributes (svg_context* svg, FILE* f, svg_attributes attr
 	if (res > 0)
 		res = read_feMorphology_children (svg, f, attribs, parentData);
 	ELEMENT_POST_PROCESS_FEMORPHOLOGY
+	if (matchedId)
+		svg->skipDraw = true;
 	return res;
 }
 int read_feOffset_attributes (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData) {
+	bool matchedId = false;
 	HEADING_FEOFFSET
 	HEADING_SVG_CORE_ATTRIB
 	HEADING_SVG_STYLE_ATTRIB
@@ -66092,9 +66237,12 @@ int read_feOffset_attributes (svg_context* svg, FILE* f, svg_attributes attribs,
 	if (res > 0)
 		res = read_feOffset_children (svg, f, attribs, parentData);
 	ELEMENT_POST_PROCESS_FEOFFSET
+	if (matchedId)
+		svg->skipDraw = true;
 	return res;
 }
 int read_feSpecularLighting_attributes (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData) {
+	bool matchedId = false;
 	HEADING_FESPECULARLIGHTING
 	HEADING_SVG_CORE_ATTRIB
 	HEADING_SVG_STYLE_ATTRIB
@@ -67535,9 +67683,12 @@ int read_feSpecularLighting_attributes (svg_context* svg, FILE* f, svg_attribute
 	if (res > 0)
 		res = read_feSpecularLighting_children (svg, f, attribs, parentData);
 	ELEMENT_POST_PROCESS_FESPECULARLIGHTING
+	if (matchedId)
+		svg->skipDraw = true;
 	return res;
 }
 int read_feTile_attributes (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData) {
+	bool matchedId = false;
 	HEADING_FETILE
 	HEADING_SVG_CORE_ATTRIB
 	HEADING_SVG_STYLE_ATTRIB
@@ -68946,9 +69097,12 @@ int read_feTile_attributes (svg_context* svg, FILE* f, svg_attributes attribs, v
 	if (res > 0)
 		res = read_feTile_children (svg, f, attribs, parentData);
 	ELEMENT_POST_PROCESS_FETILE
+	if (matchedId)
+		svg->skipDraw = true;
 	return res;
 }
 int read_feTurbulence_attributes (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData) {
+	bool matchedId = false;
 	HEADING_FETURBULENCE
 	HEADING_SVG_CORE_ATTRIB
 	HEADING_SVG_STYLE_ATTRIB
@@ -70412,9 +70566,12 @@ int read_feTurbulence_attributes (svg_context* svg, FILE* f, svg_attributes attr
 	if (res > 0)
 		res = read_feTurbulence_children (svg, f, attribs, parentData);
 	ELEMENT_POST_PROCESS_FETURBULENCE
+	if (matchedId)
+		svg->skipDraw = true;
 	return res;
 }
 int read_feDistantLight_attributes (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData) {
+	bool matchedId = false;
 	HEADING_FEDISTANTLIGHT
 	HEADING_SVG_CORE_ATTRIB
 	read_attributes_loop_start
@@ -70472,9 +70629,12 @@ int read_feDistantLight_attributes (svg_context* svg, FILE* f, svg_attributes at
 	if (res > 0)
 		res = read_feDistantLight_children (svg, f, attribs, parentData);
 	ELEMENT_POST_PROCESS_FEDISTANTLIGHT
+	if (matchedId)
+		svg->skipDraw = true;
 	return res;
 }
 int read_fePointLight_attributes (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData) {
+	bool matchedId = false;
 	HEADING_FEPOINTLIGHT
 	HEADING_SVG_CORE_ATTRIB
 	read_attributes_loop_start
@@ -70536,9 +70696,12 @@ int read_fePointLight_attributes (svg_context* svg, FILE* f, svg_attributes attr
 	if (res > 0)
 		res = read_fePointLight_children (svg, f, attribs, parentData);
 	ELEMENT_POST_PROCESS_FEPOINTLIGHT
+	if (matchedId)
+		svg->skipDraw = true;
 	return res;
 }
 int read_feSpotLight_attributes (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData) {
+	bool matchedId = false;
 	HEADING_FESPOTLIGHT
 	HEADING_SVG_CORE_ATTRIB
 	read_attributes_loop_start
@@ -70625,9 +70788,12 @@ int read_feSpotLight_attributes (svg_context* svg, FILE* f, svg_attributes attri
 	if (res > 0)
 		res = read_feSpotLight_children (svg, f, attribs, parentData);
 	ELEMENT_POST_PROCESS_FESPOTLIGHT
+	if (matchedId)
+		svg->skipDraw = true;
 	return res;
 }
 int read_feFuncR_attributes (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData) {
+	bool matchedId = false;
 	HEADING_FEFUNCR
 	HEADING_SVG_CORE_ATTRIB
 	read_attributes_loop_start
@@ -70736,9 +70902,12 @@ int read_feFuncR_attributes (svg_context* svg, FILE* f, svg_attributes attribs, 
 	if (res > 0)
 		res = read_feFuncR_children (svg, f, attribs, parentData);
 	ELEMENT_POST_PROCESS_FEFUNCR
+	if (matchedId)
+		svg->skipDraw = true;
 	return res;
 }
 int read_feFuncG_attributes (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData) {
+	bool matchedId = false;
 	HEADING_FEFUNCG
 	HEADING_SVG_CORE_ATTRIB
 	read_attributes_loop_start
@@ -70847,9 +71016,12 @@ int read_feFuncG_attributes (svg_context* svg, FILE* f, svg_attributes attribs, 
 	if (res > 0)
 		res = read_feFuncG_children (svg, f, attribs, parentData);
 	ELEMENT_POST_PROCESS_FEFUNCG
+	if (matchedId)
+		svg->skipDraw = true;
 	return res;
 }
 int read_feFuncB_attributes (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData) {
+	bool matchedId = false;
 	HEADING_FEFUNCB
 	HEADING_SVG_CORE_ATTRIB
 	read_attributes_loop_start
@@ -70958,9 +71130,12 @@ int read_feFuncB_attributes (svg_context* svg, FILE* f, svg_attributes attribs, 
 	if (res > 0)
 		res = read_feFuncB_children (svg, f, attribs, parentData);
 	ELEMENT_POST_PROCESS_FEFUNCB
+	if (matchedId)
+		svg->skipDraw = true;
 	return res;
 }
 int read_feFuncA_attributes (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData) {
+	bool matchedId = false;
 	HEADING_FEFUNCA
 	HEADING_SVG_CORE_ATTRIB
 	read_attributes_loop_start
@@ -71069,9 +71244,12 @@ int read_feFuncA_attributes (svg_context* svg, FILE* f, svg_attributes attribs, 
 	if (res > 0)
 		res = read_feFuncA_children (svg, f, attribs, parentData);
 	ELEMENT_POST_PROCESS_FEFUNCA
+	if (matchedId)
+		svg->skipDraw = true;
 	return res;
 }
 int read_cursor_attributes (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData) {
+	bool matchedId = false;
 	HEADING_CURSOR
 	HEADING_SVG_CORE_ATTRIB
 	HEADING_SVG_CONDITIONAL_ATTRIB
@@ -71249,9 +71427,12 @@ int read_cursor_attributes (svg_context* svg, FILE* f, svg_attributes attribs, v
 	if (res > 0)
 		res = read_cursor_children (svg, f, attribs, parentData);
 	ELEMENT_POST_PROCESS_CURSOR
+	if (matchedId)
+		svg->skipDraw = true;
 	return res;
 }
 int read_a_attributes (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData) {
+	bool matchedId = false;
 	HEADING_A
 	HEADING_SVG_CORE_ATTRIB
 	HEADING_SVG_CONDITIONAL_ATTRIB
@@ -72851,9 +73032,12 @@ int read_a_attributes (svg_context* svg, FILE* f, svg_attributes attribs, void* 
 	if (res > 0)
 		res = read_a_children (svg, f, attribs, parentData);
 	ELEMENT_POST_PROCESS_A
+	if (matchedId)
+		svg->skipDraw = true;
 	return res;
 }
 int read_view_attributes (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData) {
+	bool matchedId = false;
 	HEADING_VIEW
 	HEADING_SVG_CORE_ATTRIB
 	read_attributes_loop_start
@@ -72956,9 +73140,12 @@ int read_view_attributes (svg_context* svg, FILE* f, svg_attributes attribs, voi
 	if (res > 0)
 		res = read_view_children (svg, f, attribs, parentData);
 	ELEMENT_POST_PROCESS_VIEW
+	if (matchedId)
+		svg->skipDraw = true;
 	return res;
 }
 int read_script_attributes (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData) {
+	bool matchedId = false;
 	HEADING_SCRIPT
 	HEADING_SVG_CORE_ATTRIB
 	HEADING_SVG_XLINK_ATTRIB
@@ -73111,9 +73298,12 @@ int read_script_attributes (svg_context* svg, FILE* f, svg_attributes attribs, v
 	if (res > 0)
 		res = skip_children (svg, f, attribs, parentData);
 	ELEMENT_POST_PROCESS_SCRIPT
+	if (matchedId)
+		svg->skipDraw = true;
 	return res;
 }
 int read_animate_attributes (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData) {
+	bool matchedId = false;
 	HEADING_ANIMATE
 	HEADING_SVG_CORE_ATTRIB
 	HEADING_SVG_CONDITIONAL_ATTRIB
@@ -73525,9 +73715,12 @@ int read_animate_attributes (svg_context* svg, FILE* f, svg_attributes attribs, 
 	if (res > 0)
 		res = read_animate_children (svg, f, attribs, parentData);
 	ELEMENT_POST_PROCESS_ANIMATE
+	if (matchedId)
+		svg->skipDraw = true;
 	return res;
 }
 int read_set_attributes (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData) {
+	bool matchedId = false;
 	HEADING_SET
 	HEADING_SVG_CORE_ATTRIB
 	HEADING_SVG_CONDITIONAL_ATTRIB
@@ -73835,9 +74028,12 @@ int read_set_attributes (svg_context* svg, FILE* f, svg_attributes attribs, void
 	if (res > 0)
 		res = read_set_children (svg, f, attribs, parentData);
 	ELEMENT_POST_PROCESS_SET
+	if (matchedId)
+		svg->skipDraw = true;
 	return res;
 }
 int read_animateMotion_attributes (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData) {
+	bool matchedId = false;
 	HEADING_ANIMATEMOTION
 	HEADING_SVG_CORE_ATTRIB
 	HEADING_SVG_CONDITIONAL_ATTRIB
@@ -74249,9 +74445,12 @@ int read_animateMotion_attributes (svg_context* svg, FILE* f, svg_attributes att
 	if (res > 0)
 		res = read_animateMotion_children (svg, f, attribs, parentData);
 	ELEMENT_POST_PROCESS_ANIMATEMOTION
+	if (matchedId)
+		svg->skipDraw = true;
 	return res;
 }
 int read_animateColor_attributes (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData) {
+	bool matchedId = false;
 	HEADING_ANIMATECOLOR
 	HEADING_SVG_CORE_ATTRIB
 	HEADING_SVG_CONDITIONAL_ATTRIB
@@ -74663,9 +74862,12 @@ int read_animateColor_attributes (svg_context* svg, FILE* f, svg_attributes attr
 	if (res > 0)
 		res = read_animateColor_children (svg, f, attribs, parentData);
 	ELEMENT_POST_PROCESS_ANIMATECOLOR
+	if (matchedId)
+		svg->skipDraw = true;
 	return res;
 }
 int read_animateTransform_attributes (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData) {
+	bool matchedId = false;
 	HEADING_ANIMATETRANSFORM
 	HEADING_SVG_CORE_ATTRIB
 	HEADING_SVG_CONDITIONAL_ATTRIB
@@ -75126,9 +75328,12 @@ int read_animateTransform_attributes (svg_context* svg, FILE* f, svg_attributes 
 	if (res > 0)
 		res = read_animateTransform_children (svg, f, attribs, parentData);
 	ELEMENT_POST_PROCESS_ANIMATETRANSFORM
+	if (matchedId)
+		svg->skipDraw = true;
 	return res;
 }
 int read_mpath_attributes (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData) {
+	bool matchedId = false;
 	HEADING_MPATH
 	HEADING_SVG_CORE_ATTRIB
 	HEADING_SVG_XLINKREQUIRED_ATTRIB
@@ -75278,9 +75483,12 @@ int read_mpath_attributes (svg_context* svg, FILE* f, svg_attributes attribs, vo
 	if (res > 0)
 		res = read_mpath_children (svg, f, attribs, parentData);
 	ELEMENT_POST_PROCESS_MPATH
+	if (matchedId)
+		svg->skipDraw = true;
 	return res;
 }
 int read_font_attributes (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData) {
+	bool matchedId = false;
 	HEADING_FONT
 	HEADING_SVG_CORE_ATTRIB
 	HEADING_SVG_STYLE_ATTRIB
@@ -76756,9 +76964,12 @@ int read_font_attributes (svg_context* svg, FILE* f, svg_attributes attribs, voi
 	if (res > 0)
 		res = read_font_children (svg, f, attribs, parentData);
 	ELEMENT_POST_PROCESS_FONT
+	if (matchedId)
+		svg->skipDraw = true;
 	return res;
 }
 int read_font_face_attributes (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData) {
+	bool matchedId = false;
 	HEADING_FONT_FACE
 	HEADING_SVG_CORE_ATTRIB
 	read_attributes_loop_start
@@ -77035,9 +77246,12 @@ int read_font_face_attributes (svg_context* svg, FILE* f, svg_attributes attribs
 	if (res > 0)
 		res = read_font_face_children (svg, f, attribs, parentData);
 	ELEMENT_POST_PROCESS_FONT_FACE
+	if (matchedId)
+		svg->skipDraw = true;
 	return res;
 }
 int read_glyph_attributes (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData) {
+	bool matchedId = false;
 	HEADING_GLYPH
 	HEADING_SVG_CORE_ATTRIB
 	HEADING_SVG_STYLE_ATTRIB
@@ -78507,9 +78721,12 @@ int read_glyph_attributes (svg_context* svg, FILE* f, svg_attributes attribs, vo
 	if (res > 0)
 		res = read_glyph_children (svg, f, attribs, parentData);
 	ELEMENT_POST_PROCESS_GLYPH
+	if (matchedId)
+		svg->skipDraw = true;
 	return res;
 }
 int read_missing_glyph_attributes (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData) {
+	bool matchedId = false;
 	HEADING_MISSING_GLYPH
 	HEADING_SVG_CORE_ATTRIB
 	HEADING_SVG_STYLE_ATTRIB
@@ -79940,9 +80157,12 @@ int read_missing_glyph_attributes (svg_context* svg, FILE* f, svg_attributes att
 	if (res > 0)
 		res = read_missing_glyph_children (svg, f, attribs, parentData);
 	ELEMENT_POST_PROCESS_MISSING_GLYPH
+	if (matchedId)
+		svg->skipDraw = true;
 	return res;
 }
 int read_hkern_attributes (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData) {
+	bool matchedId = false;
 	HEADING_HKERN
 	HEADING_SVG_CORE_ATTRIB
 	read_attributes_loop_start
@@ -80023,9 +80243,12 @@ int read_hkern_attributes (svg_context* svg, FILE* f, svg_attributes attribs, vo
 	if (res > 0)
 		res = skip_children (svg, f, attribs, parentData);
 	ELEMENT_POST_PROCESS_HKERN
+	if (matchedId)
+		svg->skipDraw = true;
 	return res;
 }
 int read_vkern_attributes (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData) {
+	bool matchedId = false;
 	HEADING_VKERN
 	HEADING_SVG_CORE_ATTRIB
 	read_attributes_loop_start
@@ -80106,9 +80329,12 @@ int read_vkern_attributes (svg_context* svg, FILE* f, svg_attributes attribs, vo
 	if (res > 0)
 		res = skip_children (svg, f, attribs, parentData);
 	ELEMENT_POST_PROCESS_VKERN
+	if (matchedId)
+		svg->skipDraw = true;
 	return res;
 }
 int read_font_face_src_attributes (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData) {
+	bool matchedId = false;
 	HEADING_FONT_FACE_SRC
 	HEADING_SVG_CORE_ATTRIB
 	read_attributes_loop_start
@@ -80160,9 +80386,12 @@ int read_font_face_src_attributes (svg_context* svg, FILE* f, svg_attributes att
 	if (res > 0)
 		res = read_font_face_src_children (svg, f, attribs, parentData);
 	ELEMENT_POST_PROCESS_FONT_FACE_SRC
+	if (matchedId)
+		svg->skipDraw = true;
 	return res;
 }
 int read_font_face_uri_attributes (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData) {
+	bool matchedId = false;
 	HEADING_FONT_FACE_URI
 	HEADING_SVG_CORE_ATTRIB
 	HEADING_SVG_XLINKREQUIRED_ATTRIB
@@ -80296,9 +80525,12 @@ int read_font_face_uri_attributes (svg_context* svg, FILE* f, svg_attributes att
 	if (res > 0)
 		res = read_font_face_uri_children (svg, f, attribs, parentData);
 	ELEMENT_POST_PROCESS_FONT_FACE_URI
+	if (matchedId)
+		svg->skipDraw = true;
 	return res;
 }
 int read_font_face_format_attributes (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData) {
+	bool matchedId = false;
 	HEADING_FONT_FACE_FORMAT
 	HEADING_SVG_CORE_ATTRIB
 	read_attributes_loop_start
@@ -80353,9 +80585,12 @@ int read_font_face_format_attributes (svg_context* svg, FILE* f, svg_attributes 
 	if (res > 0)
 		res = skip_children (svg, f, attribs, parentData);
 	ELEMENT_POST_PROCESS_FONT_FACE_FORMAT
+	if (matchedId)
+		svg->skipDraw = true;
 	return res;
 }
 int read_font_face_name_attributes (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData) {
+	bool matchedId = false;
 	HEADING_FONT_FACE_NAME
 	HEADING_SVG_CORE_ATTRIB
 	read_attributes_loop_start
@@ -80410,9 +80645,12 @@ int read_font_face_name_attributes (svg_context* svg, FILE* f, svg_attributes at
 	if (res > 0)
 		res = skip_children (svg, f, attribs, parentData);
 	ELEMENT_POST_PROCESS_FONT_FACE_NAME
+	if (matchedId)
+		svg->skipDraw = true;
 	return res;
 }
 int read_foreignObject_attributes (svg_context* svg, FILE* f, svg_attributes attribs, void* parentData) {
+	bool matchedId = false;
 	HEADING_FOREIGNOBJECT
 	HEADING_SVG_CORE_ATTRIB
 	HEADING_SVG_CONDITIONAL_ATTRIB
@@ -81933,6 +82171,8 @@ int read_foreignObject_attributes (svg_context* svg, FILE* f, svg_attributes att
 	if (res > 0)
 		res = skip_children (svg, f, attribs, parentData);
 	ELEMENT_POST_PROCESS_FOREIGNOBJECT
+	if (matchedId)
+		svg->skipDraw = true;
 	return res;
 }
 
