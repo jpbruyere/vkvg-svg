@@ -14,10 +14,10 @@
 #define _USE_MATH_DEFINES
 #include <math.h>
 
-
 #include "fmemopen.h"
 
 #include "vkvg.h"
+#include "vkvg-svg.h"
 
 #define ARRAY_INIT	8
 #define ARRAY_ELEMENT_TYPE void*
@@ -28,6 +28,9 @@
 	#define strcasecmp(x,y) _stricmp(x,y)
 #endif
 //#define DEBUG_LOG
+#ifdef LOG
+#undef LOG
+#endif
 
 #ifdef DEBUG_LOG
 #define LOG(...) fprintf (stdout, __VA_ARGS__)
@@ -192,17 +195,27 @@ typedef struct {
 	uint32_t	width;//force surface width & height
 	uint32_t	height;
 	svg_viewbox viewBox;
+	bool		queryDimensions;
 	bool		fit;//fit rendering surface
 	bool		preserveAspectRatio;
 	bool		skip;//skip tag and children
 	bool		skipDraw;//in defs
 	bool		skipStore;//use
+	bool		ownContext;//must destroy vkvg ctx on clean
+	uint32_t	renderOnlyIdHash;
 	uint32_t	currentIdHash;
 	uint32_t	currentXlinkHref;
 	array_t*	idList;
 	/*long		currentTagStartPos;*/
-
 } svg_context;
+
+typedef struct _vkvg_svg_t {
+	size_t		size;
+	char*		buffer;
+	FILE*		fileHandle;
+	uint32_t	width;
+	uint32_t	height;
+}vkvg_svg_t;
 
 enum prevCmd {none, quad, cubic};
 

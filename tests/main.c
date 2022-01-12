@@ -160,6 +160,10 @@ static void key_callback(GLFWwindow* window, int key, int scancode, int action, 
 	case GLFW_KEY_SPACE:
 		 paused = !paused;
 		break;
+	case GLFW_KEY_R:
+		recording = !recording;
+		file_stat = (struct stat){0};
+		break;
 	case GLFW_KEY_ESCAPE :
 		glfwSetWindowShouldClose(window, GLFW_TRUE);
 		break;
@@ -281,9 +285,9 @@ int main (int argc, char *argv[]){
 
 
 	while (!vkengine_should_close (e)) {
-		//vkvg_log_level = VKVG_LOG_INFO_PATH|VKVG_LOG_INFO_CMD|VKVG_LOG_INFO_VAO;
+		vkvg_log_level = VKVG_LOG_INFO_CMD;
 		readSVG (e);
-		//vkvg_log_level = VKVG_LOG_ERR;
+		vkvg_log_level = VKVG_LOG_ERR;
 
 		VkvgContext ctx = vkvg_create(surf);
 		vkvg_set_source_rgb(ctx,0.1,0.1,0.1);

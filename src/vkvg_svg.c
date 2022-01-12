@@ -2,14 +2,11 @@
 //
 // This code is licensed under the MIT license (MIT) (http://opensource.org/licenses/MIT)
 
-#include "vkvg-svg.h"
-
 #define ARRAY_INIT	8
 #define ARRAY_ELEMENT_TYPE void*
 
 #define ARRAY_IMPLEMENTATION
 #include "array.h"
-
 
 #include "vkvg_svg_internal.h"
 
@@ -28,7 +25,7 @@ CREATE_CTOR_ELT(path)
 
 #define CASTELT(var,type,data) svg_element_##type* var = (svg_element_##type*)data
 
-
+bool recording = true;
 
 svg_element_linear_gradient* _new_linear_gradient() {
 	svg_element_linear_gradient* g = (svg_element_linear_gradient*)calloc(1,sizeof(svg_element_linear_gradient));
@@ -1127,7 +1124,8 @@ void _parse_path_d_attribute (svg_context* svg, char* str) {
 					vkvg_line_to (svg->ctx, x, y);
 				else {
 					vkvg_move_to (svg->ctx, x, y);
-					vkvg_get_current_point(svg->ctx, &subpathX, &subpathY);
+					subpathX = x;
+					subpathY = y;
 				}
 				repeat = _try_parse_floats(tmp, 1, &x);
 			} else
@@ -1788,16 +1786,28 @@ void _process_use (svg_context* svg, svg_attributes* attribs) {
 		else\
 			surfH = svg->viewBox.h;\
 	}\
-	svg->surf = vkvg_surface_create(svg->dev, surfW, surfH);\
-	svg->ctx = vkvg_create (svg->surf);\
-	vkvg_set_fill_rule(svg->ctx, VKVG_FILL_RULE_NON_ZERO);\
+	if (svg->queryDimensions) {\
+		svg->width = surfW;\
+		svg->height = surfH;\
+		return;\
+	}\
+	if (!svg->ctx) {\
+		svg->surf = vkvg_surface_create(svg->dev, surfW, surfH);\
+		svg->ctx = vkvg_create (svg->surf);\
+		vkvg_clear(svg->ctx);\
+		svg->ownContext = true;\
+	}\
+	vkvg_set_fill_rule(svg->ctx, VKVG_FILL_RULE_EVEN_ODD);\
 	if (xScale < yScale)\
 		vkvg_scale(svg->ctx, xScale, xScale);\
 	else\
-		vkvg_scale(svg->ctx, yScale, yScale);\
-	vkvg_clear(svg->ctx);
+		vkvg_scale(svg->ctx, yScale, yScale);
 
-#define ELEMENT_POST_PROCESS_SVG vkvg_destroy(svg->ctx);
+#define ELEMENT_POST_PROCESS_SVG {\
+	if (svg->ownContext)\
+		vkvg_destroy(svg->ctx);\
+}
+
 
 #define PROCESS_SVG_VIEWBOX \
 {\
@@ -2093,21 +2103,26 @@ int read_tag (svg_context* svg, FILE* f, svg_attributes attribs) {
 
 		read_element_start
 
-		if (!strcasecmp(svg->elt,"svg"))
+		if (!strcasecmp(svg->elt,"svg")) {
 			res = read_svg_attributes	(svg, f, attribs, NULL);
-		else
+			if (svg->queryDimensions)
+				return 0;
+		} else
 			skip_element
 	}
 	return res;
 }
 
-VkvgSurface _create_from_file_handle (VkvgDevice dev, uint32_t width, uint32_t height, FILE* f) {
+VkvgSurface _create_from_file_handle (VkvgDevice dev, uint32_t width, uint32_t height, FILE* f, VkvgContext ctx, const char* id) {
 	svg_context svg = {0};
 	svg.dev		= dev;
 	svg.width	= width;
 	svg.height	= height;
 	svg.fit		= true;
 	svg.idList	= array_create();
+	svg.ctx		= ctx;
+	if (id)
+		svg.currentIdHash = hash_string(id);
 
 	svg_attributes attribs = {
 		svg_paint_type_solid, svg_paint_type_none, svg_paint_type_solid, 0xff000000, 0xff000000, 0xff000000,
@@ -2136,25 +2151,88 @@ VkvgSurface _create_from_file_handle (VkvgDevice dev, uint32_t width, uint32_t h
 		free (svg.idList->elements[i]);
 	}
 	array_destroy (svg.idList);
-
 	return svg.surf;
+}
+void _query_dimensions (VkvgSvg svg) {
+	svg_context ctx = {0};
+	svg_attributes attribs = {0};
+	ctx.queryDimensions = true;
+
+	read_tag (&ctx, svg->fileHandle, attribs);
+	svg->width = ctx.width;
+	svg->height = ctx.height;
+	rewind(svg->fileHandle);
+}
+void vkvg_svg_get_dimensions (VkvgSvg svg, uint32_t* width, uint32_t* height) {
+	if (!svg) {
+		*width = *height = 0;
+		return;
+	}
+	*width = svg->width;
+	*height = svg->height;
+}
+void vkvg_svg_render (VkvgSvg svg, VkvgContext ctx, const char* id) {
+	if(!svg || !ctx || vkvg_status(ctx))
+		return;
+	_create_from_file_handle(NULL, svg->width, svg->height, svg->fileHandle, ctx, id);
+	rewind(svg->fileHandle);
+}
+VkvgSvg vkvg_svg_load (const char* svgFilePath) {
+	vkvg_svg_t* svg = (vkvg_svg_t*)calloc(1, sizeof (vkvg_svg_t));
+	if (!svg)
+		return NULL;
+	FILE* f = fopen(svgFilePath, "r");
+	if(f) {
+		fseek(f, 0, SEEK_END);
+		svg->size = ftell(f);
+		rewind(f);
+
+		svg->buffer = (char*)malloc(sizeof(char) * svg->size);
+		fread(svg->buffer, 1, svg->size, f);
+
+		fclose(f);
+
+		svg->fileHandle = fmemopen((void*)svg->buffer, svg->size, "r");
+	}
+	_query_dimensions(svg);
+	return svg;
+}
+VkvgSvg vkvg_svg_load_fragment (const char* svgFragment) {
+	if (!svgFragment)
+		return NULL;
+	vkvg_svg_t* svg = (vkvg_svg_t*)calloc(1, sizeof (vkvg_svg_t));
+	if (!svg)
+		return NULL;
+	svg->size = strlen(svgFragment);
+	svg->buffer = (char*)malloc(sizeof(char) * svg->size);
+	memcpy(svg->buffer, svgFragment, svg->size);
+	svg->fileHandle = fmemopen((void*)svg->buffer, svg->size, "r");
+	return svg;
+}
+
+void vkvg_svg_destroy (VkvgSvg svg) {
+	if (!svg)
+		return;
+	fclose (svg->fileHandle);
+	free (svg->buffer);
+	free (svg);
 }
 
 VkvgSurface vkvg_surface_create_from_svg_fragment(VkvgDevice dev, uint32_t width, uint32_t height, const char* svgFragment) {
 	FILE *f = fmemopen((void*)svgFragment, strlen (svgFragment), "r");
-	VkvgSurface surf = _create_from_file_handle (dev, width, height, f);
+	VkvgSurface surf = _create_from_file_handle (dev, width, height, f, NULL, NULL);
 	fclose(f);
 	return surf;
 }
-VkvgSurface vkvg_surface_create_from_svg (VkvgDevice dev, uint32_t width, uint32_t height, const char* filename) {
-	FILE* f = fopen(filename, "r");
+VkvgSurface vkvg_surface_create_from_svg (VkvgDevice dev, uint32_t width, uint32_t height, const char* svgFilePath) {
+	FILE* f = fopen(svgFilePath, "r");
 	if (f == NULL){
 		perror ("vkvg_svg: file not found");
 		return NULL;
 	}
 	//LOG ("loading %s\n", filename);
 	//printf ("loading %s\n", filename);
-	VkvgSurface surf = _create_from_file_handle (dev, width, height, f);
+	VkvgSurface surf = _create_from_file_handle (dev, width, height, f, NULL, NULL);
 	fclose(f);
 	return surf;
 }
