@@ -1031,6 +1031,11 @@ bool _try_parse_float (stream s, float* f) {
 		} else if (STR_PEEK(s) >= '0' && STR_PEEK(s) <= '9') {
 			STR_ADVANCE(s);
 			hasDigit = true;
+		} else if (STR_PEEK(s)=='.') {
+			if (hasDecimal||hasExponent)
+				break;
+			hasDecimal = true;
+			STR_ADVANCE(s);
 		} else if (STR_PEEK(s)=='-' || STR_PEEK(s)=='+') {
 			if (s->pos - start > 0)
 				break;
@@ -1042,11 +1047,6 @@ bool _try_parse_float (stream s, float* f) {
 				hasExponent = true;
 			} else
 				return false;
-		} else if (STR_PEEK(s)=='.') {
-			if (hasDecimal||hasExponent)
-				break;
-			hasDecimal = true;
-			STR_ADVANCE(s);
 		} else
 			break;
 	}
