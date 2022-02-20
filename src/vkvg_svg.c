@@ -1796,7 +1796,7 @@ void _process_use (svg_context* svg, svg_attributes* attribs) {
 	if (svg->queryDimensions) {\
 		svg->width = surfW;\
 		svg->height = surfH;\
-		return;\
+		return 0;\
 	}\
 	if (!svg->ctx) {\
 		svg->surf = vkvg_surface_create(svg->dev, surfW, surfH);\
