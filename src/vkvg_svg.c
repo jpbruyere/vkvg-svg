@@ -2210,7 +2210,7 @@ VkvgSvg vkvg_svg_load (const char* svgFilePath) {
 	_query_dimensions(svg);
 	return svg;
 }
-VkvgSvg vkvg_svg_load_fragment (const char* svgFragment) {
+VkvgSvg vkvg_svg_load_fragment (char* svgFragment) {
 	if (!svgFragment)
 		return NULL;
 	vkvg_svg_t* svg = (vkvg_svg_t*)calloc(1, sizeof (vkvg_svg_t));
@@ -2232,7 +2232,7 @@ void vkvg_svg_destroy (VkvgSvg svg) {
 	free (svg);
 }
 
-VkvgSurface vkvg_surface_create_from_svg_fragment(VkvgDevice dev, uint32_t width, uint32_t height, const char* svgFragment) {
+VkvgSurface vkvg_surface_create_from_svg_fragment(VkvgDevice dev, uint32_t width, uint32_t height, char* svgFragment) {
 	FILE *f = fmemopen((void*)svgFragment, strlen (svgFragment), "r");
 	VkvgSurface surf = _create_from_file_handle (dev, width, height, f, NULL, NULL);
 	fclose(f);
