@@ -1773,26 +1773,40 @@ void _process_use (svg_context* svg, svg_attributes* attribs) {
 #define ELEMENT_PRE_PROCESS_SVG \
 	int surfW = 0, surfH = 0;\
 	float xScale = 1, yScale = 1;\
-	if (svg->fit) {\
-		surfW = svg->width;\
-		surfH = svg->height;\
-	} else {\
-		surfW = _get_pixel_coord(svg->width, &width);\
-		surfH = _get_pixel_coord(svg->width, &height);\
-	}\
+	if (svg->width) {\
+		if (width.units == svg_unit_percentage)\
+			surfW = _get_pixel_coord(svg->width, &width);\
+		else\
+			surfW = svg->width;\
+	} else if (width.units == svg_unit_percentage){\
+		if (hasViewBox)\
+			surfW = _get_pixel_coord(svg->viewBox.w, &width);\
+		else \
+			return 0;\
+	} else\
+		surfW = width.number;\
+	if (svg->height) {\
+		if (height.units == svg_unit_percentage)\
+			surfH = _get_pixel_coord(svg->height, &height);\
+		else\
+			surfH = svg->height;\
+	} else if (height.units == svg_unit_percentage){\
+		if (hasViewBox)\
+			surfH = _get_pixel_coord(svg->viewBox.h, &height);\
+		else \
+			return 0;\
+	} else\
+		surfH = height.number;\
 	if (!hasViewBox) {\
-		svg->viewBox = (svg_viewbox) {0,0,_get_pixel_coord(surfW, &width),_get_pixel_coord(surfH, &height)};\
+		svg->viewBox = (svg_viewbox) {0,0,surfW,surfH};\
+		if (width.units != svg_unit_percentage)\
+			svg->viewBox.w = width.number;\
+		if (height.units != svg_unit_percentage)\
+			svg->viewBox.h = height.number;\
 	}\
-	if (hasViewBox || svg->fit) {\
-		if (surfW)\
-			xScale = (float)surfW / svg->viewBox.w;\
-		else\
-			surfW = svg->viewBox.w;\
-		if (surfH)\
-			yScale = (float)surfH / svg->viewBox.h;\
-		else\
-			surfH = svg->viewBox.h;\
-	}\
+	\
+	xScale = (float)surfW / svg->viewBox.w;\
+	yScale = (float)surfH / svg->viewBox.h;\
 	if (svg->queryDimensions) {\
 		svg->width = surfW;\
 		svg->height = surfH;\
@@ -1805,10 +1819,13 @@ void _process_use (svg_context* svg, svg_attributes* attribs) {
 		svg->ownContext = true;\
 	}\
 	vkvg_set_fill_rule(svg->ctx, VKVG_FILL_RULE_NON_ZERO);\
-	if (xScale < yScale)\
-		vkvg_scale(svg->ctx, xScale, xScale);\
-	else\
-		vkvg_scale(svg->ctx, yScale, yScale);
+	if (svg->preserveAspectRatio){\
+		if (xScale < yScale)\
+			vkvg_scale(svg->ctx, xScale, xScale);\
+		else\
+			vkvg_scale(svg->ctx, yScale, yScale);\
+	} else\
+		vkvg_scale(svg->ctx, xScale, yScale);
 
 #define ELEMENT_POST_PROCESS_SVG {\
 	if (svg->ownContext)\
@@ -2129,7 +2146,6 @@ VkvgSurface _create_from_file_handle (VkvgDevice dev, uint32_t width, uint32_t h
 	svg.dev		= dev;
 	svg.width	= width;
 	svg.height	= height;
-	svg.fit		= true;
 	svg.idList	= array_create();
 	svg.ctx		= ctx;
 	if (id && id[0] == '#') {

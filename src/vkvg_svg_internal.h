@@ -196,7 +196,6 @@ typedef struct {
 	uint32_t	height;
 	svg_viewbox viewBox;
 	bool		queryDimensions;
-	bool		fit;//fit rendering surface
 	bool		preserveAspectRatio;
 	bool		skip;//skip tag and children
 	bool		skipDraw;
