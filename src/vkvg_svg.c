@@ -1354,7 +1354,7 @@ void _parse_path_d_attribute (svg_context* svg, char* str) {
 				if (!_try_parse_flags(tmp, 2, &large, &sweep) ||
 					!_try_parse_floats(tmp, 2, &x, &y))
 					return;
-				rotx = rotx * M_PI / 180.0f;
+				rotx = rotx * M_PIF / 180.0f;
 
 				vkvg_elliptic_arc_to (svg->ctx, x, y, large, sweep, rx, ry, rotx);
 
@@ -1630,7 +1630,7 @@ void _process_element (svg_context* svg, svg_attributes* attribs, void* elt, boo
 							cy = _get_pixel_coord(svg->viewBox.h, &c->cy),
 							r  = _get_pixel_coord(_normalized_diagonal(svg->viewBox.w, svg->viewBox.h), &c->r);
 
-					vkvg_arc(svg->ctx, cx, cy, r, 0, M_PI * 2);
+					vkvg_arc(svg->ctx, cx, cy, r, 0, M_PIF * 2);
 					draw (svg, attribs);
 				}
 			}
@@ -2146,6 +2146,7 @@ VkvgSurface _create_from_file_handle (VkvgDevice dev, uint32_t width, uint32_t h
 	svg.dev		= dev;
 	svg.width	= width;
 	svg.height	= height;
+	svg.preserveAspectRatio = true;
 	svg.idList	= array_create();
 	svg.ctx		= ctx;
 	if (id && id[0] == '#') {

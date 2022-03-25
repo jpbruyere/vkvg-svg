@@ -14,6 +14,12 @@
 #define _USE_MATH_DEFINES
 #include <math.h>
 
+#ifndef M_PIF
+	#define M_PIF				3.14159265358979323846f /* float pi */
+	#define M_PIF_2				1.57079632679489661923f
+	#define M_2_PIF				0.63661977236758134308f	 // 2/pi
+#endif
+
 #include "fmemopen.h"
 
 #include "vkvg.h"
@@ -38,7 +44,7 @@
 #define LOG
 #endif
 
-#define degToRad(x) (x * M_PI / 180.0)
+#define degToRad(x) (x * M_PIF / 180.0)
 
 typedef enum {
 	svg_element_type_rect,
