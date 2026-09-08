@@ -5,12 +5,17 @@
 #include <stddef.h>
 #include <errno.h>
 #include <stdint.h>
+#include <string.h>
+#include <strings.h>
+
+#include <math.h>
 
 #include <stdarg.h>
 #include <ctype.h>
 
 #include "vkvg-svg.h"
 #include "vkengine.h"
+
 
 static VkvgDevice  dev;
 static VkvgSurface svgSurf = NULL;
@@ -25,6 +30,7 @@ static VkSampleCountFlags samples     = VK_SAMPLE_COUNT_8_BIT;
 static uint32_t           width = 512, height = 512, margin = 10;
 static double             scrollX, scrollY;
 static bool               paused = false, repaintIconList = true;
+static bool               recording = false;
 
 struct stat file_stat;
 

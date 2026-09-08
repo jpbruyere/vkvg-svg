@@ -4,12 +4,14 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <dirent.h>
-#include <stdio.h>
 #include <stddef.h>
 #include <errno.h>
 #include <stdint.h>
 #include <stdarg.h>
 #include <ctype.h>
+#include <stdio.h>
+#include <string.h>
+#include <strings.h>
 
 #define _USE_MATH_DEFINES
 #include <math.h>
