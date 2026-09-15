@@ -37,7 +37,7 @@
 #define strncasecmp(x, y, z) _strnicmp(x, y, z)
 #define strcasecmp(x, y)     _stricmp(x, y)
 #endif
-#define DEBUG_LOG
+//#define DEBUG_LOG
 #ifdef LOG
 #undef LOG
 #endif
@@ -224,8 +224,9 @@ enum prevCmd { none, quad, cubic };
 
 int skip_children(svg_context *svg, FILE *f, svg_attributes attribs, void *parentData);
 int read_tag(svg_context *svg, FILE *f, svg_attributes attribs);
+int get_attribute_func (svg_context *svg, FILE *f);
 
-#define get_attribute fscanf(f, " %[^=/>]=%*[\"']%[^\"']%*[\"']", svg->att, svg->value)
+#define get_attribute get_attribute_func (svg, f)
 
 #define read_tag_end                                                                                                   \
     svg->currentXlinkHref = 0;                                                                                         \
@@ -242,9 +243,9 @@ int read_tag(svg_context *svg, FILE *f, svg_attributes attribs);
             res = 0;                                                                                                   \
     } else {                                                                                                           \
         int c = getc(f);                                                                                               \
-        if (c == '/') {                                                                              \
+        if (c == '/' || c == '?') {                                                                              \
             if (getc(f) != '>') { \
-                LOG("parsing error, expecting '>' after '/' for self closing tag, having %c\n", c);                        \
+                LOG("parsing error, expecting '>' after '/' or '?' for self closing tag, having %c\n", c);             \
                 res - 1;                                                                                                   \
             } else {\
                 LOG("self closing tag '/> for %s'\n", svg->elt);                        \

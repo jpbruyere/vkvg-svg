@@ -2105,7 +2105,22 @@ int read_tag(svg_context *svg, FILE *f, svg_attributes attribs) {
     }
     return res;
 }
+int get_attribute_func (svg_context *svg, FILE *f) {
+    //return fscanf(f, " %[^=/>]=%*[\"']%[^\"']%*[\"']", svg->att, svg->value);
+    char closed_quote = 0;
+    svg->value[0] = '\0'; // Initialize as empty string
 
+    // 1. Check if the closing quote immediately follows the opening quote
+    int res = fscanf(f, " %[^=?/>]=%*1[\"']%1[\"']", svg->att, &closed_quote);
+
+    if (res == 1) {
+        // The immediate closing quote didn't match, meaning there IS text inside.
+        // Cleanly extract the text and discard the final quote.
+        fscanf(f, "%[^\"']%*[\"']", svg->value);
+        return 2;
+    }
+    return res;
+}
 VkvgSurface _create_from_file_handle(VkvgDevice dev, uint32_t width, uint32_t height, FILE *f, VkvgContext ctx,
                                      const char *id) {
     svg_context svg         = {0};
