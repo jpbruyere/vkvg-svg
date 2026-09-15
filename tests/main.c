@@ -1,3 +1,7 @@
+#include "vkvg.h"
+#include "vkvg-svg.h"
+#include "vkengine.h"
+
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <dirent.h>
@@ -5,32 +9,25 @@
 #include <stddef.h>
 #include <errno.h>
 #include <stdint.h>
-#include <string.h>
-#include <strings.h>
-
-#include <math.h>
 
 #include <stdarg.h>
 #include <ctype.h>
-
-#include "vkvg-svg.h"
-#include "vkengine.h"
-
+#include <string.h>
+#include <math.h>
 
 static VkvgDevice  dev;
 static VkvgSurface svgSurf = NULL;
 static double      scale   = 1;
 
-static char              *filename    = NULL;
-static char              *directory   = NULL;
-static DIR               *pCurrentDir = NULL;
-struct dirent            *dir         = NULL;
+static char*              filename    = NULL;
+static char*              directory   = NULL;
+static DIR*               pCurrentDir = NULL;
+struct dirent*            dir         = NULL;
 static int                iconSize    = -1;
 static VkSampleCountFlags samples     = VK_SAMPLE_COUNT_8_BIT;
 static uint32_t           width = 512, height = 512, margin = 10;
 static double             scrollX, scrollY;
 static bool               paused = false, repaintIconList = true;
-static bool               recording = false;
 
 struct stat file_stat;
 
@@ -41,8 +38,13 @@ struct stat file_stat;
 static int   svg_file_count;
 static float maxScroll;
 
+/* not defined in c11, ok to define here only for sample */
+#ifndef DT_DIR
+#define DT_DIR 4
+#endif
+
 int _count_svg_files() {
-    struct dirent *de;
+    struct dirent* de;
     rewinddir(pCurrentDir);
     int i = 0;
     while ((de = readdir(pCurrentDir)) != NULL) {
@@ -69,7 +71,7 @@ void readSVG(VkEngine e) {
         newSvgSurf      = vkvg_surface_create(dev, width, height);
         VkvgContext ctx = vkvg_create(newSvgSurf);
 
-        struct dirent *de;
+        struct dirent* de;
         rewinddir(pCurrentDir);
         int i = 0;
         while ((de = readdir(pCurrentDir)) != NULL) {
@@ -104,7 +106,7 @@ void readSVG(VkEngine e) {
             printf("Unable to stat file: %s\n", filename);
             exit(EXIT_FAILURE);
         }
-        if (sb.st_mtim.tv_sec == file_stat.st_mtim.tv_sec)
+        if (sb.st_mtime == file_stat.st_mtime)
             return;
         file_stat  = sb;
         newSvgSurf = vkvg_surface_create_from_svg(dev, width, height, filename);
@@ -116,7 +118,7 @@ void readSVG(VkEngine e) {
             printf("Unable to stat file: %s\n", tmp);
             exit(EXIT_FAILURE);
         }
-        if (sb.st_mtim.tv_sec == file_stat.st_mtim.tv_sec)
+        if (sb.st_mtime == file_stat.st_mtime)
             return;
         file_stat  = sb;
         newSvgSurf = vkvg_surface_create_from_svg(dev, width, height, tmp);
@@ -132,17 +134,17 @@ void readSVG(VkEngine e) {
 #ifdef VKVG_DBG_STATS
     vkvg_debug_stats_t dbgStats = vkvg_device_get_stats(dev);
     vkvg_device_reset_stats(dev);
-    LOG("maximum point array size		= %d\n", dbgStats.sizePoints);
-    LOG("maximum path array size			= %d\n", dbgStats.sizePathes);
-    LOG("maximum size of host vertice cache	= %d\n", dbgStats.sizeVertices);
-    LOG("maximum size of host index cache	= %d\n", dbgStats.sizeIndices);
-    LOG("maximum size of vulkan vertex buffer	= %d\n", dbgStats.sizeVBO);
-    LOG("maximum size of vulkan index buffer	= %d\n", dbgStats.sizeIBO);
+    printf("maximum point array size		= %d\n", dbgStats.sizePoints);
+    printf("maximum path array size			= %d\n", dbgStats.sizePathes);
+    printf("maximum size of host vertice cache	= %d\n", dbgStats.sizeVertices);
+    printf("maximum size of host index cache	= %d\n", dbgStats.sizeIndices);
+    printf("maximum size of vulkan vertex buffer	= %d\n", dbgStats.sizeVBO);
+    printf("maximum size of vulkan index buffer	= %d\n", dbgStats.sizeIBO);
 #endif
 }
 
-struct dirent *get_next_svg_file_in_current_directory(bool cycle) {
-    struct dirent *de;
+struct dirent* get_next_svg_file_in_current_directory(bool cycle) {
+    struct dirent* de;
     while ((de = readdir(pCurrentDir)) != NULL) {
         if (de->d_type != DT_DIR) {
             if (!strcasecmp(strrchr(de->d_name, '\0') - 4, ".svg"))
@@ -155,7 +157,7 @@ struct dirent *get_next_svg_file_in_current_directory(bool cycle) {
     return get_next_svg_file_in_current_directory(false);
 }
 
-static void key_callback(GLFWwindow *window, int key, int scancode, int action, int mods) {
+static void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods) {
     if (action == GLFW_RELEASE)
         return;
     switch (key) {
@@ -163,7 +165,7 @@ static void key_callback(GLFWwindow *window, int key, int scancode, int action, 
         paused = !paused;
         break;
     case GLFW_KEY_R:
-        recording = !recording;
+        // recording = !recording;
         file_stat = (struct stat){0};
         break;
     case GLFW_KEY_ESCAPE:
@@ -185,7 +187,7 @@ static void key_callback(GLFWwindow *window, int key, int scancode, int action, 
         break;
     }
 }
-static void scroll_callback(GLFWwindow *window, double x, double y) {
+static void scroll_callback(GLFWwindow* window, double x, double y) {
     if (iconSize == 0)
         return;
     scrollX -= x * 25;
@@ -201,16 +203,21 @@ static void scroll_callback(GLFWwindow *window, double x, double y) {
 
 void print_help_and_exit() {
     printf("\nUsage: svgviewer [options] [svgfilepath]\n\n");
-    printf("if the -d option is not specified, svgfile path is mandatory.\n");
+    printf("\t-o file.png:\toutput result to file then exit.\n");
     printf("\t-d directory:\tdirectory containing svg files, cycle pressing Enter.\n");
+    printf("\t\t\tif the -d option is not specified, svgfile path is mandatory.\n");
     printf("\t-i size:\tif -d option is present, display all svg files as a list with the size specified.\n");
     printf("\t-m margin:\tset margin for the -i option\n");
+    printf("\t-w width:\tset output surface width.\n");
+    printf("\t-h height:\tset output surface height.\n");
+    printf("\t-s samples:\tset sample count, set to 1 to disable multisampling.\n");
     printf("\n");
     exit(-1);
 }
 
-int main(int argc, char *argv[]) {
-    int i = 1;
+int main(int argc, char* argv[]) {
+    int   i      = 1;
+    char* output = NULL;
 
     while (i < argc) {
         int argLen = strlen(argv[i]);
@@ -248,7 +255,12 @@ int main(int argc, char *argv[]) {
             case 'm':
                 if (argc < ++i + 1)
                     print_help_and_exit();
-                margin = atoi(argv[++i]);
+                margin = atoi(argv[i]);
+                break;
+            case 'o':
+                if (argc < ++i + 1)
+                    print_help_and_exit();
+                output = argv[i];
                 break;
             default:
                 print_help_and_exit();
@@ -257,77 +269,92 @@ int main(int argc, char *argv[]) {
             filename = argv[i];
         i++;
     }
+    if (!filename && !directory)
+        print_help_and_exit();
+
     VkEngine e = vkengine_create(VK_PRESENT_MODE_FIFO_KHR, width, height);
     vkengine_set_key_callback(e, key_callback);
     vkengine_set_scroll_callback(e, scroll_callback);
+    vkvg_device_create_info_t info = {samples,
+                                      false,
+                                      vkh_app_get_inst(e->app),
+                                      vkengine_get_physical_device(e),
+                                      vkengine_get_device(e),
+                                      vkengine_get_queue_fam_idx(e),
+                                      0};
+    dev                            = vkvg_device_create(&info);
 
-    dev = vkvg_device_create_from_vk_multisample(vkh_app_get_inst(e->app), vkengine_get_physical_device(e),
-                                                 vkengine_get_device(e), vkengine_get_queue_fam_idx(e), 0, samples,
-                                                 false);
+    VkvgSurface surf = NULL;
 
-    VkvgSurface surf = vkvg_surface_create(dev, width, height);
+    if (output) {
+        surf = vkvg_surface_create_from_svg(dev, width, height, filename);
+        vkvg_surface_write_to_png(surf, output);
+    } else {
 
-    vkh_presenter_build_blit_cmd(e->renderer, vkvg_surface_get_vk_image(surf), width, height);
+        surf = vkvg_surface_create(dev, width, height);
 
-    if (directory) {
-        pCurrentDir = opendir(directory);
-        if (!pCurrentDir) {
-            printf("Directory not found: %s\n", directory);
-            exit(EXIT_FAILURE);
+        vkh_presenter_build_blit_cmd(e->renderer, vkvg_surface_get_vk_image(surf), width, height);
+
+        if (directory) {
+            pCurrentDir = opendir(directory);
+            if (!pCurrentDir) {
+                printf("Directory not found: %s\n", directory);
+                exit(EXIT_FAILURE);
+            }
+            dir = get_next_svg_file_in_current_directory(false);
+            if (!dir) {
+                printf("No .svg file found in %s\n", directory);
+                closedir(pCurrentDir);
+                exit(EXIT_FAILURE);
+            }
+            if (iconSize > 0) {
+                svg_file_count   = _count_svg_files();
+                int cellSize     = iconSize + margin;
+                int iconPerLine  = ceil((double)(width - iconSize) / cellSize);
+                int visibleLines = ceil((double)(height) / cellSize);
+                int totLines     = ceil((double)svg_file_count / iconPerLine);
+                maxScroll        = (totLines - visibleLines) * cellSize;
+            }
         }
-        dir = get_next_svg_file_in_current_directory(false);
-        if (!dir) {
-            printf("No .svg file found in %s\n", directory);
-            closedir(pCurrentDir);
-            exit(EXIT_FAILURE);
-        }
-        if (iconSize > 0) {
-            svg_file_count   = _count_svg_files();
-            int cellSize     = iconSize + margin;
-            int iconPerLine  = ceil((double)(width - iconSize) / cellSize);
-            int visibleLines = ceil((double)(height) / cellSize);
-            int totLines     = ceil((double)svg_file_count / iconPerLine);
-            maxScroll        = (totLines - visibleLines) * cellSize;
-        }
-    }
 
-    while (!vkengine_should_close(e)) {
-        vkvg_log_level = VKVG_LOG_INFO_CMD;
-        readSVG(e);
-        vkvg_log_level = VKVG_LOG_ERR;
+        while (!vkengine_should_close(e)) {
+            // vkvg_log_level = VKVG_LOG_INFO_CMD;
+            readSVG(e);
+            // vkvg_log_level = VKVG_LOG_ERR;
 
-        VkvgContext ctx = vkvg_create(surf);
-        vkvg_set_source_rgb(ctx, 0.1, 0.1, 0.1);
-        vkvg_paint(ctx);
-
-        if (svgSurf) {
-            vkvg_set_source_surface(ctx, svgSurf, 0, 0);
+            VkvgContext ctx = vkvg_create(surf);
+            vkvg_set_source_rgb(ctx, 0.1, 0.1, 0.1);
             vkvg_paint(ctx);
-        } else {
-            vkvg_set_line_width(ctx, 10);
-            vkvg_set_source_rgb(ctx, 1, 0, 0);
-            vkvg_move_to(ctx, 0, 0);
-            vkvg_line_to(ctx, 512, 512);
-            vkvg_move_to(ctx, 0, 512);
-            vkvg_line_to(ctx, 512, 0);
-            vkvg_stroke(ctx);
-        }
-        vkvg_destroy(ctx);
 
-        glfwPollEvents();
+            if (svgSurf) {
+                vkvg_set_source_surface(ctx, svgSurf, 0, 0);
+                vkvg_paint(ctx);
+            } else {
+                vkvg_set_line_width(ctx, 10);
+                vkvg_set_source_rgb(ctx, 1, 0, 0);
+                vkvg_move_to(ctx, 0, 0);
+                vkvg_line_to(ctx, 512, 512);
+                vkvg_move_to(ctx, 0, 512);
+                vkvg_line_to(ctx, 512, 0);
+                vkvg_stroke(ctx);
+            }
+            vkvg_destroy(ctx);
 
-        if (!vkh_presenter_draw(e->renderer)) {
-            vkh_presenter_get_size(e->renderer, &width, &height);
-            vkvg_surface_destroy(surf);
-            surf = vkvg_surface_create(dev, width, height);
-            vkh_presenter_build_blit_cmd(e->renderer, vkvg_surface_get_vk_image(surf), width, height);
-            vkengine_wait_idle(e);
-            repaintIconList = true;
-            continue;
+            glfwPollEvents();
+
+            if (!vkh_presenter_draw(e->renderer)) {
+                vkh_presenter_get_size(e->renderer, &width, &height);
+                vkvg_surface_destroy(surf);
+                surf = vkvg_surface_create(dev, width, height);
+                vkh_presenter_build_blit_cmd(e->renderer, vkvg_surface_get_vk_image(surf), width, height);
+                vkengine_wait_idle(e);
+                repaintIconList = true;
+                continue;
+            }
         }
+
+        vkengine_wait_idle(e);
     }
-
-    vkengine_wait_idle(e);
 
     if (svgSurf)
         vkvg_surface_destroy(svgSurf);

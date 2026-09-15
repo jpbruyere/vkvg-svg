@@ -854,6 +854,7 @@ bool try_parse_color(const char *colorString, svg_paint_type *isEnabled, uint32_
             if (iri[0] == '#') {
                 *colorValue = hash_string(&iri[1]);
                 *isEnabled  = svg_paint_type_pattern;
+                LOG("URI: %s\n", colorString);
                 return true;
             }
         }
@@ -1405,10 +1406,11 @@ void _store_or_throw(svg_context *svg, void *elt) {
     if (svg->currentIdHash) {
         svg_element_header *id = (svg_element_header *)elt;
         id->hash               = svg->currentIdHash;
-        LOG("store elemnt: %u type:%u\n", id->hash, id->type);
         array_add(svg->idList, elt);
-    } else
+        LOG("SVG: store elemnt: %u type:%u\n", id->hash, id->type);
+    } else {
         free(elt);
+    }
 }
 float _get_pixel_coord(float reference, svg_length_or_percentage *lop) {
     switch (lop->units) {
@@ -1452,7 +1454,9 @@ void _resolve_pattern_href(svg_context *svg, void *rootElt, VkvgPattern pat) {
             return;
         }
         _copy_pattern_color_stops(refPatter, pat);
+        LOG("_resolve_pattern_href: status: %d\n", vkvg_pattern_status(refPatter));
     }
+
 }
 void set_pattern(svg_context *svg, uint32_t patternHash) {
     void       *elt;
@@ -1524,6 +1528,7 @@ void set_pattern(svg_context *svg, uint32_t patternHash) {
         LOG("pattern hash not resolved: %d\n", patternHash);
 }
 int draw(svg_context *svg, svg_attributes *attribs) {
+    LOG("SVG Draw: %s\n", svg->elt);
     if (attribs->hasFill) {
         vkvg_set_opacity(svg->ctx, attribs->opacity * attribs->fill_opacity);
         if (attribs->hasFill == svg_paint_type_pattern)
@@ -1580,6 +1585,7 @@ void _draw_text(svg_context *svg, FILE *f, svg_attributes *attribs, svg_length_o
 float _normalized_diagonal(float w, float h) { return sqrtf(powf(w, 2) + powf(h, 2)) / sqrtf(2); }
 void  _process_element(svg_context *svg, svg_attributes *attribs, void *elt, bool use) {
     if (!(svg->inDefs || svg->skipDraw)) {
+        LOG("process element: %s \n", svg->elt);
         switch (_get_element_type(elt)) {
         case svg_element_type_rect: {
             CASTELT(r, rect, elt);
@@ -1960,7 +1966,7 @@ void _process_use(svg_context *svg, svg_attributes *attribs) {
     rg->pattern      = vkvg_pattern_create_linear(rg->x1.number, rg->y1.number, rg->x2.number, rg->y2.number);         \
     rg->id.hash      = svg->currentIdHash;                                                                             \
     rg->id.xlinkHref = svg->currentXlinkHref;                                                                          \
-    LOG("store pattern id:%u href:%u\n", rg->id.hash, rg->id.xlinkHref);                                               \
+    LOG("SVG: store pattern id:%u href:%u\n", rg->id.hash, rg->id.xlinkHref);                                               \
     if (hasTransform)                                                                                                  \
         vkvg_pattern_set_matrix(rg->pattern, &transform);                                                              \
     array_add(svg->idList, rg);                                                                                        \
@@ -2226,7 +2232,7 @@ VkvgSurface vkvg_surface_create_from_svg(VkvgDevice dev, uint32_t width, uint32_
         perror("vkvg_svg: file not found");
         return NULL;
     }
-    // LOG ("loading %s\n", filename);
+    LOG ("loading %s\n", svgFilePath);
     // printf ("loading %s\n", filename);
     VkvgSurface surf = _create_from_file_handle(dev, width, height, f, NULL, NULL);
     fclose(f);

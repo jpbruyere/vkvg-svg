@@ -22,11 +22,6 @@
 
 #include "vkh.h"
 #include "vkengine.h"
-/*#include "vkh_app.h"
-#include "vkh_phyinfo.h"
-#include "vkh_presenter.h"
-#include "vkh_image.h"
-#include "vkh_device.h"*/
 
 VkSampleCountFlagBits getMaxUsableSampleCount(VkSampleCountFlags counts) {
     if (counts & VK_SAMPLE_COUNT_64_BIT) {
@@ -132,7 +127,7 @@ vk_engine_t *vkengine_create(VkPresentModeKHR presentMode, uint32_t width, uint3
 
     e->window = glfwCreateWindow((int)width, (int)height, "vkvg svg drawer", NULL, NULL);
 
-    VK_CHECK_RESULT(glfwCreateWindowSurface(vkh_app_get_inst(e->app), e->window, NULL, &e->surface))
+    glfwCreateWindowSurface(vkh_app_get_inst(e->app), e->window, NULL, &e->surface);
 
     VkhPhyInfo *phys = vkh_app_get_phyinfos(e->app, &phyCount, e->surface);
 

@@ -24,6 +24,8 @@
 
 #include "fmemopen.h"
 
+#define _svg_placeholder _vkvg_svg_t
+
 #include "vkvg.h"
 #include "vkvg-svg.h"
 
@@ -35,13 +37,13 @@
 #define strncasecmp(x, y, z) _strnicmp(x, y, z)
 #define strcasecmp(x, y)     _stricmp(x, y)
 #endif
-// #define DEBUG_LOG
+#define DEBUG_LOG
 #ifdef LOG
 #undef LOG
 #endif
 
 #ifdef DEBUG_LOG
-#define LOG(...) fprintf(stdout, __VA_ARGS__)
+#define LOG(...) fprintf(stdout, "[SVG] " __VA_ARGS__)
 #else
 #define LOG
 #endif
@@ -223,45 +225,68 @@ enum prevCmd { none, quad, cubic };
 int skip_children(svg_context *svg, FILE *f, svg_attributes attribs, void *parentData);
 int read_tag(svg_context *svg, FILE *f, svg_attributes attribs);
 
-#define get_attribute fscanf(f, " %[^=>]=%*[\"']%[^\"']%*[\"']", svg->att, svg->value)
+#define get_attribute fscanf(f, " %[^=/>]=%*[\"']%[^\"']%*[\"']", svg->att, svg->value)
 
 #define read_tag_end                                                                                                   \
     svg->currentXlinkHref = 0;                                                                                         \
     svg->currentIdHash    = 0;                                                                                         \
     if (res < 0) {                                                                                                     \
-        LOG("error parsing: %s\n", svg->att);                                                                          \
+        LOG("error parsing!: %s\n", svg->att);                                                                         \
         res - 1;                                                                                                       \
     } else if (res == 1) {                                                                                             \
+        LOG("read_tag_end for %s' res == 1\n", svg->elt);                        \
         if (getc(f) != '>') {                                                                                          \
             LOG("parsing error, expecting '>'\n");                                                                     \
             res = -1;                                                                                                  \
         } else                                                                                                         \
             res = 0;                                                                                                   \
-    } else if (getc(f) != '>') {                                                                                       \
-        LOG("parsing error, expecting '>'\n");                                                                         \
-        res - 1;                                                                                                       \
-    } else                                                                                                             \
-        res = 1;
+    } else {                                                                                                           \
+        int c = getc(f);                                                                                               \
+        if (c == '/') {                                                                              \
+            if (getc(f) != '>') { \
+                LOG("parsing error, expecting '>' after '/' for self closing tag, having %c\n", c);                        \
+                res - 1;                                                                                                   \
+            } else {\
+                LOG("self closing tag '/> for %s'\n", svg->elt);                        \
+                res = 0;                                                                                                   \
+            }\
+        } else if (c != '>') {                                                                                         \
+            LOG("parsing error, expecting '>', having %c\n", c);                                                       \
+            res - 1;                                                                                                   \
+        } else                                                                                                         \
+            res = 1;                                                                                                   \
+    }
+/*        if (((c == '/') && (getc(f) != '>')) || (c != '>')) {                                                                           \
+            LOG("parsing error, expecting '>' after '/' for self closing tag %c\n", c);                                \
+            res - 1;                                                                                                   \
+        } else                                                                                                             \
+            res = 1;\
+    }*/
 
 int skip_attributes_and_children(svg_context *svg, FILE *f, svg_attributes attribs);
 
 #define read_element_start                                                                                             \
     fscanf(f, "%[^<]", svg->value);                                                                                    \
-    res = fscanf(f, " <%[^> \n\r]", svg->elt);                                                                         \
-    if (res < 0)                                                                                                       \
+    res = fscanf(f, " <%c%[^/> \n\r]", svg->elt, &svg->elt[1]);                                                         \
+    if (res < 0) {                                                                                                     \
+        LOG("cancel read_element_start res < 0: %d\n", res);                                                           \
         return 0;                                                                                                      \
+    }                                                                                                                  \
     if (!res) {                                                                                                        \
+        LOG("read_element_start after res == 0: res: %d, %s\n", res, svg->elt);                                                            \
         res = fscanf(f, "%*[^<]<%[^> \n\r]", svg->elt);                                                                \
         if (!res) {                                                                                                    \
             LOG("element name parsing error (%s)\n", svg->elt);                                                        \
             return -1;                                                                                                 \
         }                                                                                                              \
     }                                                                                                                  \
+    LOG("read_element_start res: %d, %s\n", res, svg->elt);                                                            \
     if (svg->elt[0] == '/') {                                                                                          \
         if (getc(f) != '>') {                                                                                          \
             LOG("parsing error, expecting '>'\n");                                                                     \
             return -1;                                                                                                 \
         }                                                                                                              \
+        LOG("read_element_start closing tag\n");                                                                  \
         return 0;                                                                                                      \
     }                                                                                                                  \
     if (svg->elt[0] == '!') {                                                                                          \
@@ -273,8 +298,11 @@ int skip_attributes_and_children(svg_context *svg, FILE *f, svg_attributes attri
         if (!strncmp(svg->elt, "!--", 3)) {                                                                            \
             while (!feof(f)) {                                                                                         \
                 if (fgetc(f) == '-') {                                                                                 \
-                    if (fgetc(f) == '-' && fgetc(f) == '>')                                                            \
-                        break;                                                                                         \
+                    if (fgetc(f) == '-')                                                                               \
+                        if (fgetc(f) == '>')                                                                           \
+                            break;                                                                                     \
+                        else                                                                                           \
+                            fseek(f, -2, SEEK_CUR);                                                                    \
                     else                                                                                               \
                         fseek(f, -1, SEEK_CUR);                                                                        \
                 }                                                                                                      \
@@ -313,6 +341,7 @@ int skip_attributes_and_children(svg_context *svg, FILE *f, svg_attributes attri
     FILE *pfStyle = NULL;                                                                                              \
     char *style   = NULL;                                                                                              \
     int   res     = get_attribute;                                                                                     \
+    LOG("read_attributes_loop_start.get_attribute res: %d, %s = %s\n", res, svg->att, svg->value);                            \
     read_attributes_loop_start_lite
 
 #define read_attributes_loop_end                                                                                       \
@@ -327,6 +356,7 @@ int skip_attributes_and_children(svg_context *svg, FILE *f, svg_attributes attri
         }                                                                                                              \
     }                                                                                                                  \
     res = get_attribute;                                                                                               \
+    LOG("read_attributes_loop_end.get_attribute res: %d, %s = %s\n", res, svg->att, svg->value);                    \
     }
 
 #endif // VKVG_SVG_INTERNAL_H
